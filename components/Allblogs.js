@@ -1,0 +1,173 @@
+// pages/Allinfo.js
+
+import Blogcard from './Blogcard.js';
+import styles from '../styles/Card.module.css';
+import { useEffect } from 'react';
+import lottie from 'lottie-web';
+import Typewriter from 'typewriter-effect';
+import { useRouter } from 'next/router';
+export default function Allblogs({ allBlog = [] }) {  // Default to empty array
+    const router = useRouter();
+    const handleNavigation = () => {
+        router.push('/planbot'); // Navigate to the createplan page
+    };
+    useEffect(() => {
+        // Initialize the Lottie animation
+        const animationInstance = lottie.loadAnimation({
+            container: document.getElementById('boy-waving-animation'), // Container ID
+            renderer: 'svg', // Render as SVG
+            loop: true, // Set animation to loop
+            autoplay: true, // Start playing on load
+            path: '/boy.json', // Path to your Lottie JSON file
+        });
+    
+        // Cleanup function to destroy the animation on component unmount
+        return () => {
+            animationInstance.destroy();
+        };
+    }, []); // Empty dependency array ensures this runs only once
+    
+
+    return (
+        <div className="w-100 d-flex justify-content-center align-items-center" id="plannerdiv">
+            <div className={`${styles.explorediv} d-flex justify-content-center align-items-center flex-column`}>
+                <h4 className={styles.headingexplore}>
+                    Explore <span style={{ color: "red" }}>Ayodhya</span> With G<span style={{ color: "orange" }}>I</span>G!
+                </h4>
+                <p className="text-center" style={{ fontSize: "2vmin" }}>
+                    Unveil the Mystique of Shri Ram Ki Nagri Ayodhya - Explore the <strong><span style={{ color: "orange" }}>Spiritual Essence</span></strong> with Us!
+                </p>
+                <div className='w-100'>
+                    <div className={styles.fullcontainer}>
+                        {/* Blog Cards */}
+                        <div className={`d-flex ${styles.blogcardContainer}`}>
+                            <Blogcard title="Ram Mandir" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2F026e37da-89b9-4b8e-bdf8-8d3c3ba1ab0a?alt=media&token=47ed0118-b9bd-4496-a714-e805ec65df37" />
+                            <Blogcard title="Kanak Bhawan" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2Fb62ef1d4-647f-4a31-a5ed-c1d50387c868?alt=media&token=92e6e67c-0ea5-4e6d-a3ef-b804ef5c8230" />
+                            <Blogcard title="Hanuman Gadhi" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2Fdb99d622-6205-45af-889c-39512ec96104?alt=media&token=1185d350-5568-4efe-9d46-544de8ce6af9" />
+                            <Blogcard title="Dashrath Mahal" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2F3e914480-489b-41cc-b222-717bf916effc?alt=media&token=55fa514c-42b2-44a1-a649-69c974ad1c51" />
+                            <Blogcard title="Naya Ghat" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2F182b9ca2-26ab-4da2-a7ff-88702fcca83d?alt=media&token=455794f2-1cb5-4b83-ab69-9164f4faa918" />
+                            <Blogcard title="Mani Parvat" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2F64830f08-fc2b-43b3-893e-f3f799243953?alt=media&token=857c11a2-7260-4fac-9485-15c5cd5a2221" />
+                            <Blogcard title="Surya Kund" images="https://firebasestorage.googleapis.com/v0/b/gig-storage.appspot.com/o/blogs%2F8bb72f77-bb08-4f6d-abfd-b747f38830c9?alt=media&token=86116896-d686-405e-a007-a91a94c47b8e" />
+                            {/* {allBlog.length > 0 ? (
+                                allBlog.map((blog) => (
+                                    <Blogcard  title={blog.title} images={blog.imageUrlList} />
+                                ))
+                            ) : (
+                                <p>No blogs available at the moment.</p>  // Fallback message
+                            )} */}
+                        </div>
+
+                        <div className={styles.botcontainer}>
+                            <div id="boy-waving-animation" className={styles.bot}></div>
+                            <div className=' text-light w-100' style={{ maxHeight: "fit-content", marginLeft: "0px", display: "flex", flexDirection: "column",justifyContent:"center",alignItems:"center" }}>
+                                <h1 className='mt-1 mb-0 p-0' style={{ fontFamily: "serif", textAlign: "center" }}>
+                                    <Typewriter
+                                        options={{
+                                            strings: [
+                                                'Namaste, <span style="color: red;">Travellers!</span>', // Red color for this string
+                                                'I am <span style="color: #ff920c;">Shravan!</span>',
+                                                "Let's Plan Your <span style='color: orange;'>Darshan!</span>", , // Green color for this string
+                                            ],
+                                            autoStart: true,
+                                            loop: true,
+                                            deleteSpeed: 30,
+                                            typeSpeed: 190,
+                                        }}
+                                        style={{ lineHeight: "1"}}
+
+                                    />
+                                </h1>
+                                <div className={styles.offerings}>
+                                    <div className={`my-2 d-flex flex-column ${styles.aboutcard} ${styles.acard1}`} >
+                                        <div className="d-flex justify-content-center align-items-center w-100 ">
+                                            <i className="fa fa-hotel"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                        </div>
+                                        <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
+                                            <h6 className='headingAbout mb-0'>
+                                                Accomodation
+                                            </h6>
+                                            <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
+                                                Dharmashalas to 4 Star Hotels
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`my-2 d-flex flex-column ${styles.aboutcard} ${styles.acard2}`} >
+                                        <div className="d-flex justify-content-center align-items-center w-100 ">
+                                            <i className="fa fa-taxi"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                        </div>
+                                        <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
+                                            <h6 className='headingAbout mb-0'>
+                                                Travel
+                                            </h6>
+                                            <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
+                                                E-Rickshaws to AC Cabs
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`my-2 d-flex flex-column ${styles.aboutcard} ${styles.acard3}`} >
+                                        <div className="d-flex justify-content-center align-items-center w-100 ">
+                                            <i className="fa fa-map"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                        </div>
+                                        <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
+                                            <h6 className='headingAbout mb-0'>
+                                            Itineraries
+                                            </h6>
+                                            <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
+                                                Customize your Itineraries
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`my-2 d-flex flex-column ${styles.aboutcard} ${styles.acard4}`} >
+                                        <div className="d-flex justify-content-center align-items-center w-100 ">
+                                            <i className="fa fa-user"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                        </div>
+                                        <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
+                                            <h6 className='headingAbout mb-0'>
+                                                Guides
+                                            </h6>
+                                            <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
+                                                24*7 Guided Tours 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`my-2 d-flex flex-column ${styles.aboutcard} ${styles.acard5}`} >
+                                        <div className="d-flex justify-content-center align-items-center w-100 ">
+                                            <i className="fa fa-gamepad"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                        </div>
+                                        <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
+                                            <h6 className='headingAbout mb-0'>
+                                                Local Activites
+                                            </h6>
+                                            <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
+                                                Explore Local Activites of the City
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className={`my-2 d-flex flex-column ${styles.aboutcard} ${styles.acard6}`} >
+                                        <div className="d-flex justify-content-center align-items-center w-100 ">
+                                            <i className="fa fa-fire"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                        </div>
+                                        <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
+                                            <h6 className='headingAbout mb-0'>
+                                                Pooja
+                                            </h6>
+                                            <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
+                                                Arrangement of Pooja Rituals
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <p className='m-0 p-0 text-light'>-Your One Stop Darshan Solution</p>
+                        <button className='btn btn-danger mt-2 mb-3'  onClick={handleNavigation}>Let's Plan Your Darshan</button>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

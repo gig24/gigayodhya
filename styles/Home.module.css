@@ -166,3 +166,19 @@ a.secondary {
     filter: invert();
   }
 }
+@media (min-width: 601px){
+  .rediv{
+      display: flex;
+  }
+
+}
+@media (max-width: 600px){
+  .rediv{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+  }
+
+}
