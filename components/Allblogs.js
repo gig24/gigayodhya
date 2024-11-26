@@ -12,20 +12,23 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
         router.push('/planbot'); // Navigate to the createplan page
     };
     useEffect(() => {
-        // Initialize the Lottie animation
-        const animationInstance = lottie.loadAnimation({
-            container: document.getElementById('boy-waving-animation'), // Container ID
-            renderer: 'svg', // Render as SVG
-            loop: true, // Set animation to loop
-            autoplay: true, // Start playing on load
-            path: '/boy.json', // Path to your Lottie JSON file
-        });
-    
-        // Cleanup function to destroy the animation on component unmount
-        return () => {
-            animationInstance.destroy();
-        };
-    }, []); // Empty dependency array ensures this runs only once
+        // Check if the window object is available (indicating we're in the browser)
+        if (typeof window !== 'undefined') {
+            // Initialize the Lottie animation
+            const animationInstance = lottie.loadAnimation({
+                container: document.getElementById('boy-waving-animation'), // Container ID
+                renderer: 'svg', // Render as SVG
+                loop: true, // Set animation to loop
+                autoplay: true, // Start playing on load
+                path: '/boy.json', // Path to your Lottie JSON file
+            });
+
+            // Cleanup function to destroy the animation on component unmount
+            return () => {
+                animationInstance.destroy();
+            };
+        }
+    }, []);  // Empty dependency array ensures this runs only once
     
 
     return (
