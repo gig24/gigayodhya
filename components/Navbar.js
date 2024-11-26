@@ -11,14 +11,16 @@ const Navbar = () => {
   const getActiveClass = (path) => (router.pathname === path ? styles.active : styles.inactive);
 
   // Determine active state for Blogs and Packages
-  const isBlogsActive = () => router.asPath.includes('blogs') ? styles.active : styles.inactive;
-  const isPackagesActive = () => router.asPath.includes('ayodhyapackages') ? styles.active : styles.inactive;
+  const isBlogsActive = () => (router.asPath.includes('blogs') ? styles.active : styles.inactive);
+  const isPackagesActive = () => (router.asPath.includes('ayodhyapackages') ? styles.active : styles.inactive);
 
-  // Scroll to specific section when on the home page
+  // Scroll to specific section when on the home page (Client-side only)
   const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (typeof window !== 'undefined') {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     }
   };
 
@@ -27,7 +29,7 @@ const Navbar = () => {
     if (router.pathname === '/') {
       // Scroll to the specific section on the home page
       scrollToSection(section);
-  
+
       // Clean the URL by replacing with "/"
       router.replace('/', undefined, { shallow: true });
     } else {
@@ -39,16 +41,16 @@ const Navbar = () => {
       });
     }
   };
-  
 
   // Handle scrolling based on query parameters
   useEffect(() => {
-    const { scrollTo } = router.query;
-    if (scrollTo) {
-      scrollToSection(scrollTo);
+    if (typeof window !== 'undefined') {
+      const { scrollTo } = router.query;
+      if (scrollTo) {
+        scrollToSection(scrollTo);
+      }
     }
   }, [router.query]);
-
   return (
     <nav className={styles.navbar}>
       {/* Desktop Navigation */}

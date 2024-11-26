@@ -1,31 +1,46 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import styles from '../styles/Navbar.module.css';
 
 export default function Footer() {
   const router = useRouter();
 
-  // Handle navigation and scrolling for specific sections on the home page
   const handleNavigation = (section) => {
     if (router.pathname === '/') {
-      // Scroll to the specific section on the home page
-      const element = document.getElementById(section);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-
-      // Clean the URL by replacing it with "/"
-      router.replace('/', undefined, { shallow: true });
-    } else {
-      // Navigate to the home page and scroll to the section
-      router.push(`/?scrollTo=${section}`).then(() => {
+      // Delay scrolling until the component is mounted
+      setTimeout(() => {
         const element = document.getElementById(section);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        router.replace('/', undefined, { shallow: true });
+      }, 0);
+      router.replace('/', undefined, { shallow: true });
+    } else {
+      router.push(`/?scrollTo=${section}`).then(() => {
+        setTimeout(() => {
+          const element = document.getElementById(section);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 0);
       });
     }
   };
+
+  // Handle scroll on initial load if URL has a `scrollTo` query parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const scrollTo = params.get('scrollTo');
+      if (scrollTo) {
+        const element = document.getElementById(scrollTo);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        router.replace('/', undefined, { shallow: true });
+      }
+    }
+  }, [router]);
 
   return (
     <div className={styles.footer}>

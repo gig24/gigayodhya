@@ -344,11 +344,16 @@ export default function Planbot() {
     };
 
     const scrollToSection = (id) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (typeof window !== 'undefined') { // Ensure this runs in the browser
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        } else {
+            console.warn('scrollToSection called in a non-browser environment');
         }
     };
+    
     const handleNavigation = (section) => {
         if (router.pathname === '/') {
             // Scroll to the specific section on the home page
@@ -583,22 +588,29 @@ export default function Planbot() {
     // Handle form submit
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        setIsSubmitting(true);  // Disable button and show submitting state
-        const submitButton = document.getElementById('submitBtn');
-        submitButton.innerText = 'Submitting...';
+        setIsSubmitting(true); // Disable button and show submitting state
+    
+        let submitButton;
+        if (typeof window !== 'undefined') {
+            submitButton = document.getElementById('submitBtn');
+            if (submitButton) {
+                submitButton.innerText = 'Submitting...';
+            }
+        }
+    
         try {
             // Submit form data using fetch
             const response = await fetch('/api/addbooking', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...formData,          // Include form data
-                    packageObject: finalUserPackage  // Add the packageObject separately
-                })
+                    ...formData, // Include form data
+                    packageObject: finalUserPackage, // Add the packageObject separately
+                }),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
                 setFormData({
@@ -611,18 +623,23 @@ export default function Planbot() {
                     noOfPersons: '',
                 });
                 setIsSubmitting(false);
-                submitButton.innerText = 'Submit';
+    
+                if (submitButton) {
+                    submitButton.innerText = 'Submit';
+                }
+    
                 alert('Query Added Successfully! You will be contacted soon.');
-                addToChat("user", "Submit Details");
-                setStep(10)
+                addToChat('user', 'Submit Details');
+                setStep(10);
             } else {
-                alert('Could Not Submit Your Query,Try Again Later or Contact Us on 7505866498')
+                alert('Could Not Submit Your Query, Try Again Later or Contact Us on 7505866498');
                 console.error('Error submitting data:', response.statusText);
             }
         } catch (error) {
             console.error('Error submitting data:', error);
         }
     };
+    
     const handlePhoneInput = (e) => {
         const value = e.target.value;
         // Allow only numbers by removing non-numeric characters
