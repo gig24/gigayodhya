@@ -95,7 +95,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             <i className="fa fa-hotel"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
-                                            <h6 className='headingAbout mb-0'>
+                                            <h6 className={styles.headingAbout}>
                                                 Accomodation
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
@@ -108,7 +108,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             <i className="fa fa-taxi"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
-                                            <h6 className='headingAbout mb-0'>
+                                            <h6 className={styles.headingAbout}>
                                                 Travel
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
@@ -121,7 +121,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             <i className="fa fa-map"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
-                                            <h6 className='headingAbout mb-0'>
+                                            <h6 className={styles.headingAbout}>
                                             Itineraries
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
@@ -134,7 +134,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             <i className="fa fa-user"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
-                                            <h6 className='headingAbout mb-0'>
+                                            <h6 className={styles.headingAbout}>
                                                 Guides
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
@@ -147,7 +147,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             <i className="fa fa-gamepad"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
-                                            <h6 className='headingAbout mb-0'>
+                                            <h6 className={styles.headingAbout}>
                                                 Local Activites
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
@@ -160,7 +160,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             <i className="fa fa-fire"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
-                                            <h6 className='headingAbout mb-0'>
+                                            <h6 className={styles.headingAbout}>
                                                 Pooja
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>

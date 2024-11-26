@@ -182,11 +182,18 @@
         color: #ff920c;
 
     }
+    .headingAbout{
+        margin-bottom: 0;
+        font-size: 4vmin;
+    }
       
 }
 
 /* Responsive Styles for Larger Screens */
 @media (min-width: 601px) {
+    .headingAbout{
+        margin-bottom: 0;
+    }
     .bot{
         min-width:50px;
          min-height:50px;
