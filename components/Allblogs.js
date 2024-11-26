@@ -162,7 +162,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
 
                         </div>
                         <p className='m-0 p-0 text-light'>-Your One Stop Darshan Solution</p>
-                        <button className='btn btn-danger mt-2 mb-3'  onClick={handleNavigation}>Let's Plan Your Darshan</button>
+                        <button className='btn btn-danger mt-2 mb-3'  onClick={handleNavigation}>Let&apos;s Plan Your Darshan</button>
 
 
                     </div>

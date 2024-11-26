@@ -3,12 +3,13 @@ import Head from 'next/head';
 import Footer from '../../components/Footer.js'; 
 import Image from 'next/image'; // Import next/image for lazy loading
 import styles from '../../styles/Blog.module.css'; // Importing the styles
+import Link from 'next/link.js';
 
 const RamMandir = () => {
   return (
     <>
       <Head>
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="Ram Mandir Ayodhya" />
         <meta name="keywords" content="Ayodhya, ramjanmbhoomi, Ram Mandir" />
@@ -25,7 +26,7 @@ const RamMandir = () => {
             <div className="col-md-9">
               <h1 className={styles.heading}>Ram Mandir</h1>
               <div className={`${styles.user} p-4 rounded`}>
-                <div className="d-flex align-items-start" >
+                <div className="d-flex align-items-start">
                   <Image
                     src="https://thumbs.dreamstime.com/b/man-head-smile-as-facial-expression-vector-illustration-man-head-smile-as-facial-expression-vector-illustration-young-229260301.jpg"
                     className="img-fluid rounded-circle"
@@ -34,7 +35,7 @@ const RamMandir = () => {
                     height={100}
                     loading="lazy" // Explicit lazy loading
                   />
-                  <div className="d-block" >
+                  <div className="d-block">
                     <span className="d-block">by Ram Singh</span>
                     <span className="d-block text-muted">11th Aug. 2023</span>
                   </div>
@@ -43,7 +44,7 @@ const RamMandir = () => {
 
               <div className={styles.blogSection}>
                 <p>
-                  India's cultural tapestry is woven with threads of history, spirituality, and architectural marvels
+                  India&apos;s cultural tapestry is woven with threads of history, spirituality, and architectural marvels
                   that reflect its diverse heritage. One such emblematic structure is the Ram Mandir, a place of worship
                   that holds profound historical significance and serves as a testament to the enduring faith of millions
                   of devotees. In this blog, we delve into the captivating history and enduring importance of the Ram Mandir.
@@ -60,7 +61,7 @@ const RamMandir = () => {
 
                 <h2>The Controversy and Legal Resolution</h2>
                 <p>
-                  The Ram Mandir's history also carries the weight of a long-standing dispute between the Hindu and Muslim
+                  The Ram Mandir&apos;s history also carries the weight of a long-standing dispute between the Hindu and Muslim
                   communities regarding the ownership of the site. This dispute became a focal point of national attention
                   and raised questions about communal harmony and historical preservation. In 2019, the Indian Supreme Court
                   delivered a landmark judgment, settling the matter and paving the way for the construction of a new temple
@@ -81,8 +82,8 @@ const RamMandir = () => {
                   The architecture of the Ram Mandir is a testament to the exquisite craftsmanship that has defined Indian
                   temple art for centuries. The temple draws inspiration from the Nagara architectural style, characterized
                   by its towering spires (shikharas), intricate carvings, and ornate embellishments. The use of pink sandstone,
-                  reminiscent of the original temple's material, creates a harmonious link between the past and the present.
-                  Modern engineering techniques ensure the temple's structural stability, ensuring that it stands for generations
+                  reminiscent of the original temple&apos;s material, creates a harmonious link between the past and the present.
+                  Modern engineering techniques ensure the temple&apos;s structural stability, ensuring that it stands for generations
                   to come.
                 </p>
 
@@ -97,10 +98,10 @@ const RamMandir = () => {
 
                 <h2>Spiritual Significance: Gateway to Divine Connection</h2>
                 <p>
-                  For millions of Hindus, the Ram Mandir holds deep spiritual significance. The belief in Lord Ram's divine
+                  For millions of Hindus, the Ram Mandir holds deep spiritual significance. The belief in Lord Ram&apos;s divine
                   attributes—his righteousness, compassion, and unwavering devotion—finds expression in the devotion of the
-                  temple's visitors. Pilgrims from across the country and the world journey to this sacred site to offer prayers,
-                  seek blessings, and immerse themselves in the aura of divinity that envelopes the premises. The temple's
+                  temple&apos;s visitors. Pilgrims from across the country and the world journey to this sacred site to offer prayers,
+                  seek blessings, and immerse themselves in the aura of divinity that envelopes the premises. The temple&apos;s
                   completion signifies the restoration of a holy space where faith can flourish unimpeded.
                 </p>
 
@@ -117,18 +118,18 @@ const RamMandir = () => {
               <hr />
               <div className={`${styles.share} text-center d-flex align-items-center justify-content-center flex-column`}>
                 <div className="mr-3">
-                  Didn't Plan?{' '}
+                  Didn&apos;t Plan?{' '}
                   <p className="text-muted m-0 text-center mb-2" style={{ fontSize: '2vmin' }}>
                     Plan Your Full Darshan With Us! You Should See What We Are <span style={{ color: 'green' }}>Offering!</span>
                     <span style={{ color: 'red' }}>
                       <br />
-                      YOU DON'T HAVE TO PAY!
+                      YOU DON&apos;T HAVE TO PAY!
                     </span>
                   </p>
                 </div>
-                <a href="/" className="btn btn-danger">
+                <Link href="/" className="btn btn-danger">
                   Plan Now!
-                </a>
+                </Link>
               </div>
               <hr />
             </div>

@@ -8,7 +8,7 @@ const KanakBhawan = () => {
   return (
     <>
       <Head>
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="Kanak Bhawan Ayodhya" />
         <meta name="keywords" content="Ayodhya, kanak bhawan, blog, tour in ayodhya, places to visit in ayodhya" />
@@ -57,12 +57,12 @@ const KanakBhawan = () => {
 
                 <h2>History and Significance</h2>
                 <p>
-                  Kanak Bhawan's history is closely intertwined with the legendary narrative of Lord Ram and Goddess Sita. According to popular belief, it was gifted to Sita by her mother after her marriage to Lord Ram. The name "Kanak Bhawan" itself translates to "Golden House," a nod to its opulent architecture and the abundance of gold and precious metals used in its adornments. Over the centuries, the bhawan underwent various renovations, with each ruler and patron adding their unique touch to this sacred space.
+                  Kanak Bhawan&apos;s history is closely intertwined with the legendary narrative of Lord Ram and Goddess Sita. According to popular belief, it was gifted to Sita by her mother after her marriage to Lord Ram. The name &quot;Kanak Bhawan&quot; itself translates to &quot;Golden House,&quot; a nod to its opulent architecture and the abundance of gold and precious metals used in its adornments. Over the centuries, the bhawan underwent various renovations, with each ruler and patron adding their unique touch to this sacred space.
                 </p>
 
                 <h2>Architectural Marvel: Blend of Styles and Symbolism</h2>
                 <p>
-                  Kanak Bhawan's architecture is a splendid fusion of various styles that span centuries. The design elements draw inspiration from both North Indian and South Indian architectural traditions, resulting in an aesthetic that is both intricate and harmonious. The grand entrance, elaborate frescoes, intricate carvings, and elegant domes create a mesmerizing visual spectacle. The temple's aesthetic reflects the confluence of art, devotion, and cultural heritage.
+                  Kanak Bhawan&apos;s architecture is a splendid fusion of various styles that span centuries. The design elements draw inspiration from both North Indian and South Indian architectural traditions, resulting in an aesthetic that is both intricate and harmonious. The grand entrance, elaborate frescoes, intricate carvings, and elegant domes create a mesmerizing visual spectacle. The temple&apos;s aesthetic reflects the confluence of art, devotion, and cultural heritage.
                 </p>
 
                 <Image
@@ -90,7 +90,7 @@ const KanakBhawan = () => {
 
                 <h2>Cultural Legacy: Preserving Heritage and Devotion</h2>
                 <p>
-                  Kanak Bhawan is not only a place of worship but also a repository of cultural heritage. Its walls resonate with stories of devotion, sacrifice, and timeless love. The temple's architecture reflects the skill and creativity of artisans from different eras, showcasing the evolution of craftsmanship. By preserving and venerating this historic site, we honor the values that have shaped India's cultural fabric.
+                  Kanak Bhawan is not only a place of worship but also a repository of cultural heritage. Its walls resonate with stories of devotion, sacrifice, and timeless love. The temple&apos;s architecture reflects the skill and creativity of artisans from different eras, showcasing the evolution of craftsmanship. By preserving and venerating this historic site, we honor the values that have shaped India&apos;s cultural fabric.
                 </p>
 
                 <div className="text-center w-100">
@@ -105,18 +105,18 @@ const KanakBhawan = () => {
                 <hr />
                 <div className={`${styles.share} text-center d-flex align-items-center justify-content-center flex-column`}>
                   <div className="mr-3">
-                    Didn't Plan?{' '}
+                    Didn&apos;t Plan?{' '}
                     <p className="text-muted m-0 text-center mb-2" style={{ fontSize: '2vmin' }}>
                       Plan Your Full Darshan With Us! You Should See What We Are <span style={{ color: 'green' }}>Offering!</span>
                       <span style={{ color: 'red' }}>
                         <br />
-                        YOU DON'T HAVE TO PAY!
+                        YOU DON&apos;T HAVE TO PAY!
                       </span>
                     </p>
                   </div>
-                  <a href="/" className="btn btn-danger">
+                  <Link href="/" className="btn btn-danger">
                     Plan Now!
-                  </a>
+                  </Link>
                 </div>
                 <hr />
               </div>

@@ -3,12 +3,13 @@ import Head from 'next/head';
 import Footer from '../../components/Footer.js'; 
 import Image from 'next/image'; // Import next/image for lazy loading
 import styles from '../../styles/Blog.module.css'; // Importing the styles
+import Link from 'next/link.js';
 
 const ManiParvat = () => {
   return (
     <>
       <Head>
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="Mani Parvat Ayodhya" />
         <meta name="keywords" content="Ayodhya, mani parvat, mountain in ayodhya, hill in ayodhya, blog, darshan in ayodhya, places to visit in ayodhya" />
@@ -57,12 +58,12 @@ const ManiParvat = () => {
 
                 <h2>History and Mythological Significance</h2>
                 <p>
-                  Mani Parvat, often referred to as "Jewel Hill," is a hillock in Ayodhya that holds a special place in Hindu mythology. It is believed that Lord Rama, accompanied by his beloved wife Sita and loyal brother Lakshman, stayed on this hill during their exile in the forest. The hill's serene surroundings and natural beauty provided solace to the royal family during their challenging times. The presence of the trio imbued Mani Parvat with an aura of divinity and devotion.
+                  Mani Parvat, often referred to as &quot;Jewel Hill,&quot; is a hillock in Ayodhya that holds a special place in Hindu mythology. It is believed that Lord Rama, accompanied by his beloved wife Sita and loyal brother Lakshman, stayed on this hill during their exile in the forest. The hill&apos;s serene surroundings and natural beauty provided solace to the royal family during their challenging times. The presence of the trio imbued Mani Parvat with an aura of divinity and devotion.
                 </p>
 
                 <h2>Architectural Essence</h2>
                 <p>
-                  Though Mani Parvat itself might not be adorned with grand structures, its historical and spiritual importance is immeasurable. Pilgrims and devotees flock to the hill to connect with the energy of Lord Rama's stay and seek blessings. The hill offers breathtaking panoramic views of Ayodhya, creating a serene atmosphere for introspection and meditation.
+                  Though Mani Parvat itself might not be adorned with grand structures, its historical and spiritual importance is immeasurable. Pilgrims and devotees flock to the hill to connect with the energy of Lord Rama&apos;s stay and seek blessings. The hill offers breathtaking panoramic views of Ayodhya, creating a serene atmosphere for introspection and meditation.
                 </p>
 
                 <Image
@@ -76,7 +77,7 @@ const ManiParvat = () => {
 
                 <h2>Devotional Practices and Contemplation</h2>
                 <p>
-                  Mani Parvat offers a peaceful setting for devotees to engage in devotional practices. Many choose to meditate, offer prayers, and perform rituals at the hill's serene surroundings. The spiritual energy of the site enhances the connection between the devotee and the divine, allowing for moments of introspection and self-discovery.
+                  Mani Parvat offers a peaceful setting for devotees to engage in devotional practices. Many choose to meditate, offer prayers, and perform rituals at the hill&apos;s serene surroundings. The spiritual energy of the site enhances the connection between the devotee and the divine, allowing for moments of introspection and self-discovery.
                 </p>
 
                 <div className="text-center w-100">
@@ -92,18 +93,18 @@ const ManiParvat = () => {
               <hr />
               <div className={`${styles.share} text-center d-flex align-items-center justify-content-center flex-column`}>
                 <div className="mr-3">
-                  Didn't Plan?{' '}
+                  Didn&apos;t Plan?{' '}
                   <p className="text-muted m-0 text-center mb-2" style={{ fontSize: '2vmin' }}>
                     Plan Your Full Darshan With Us! You Should See What We Are <span style={{ color: 'green' }}>Offering!</span>
                     <span style={{ color: 'red' }}>
                       <br />
-                      YOU DON'T HAVE TO PAY!
+                      YOU DON&apos;T HAVE TO PAY!
                     </span>
                   </p>
                 </div>
-                <a href="/" className="btn btn-danger">
+                <Link href="/" className="btn btn-danger">
                   Plan Now!
-                </a>
+                </Link>
               </div>
               <hr />
             </div>

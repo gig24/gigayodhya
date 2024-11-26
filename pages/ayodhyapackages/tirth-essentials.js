@@ -453,7 +453,7 @@ export default function Tirthaessential() {
                     <div className={`packageimglistdiv ${styles.corousalcontainer}`}>
                         <Carousel infiniteLoop showThumbs={false} showStatus={false} dynamicHeight autoPlay interval={3000} transitionTime={500} className={styles.imgcorousel}>
                             {packageObject.pimageslist.map((link, index) => (
-                                <div className='w-100 h-100'>
+                                <div className='w-100 h-100' key={index}>
                                     <img src={link} alt="Image 1" className={styles.packageImage} loading="lazy" />
                                 </div>
                             ))}
@@ -824,7 +824,7 @@ export default function Tirthaessential() {
                             <div className={`w-100 ${styles.daysectioncontainer}`}>
                                 {tempItinerary.map((day, index) => (
 
-                                    <div className='mt-3'><h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
+                                    <div className='mt-3' key={index}><h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
                                         <div
                                             key={index}
                                             className={styles.daySection}

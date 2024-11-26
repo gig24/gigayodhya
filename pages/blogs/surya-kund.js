@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Footer from '../../components/Footer.js'; 
 import Image from 'next/image'; // Import next/image for lazy loading
 import styles from '../../styles/Blog.module.css'; // Importing the styles
+import Link from 'next/link.js';
 
 const SurajKund = () => {
   return (
@@ -59,7 +60,7 @@ const SurajKund = () => {
 
                 <h2>History and Mythological Significance</h2>
                 <p>
-                  Suraj Kund, which translates to the "Pool of the Sun," is believed to have been built during the reign of King
+                  Suraj Kund, which translates to the &quot;Pool of the Sun,&quot; is believed to have been built during the reign of King
                   Dashrath, the father of Lord Rama, in the Treta Yuga. According to local legends, it is said that Lord Rama used
                   to take a dip in the waters of Suraj Kund during his time in Ayodhya.
                 </p>
@@ -99,7 +100,7 @@ const SurajKund = () => {
                 <h2>Laser Light Show</h2>
                 <p>
                   Adding a modern touch to its historical and spiritual significance, Suraj Kund hosts a captivating laser light
-                  and sound show. The show beautifully narrates the tales of Lord Rama's life, taking spectators on a visual journey
+                  and sound show. The show beautifully narrates the tales of Lord Rama&apos;s life, taking spectators on a visual journey
                   through his adventures and teachings.
                 </p>
 
@@ -125,18 +126,18 @@ const SurajKund = () => {
               <hr />
               <div className={`${styles.share} text-center d-flex align-items-center justify-content-center flex-column`}>
                 <div className="mr-3">
-                  Didn't Plan?{' '}
+                  Didn&apos;t Plan?{' '}
                   <p className="text-muted m-0 text-center mb-2" style={{ fontSize: '2vmin' }}>
                     Plan Your Full Darshan With Us! You Should See What We Are <span style={{ color: 'green' }}>Offering!</span>
                     <span style={{ color: 'red' }}>
                       <br />
-                      YOU DON'T HAVE TO PAY!
+                      YOU DON&apos;T HAVE TO PAY!
                     </span>
                   </p>
                 </div>
-                <a href="/" className="btn btn-danger">
+                <Link href="/" className="btn btn-danger">
                   Plan Now!
-                </a>
+                </Link>
               </div>
               <hr />
             </div>

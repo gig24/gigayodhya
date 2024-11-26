@@ -7,8 +7,8 @@ export default function Whyus() {
             <div id="whyus" className={`d-flex justify-content-center flex-column align-items-center ${styles.whyuscontainer}`}>
                 <h6 className="text-muted mt-3">Why People Choose Us?</h6>
                 <h5 style={{textAlign:"center"}}>
-                Because 
-                with G<span style={{color:"orange"}}>I</span>G, <span style={{ color: 'red' }}>you're not just a tourist;</span> you're family
+                    Because 
+                    with G<span style={{color:"orange"}}>I</span>G, <span style={{ color: 'red' }}>&#39;re not just a tourist;</span> you&apos;re family
                 </h5>
                 <p style={{ fontSize: '2vmin' }}>
                     Discover the Reasons<strong> <span style={{ color: '#24BBEF' }}>to Embrace</span></strong> Our Distinctive
@@ -22,11 +22,11 @@ export default function Whyus() {
                             <i className={`fa fa-child bg-light p-1 ${styles.aboutcardlogo}`} style={{ fontSize: '50px', borderRadius: '50%' }} ></i>
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>More Than Just “Book & Bye”</h6>
+                            <h6 className={styles.headingAbout}>More Than Just &quot;Book &amp; Bye&quot;</h6>
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`} >
-                                We don’t just toss you a package and
+                                We don&apos;t just toss you a package and
                                 disappear. From planning to execution,
-                                GIG’s got your back every step of the way.
+                                GIG&apos;s got your back every step of the way.
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@ export default function Whyus() {
 
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>Local Discounts & Perks</h6>
+                            <h6 className={styles.headingAbout}>Local Discounts &amp; Perks</h6>
                             <div className={`w-100 text-center ${styles.paraabout} text-muted`} >
                                 Get exclusive cashback and discounts at
                                 local shops and restaurants. Support local
@@ -57,7 +57,7 @@ export default function Whyus() {
                             <h6 className={styles.headingAbout}>Choices Galore</h6>
                             <div className={`w-100 text-center ${styles.paraabout} text-muted`} >
                                 Dharmshalas or hotels, e-rickshaws or
-                                taxis—we’ve got options for every budget.
+                                taxis—we&apos;ve got options for every budget.
                                 No rigid packages, just the choices you
                                 actually want.
                             </div>
@@ -90,7 +90,7 @@ export default function Whyus() {
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
                             <h6 className={styles.headingAbout}>Real Connections, Real Comfort</h6>
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`} >
-                                With GIG, you have your “local rishtedar”
+                                With GIG, you have your &quot;local rishtedar&quot;
                                 (SPOC) guiding you, helping you
                                 experience your destination like family,
                                 not just another tourist with a map.
@@ -108,8 +108,8 @@ export default function Whyus() {
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`}>
                                 For the planners, Shravan Bot is here to
                                 make you feel in control. For the rest of us,
-                                we’ve got pre-set plans so you can just
-                                show up and enjoy. Either way, we’ve got
+                                we&apos;ve got pre-set plans so you can just
+                                show up and enjoy. Either way,  we&apos;ve got
                                 you
                             </div>
                         </div>
