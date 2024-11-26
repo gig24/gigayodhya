@@ -26,7 +26,7 @@ export default function Home({ allBlog }) {
     <>
       <Head>
         <title>GIG Ayodhya</title>
-        <meta name="description" content="Ayodhya travel agency" />
+        <meta name="description" content="Ayodhya Destination Management Company" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
