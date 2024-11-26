@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Footer from '../../components/Footer.js'; 
 import Image from 'next/image'; // Import next/image for lazy loading
 import styles from '../../styles/Blog.module.css'; // Importing the styles
+import Link from 'next/link.js';
 
 const KanakBhawan = () => {
   return (
