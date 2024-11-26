@@ -1,21 +1,32 @@
-// pages/Allinfo.js
-
 import Blogcard from './Blogcard.js';
 import styles from '../styles/Card.module.css';
-import { useEffect } from 'react';
-import lottie from 'lottie-web';
+import { useEffect, useState } from 'react';
 import Typewriter from 'typewriter-effect';
 import { useRouter } from 'next/router';
+
 export default function Allblogs({ allBlog = [] }) {  // Default to empty array
     const router = useRouter();
+    const [Lottie, setLottie] = useState(null);  // State to store Lottie instance
+
     const handleNavigation = () => {
         router.push('/planbot'); // Navigate to the createplan page
     };
+
     useEffect(() => {
-        // Check if the window object is available (indicating we're in the browser)
-        if (typeof window !== 'undefined') {
-            // Initialize the Lottie animation
-            const animationInstance = lottie.loadAnimation({
+        // Check if window/document is available (indicating we're in the browser)
+        if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+            import('lottie-web').then((lottie) => {
+                setLottie(lottie);  // Set Lottie once it is loaded
+            }).catch(error => {
+                console.error('Error loading Lottie:', error);  // Log if loading Lottie fails
+            });
+        }
+    }, []);  // Only run once when the component is mounted
+
+    useEffect(() => {
+        // Ensure Lottie is initialized only if Lottie is loaded
+        if (Lottie && document.getElementById('boy-waving-animation')) {
+            const animationInstance = Lottie.loadAnimation({
                 container: document.getElementById('boy-waving-animation'), // Container ID
                 renderer: 'svg', // Render as SVG
                 loop: true, // Set animation to loop
@@ -28,9 +39,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                 animationInstance.destroy();
             };
         }
-    }, []);  // Empty dependency array ensures this runs only once
-    
-
+    }, [Lottie]);  // Only run when Lottie has been loaded
     return (
         <div className="w-100 d-flex justify-content-center align-items-center" id="plannerdiv">
             <div className={`${styles.explorediv} d-flex justify-content-center align-items-center flex-column`}>
