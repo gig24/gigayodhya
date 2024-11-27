@@ -61,14 +61,14 @@ export default function Studentenlightenment() {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true); // Disable button and show submitting state
-    
+
         if (typeof window !== 'undefined') {
             const submitButton = document.getElementById('submitBtn');
             if (submitButton) {
                 submitButton.innerText = 'Submitting...';
             }
         }
-    
+
         try {
             // Submit form data using fetch
             const response = await fetch('/api/addbooking', {
@@ -81,7 +81,7 @@ export default function Studentenlightenment() {
                     packageObject: packageObject, // Add the packageObject separately
                 }),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 setFormData({
@@ -94,14 +94,14 @@ export default function Studentenlightenment() {
                     noOfPersons: '',
                 });
                 setIsSubmitting(false);
-    
+
                 if (typeof window !== 'undefined') {
                     const submitButton = document.getElementById('submitBtn');
                     if (submitButton) {
                         submitButton.innerText = 'Submit';
                     }
                 }
-    
+
                 console.log('Data submitted successfully:', data);
                 alert('Query Added Successfully! You will be contacted soon.');
                 setShowFormOverlay(false); // Close the overlay after submission
@@ -113,14 +113,14 @@ export default function Studentenlightenment() {
             console.error('Error submitting data:', error);
         }
     };
-    
+
     const handlePhoneInput = (e) => {
         const value = e.target.value;
         // Allow only numbers by removing non-numeric characters
         const numericValue = value.replace(/[^0-9]/g, '');
         e.target.value = numericValue;
         handleFormChange(e);  // Call handleFormChange to update the form data state
-      };
+    };
     const guideOptions = [
         {
             name: "InPerson Guide",
@@ -266,62 +266,181 @@ export default function Studentenlightenment() {
             setUnassignedPlaces(unassigned);
         }
     }, [isOverlayVisible]);
+    const [draggedPlace, setDraggedPlace] = useState(null);
     const handleDragStart = (event, place, sourceType, sourceIndex) => {
-        event.dataTransfer.setData('place', JSON.stringify(place));
-        event.dataTransfer.setData('sourceType', sourceType);
-        event.dataTransfer.setData('sourceIndex', sourceIndex);
+        if (event.type === "touchstart") {
+            setDraggedPlace({ place, sourceType, sourceIndex });
+        } else {
+            event.dataTransfer.setData("place", JSON.stringify(place));
+            event.dataTransfer.setData("sourceType", sourceType);
+            event.dataTransfer.setData("sourceIndex", sourceIndex);
+        }
+    };
+
+    // const handleDragStart = (event, place, sourceType, sourceIndex) => {
+    //     event.dataTransfer.setData('place', JSON.stringify(place));
+    //     event.dataTransfer.setData('sourceType', sourceType);
+    //     event.dataTransfer.setData('sourceIndex', sourceIndex);
+    // };
+    const handleTouchMove = (event) => {
+        const touch = event.touches[0];
+        const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+        // Highlight drop target (optional, for visual feedback)
+        document.querySelectorAll("[data-drop-target]").forEach((el) =>
+            el.classList.remove("drag-over")
+        );
+        if (element && element.dataset.dropTarget) {
+            element.classList.add("drag-over");
+        }
+    };
+    const handleTouchEnd = (event, targetType, targetIndex) => {
+        if (draggedPlace) {
+            const { place, sourceType, sourceIndex } = draggedPlace;
+    
+            handleDrop(
+                {
+                    dataTransfer: {
+                        getData: (key) => {
+                            if (key === "place") return JSON.stringify(place);
+                            if (key === "sourceType") return sourceType;
+                            if (key === "sourceIndex") return sourceIndex.toString();
+                        },
+                    },
+                },
+                targetType,
+                targetIndex
+            );
+            setDraggedPlace(null);
+        }
+    
+        // Clean up visual feedback
+        document.querySelectorAll("[data-drop-target]").forEach((el) =>
+            el.classList.remove("drag-over")
+        );
     };
     const handleDrop = (event, targetType, targetIndex) => {
         try {
-            const place = JSON.parse(event.dataTransfer.getData('place'));
-            const sourceType = event.dataTransfer.getData('sourceType');
-            const sourceIndex = parseInt(event.dataTransfer.getData('sourceIndex'));
-
-            if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
-                console.error('Invalid drop data');
+            let place, sourceType, sourceIndex;
+    
+            if (event.type === "drop" && event.dataTransfer) {
+                // Desktop drag-and-drop
+                event.preventDefault(); // Prevent default drag behavior
+                place = JSON.parse(event.dataTransfer.getData("place"));
+                sourceType = event.dataTransfer.getData("sourceType");
+                sourceIndex = parseInt(event.dataTransfer.getData("sourceIndex"), 10);
+            } else if (draggedPlace) {
+                // Mobile touch-based drag
+                ({ place, sourceType, sourceIndex } = draggedPlace);
+            } else {
+                console.error("Invalid event type or missing draggedPlace");
                 return;
             }
-
+    
+            // Validate extracted data
+            if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
+                console.error("Invalid drop data");
+                return;
+            }
+    
             // Deep clone the state to avoid direct mutations
             const updatedTempItinerary = deepClone(tempItinerary);
             const updatedUnassignedPlaces = deepClone(unassignedPlaces);
-
+    
             // Validate target and source
-            if (targetType === 'itinerary' && !updatedTempItinerary[targetIndex]) {
-                console.error('Invalid target day index');
+            if (targetType === "itinerary" && !updatedTempItinerary[targetIndex]) {
+                console.error("Invalid target day index");
                 return;
             }
-
-            if (sourceType === 'itinerary' && !updatedTempItinerary[sourceIndex]) {
-                console.error('Invalid source day index');
+    
+            if (sourceType === "itinerary" && !updatedTempItinerary[sourceIndex]) {
+                console.error("Invalid source day index");
                 return;
             }
-            if (targetType === 'itinerary' && updatedTempItinerary[targetIndex].places.length >= 6) {
-                alert('You can add a maximum of 6 places to a day.');
+    
+            if (targetType === "itinerary" && updatedTempItinerary[targetIndex].places.length >= 6) {
+                alert("You can add a maximum of 6 places to a day.");
                 return;
             }
+    
             // Remove the place from the source
-            if (sourceType === 'itinerary') {
+            if (sourceType === "itinerary") {
                 const sourceDay = updatedTempItinerary[sourceIndex];
-                sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
-            } else if (sourceType === 'unassigned') {
-                setUnassignedPlaces(updatedUnassignedPlaces.filter(p => p.pid !== place.pid));
+                sourceDay.places = sourceDay.places.filter((p) => p.pid !== place.pid);
+            } else if (sourceType === "unassigned") {
+                setUnassignedPlaces(updatedUnassignedPlaces.filter((p) => p.pid !== place.pid));
             }
-
+    
             // Add the place to the target
-            if (targetType === 'itinerary') {
+            if (targetType === "itinerary") {
                 updatedTempItinerary[targetIndex].places.push(place);
-            } else if (targetType === 'unassigned') {
+            } else if (targetType === "unassigned") {
                 updatedUnassignedPlaces.push(place);
-                setUnassignedPlaces(updatedUnassignedPlaces);  // Update the state
+                setUnassignedPlaces(updatedUnassignedPlaces); // Update the state
             }
-
+    
             // Update the state
             setTempItinerary(updatedTempItinerary);
+            setDraggedPlace(null); // Clear the draggedPlace for touch inputs
         } catch (error) {
-            console.error('Error during drop operation:', error);
+            console.error("Error during drop operation:", error);
         }
     };
+    
+    
+    
+    // const handleDrop = (event, targetType, targetIndex) => {
+    //     try {
+    //         const place = JSON.parse(event.dataTransfer.getData('place'));
+    //         const sourceType = event.dataTransfer.getData('sourceType');
+    //         const sourceIndex = parseInt(event.dataTransfer.getData('sourceIndex'));
+
+    //         if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
+    //             console.error('Invalid drop data');
+    //             return;
+    //         }
+
+    //         // Deep clone the state to avoid direct mutations
+    //         const updatedTempItinerary = deepClone(tempItinerary);
+    //         const updatedUnassignedPlaces = deepClone(unassignedPlaces);
+
+    //         // Validate target and source
+    //         if (targetType === 'itinerary' && !updatedTempItinerary[targetIndex]) {
+    //             console.error('Invalid target day index');
+    //             return;
+    //         }
+
+    //         if (sourceType === 'itinerary' && !updatedTempItinerary[sourceIndex]) {
+    //             console.error('Invalid source day index');
+    //             return;
+    //         }
+    //         if (targetType === 'itinerary' && updatedTempItinerary[targetIndex].places.length >= 6) {
+    //             alert('You can add a maximum of 6 places to a day.');
+    //             return;
+    //         }
+    //         // Remove the place from the source
+    //         if (sourceType === 'itinerary') {
+    //             const sourceDay = updatedTempItinerary[sourceIndex];
+    //             sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
+    //         } else if (sourceType === 'unassigned') {
+    //             setUnassignedPlaces(updatedUnassignedPlaces.filter(p => p.pid !== place.pid));
+    //         }
+
+    //         // Add the place to the target
+    //         if (targetType === 'itinerary') {
+    //             updatedTempItinerary[targetIndex].places.push(place);
+    //         } else if (targetType === 'unassigned') {
+    //             updatedUnassignedPlaces.push(place);
+    //             setUnassignedPlaces(updatedUnassignedPlaces);  // Update the state
+    //         }
+
+    //         // Update the state
+    //         setTempItinerary(updatedTempItinerary);
+    //     } catch (error) {
+    //         console.error('Error during drop operation:', error);
+    //     }
+    // };
+
     const saveChanges = () => {
         setPackageObject(prev => ({
             ...prev,
@@ -425,7 +544,7 @@ export default function Studentenlightenment() {
             }
         }
     };
-    
+
     return (
         <div>
             <Head>
@@ -478,7 +597,7 @@ export default function Studentenlightenment() {
                     </div>
 
                     {/* Menu */}
-                    <div className="d-flex justify-content-start flex-wrap mt-2">
+                    <div className="d-flex justify-content-start flex-wrap mt-2 mb-4">
                         <span className={styles.menupackage} onClick={() => scrollToSection('overview')}>Overview</span>
                         <span className={styles.menupackage} onClick={() => scrollToSection('itinerary')}>Itenerary</span>
                         <span className={styles.menupackage} onClick={() => scrollToSection('companion')} >Companion</span>
@@ -818,8 +937,11 @@ export default function Studentenlightenment() {
 
                                 <div
                                     className={styles.unassignedPlacesSection}
+                                    data-drop-target="true"
                                     onDrop={event => handleDrop(event, 'unassigned', -1)}
                                     onDragOver={event => event.preventDefault()}
+                                    onTouchMove={handleTouchMove}
+                                    onTouchEnd={(event) => handleTouchEnd(event, "unassigned", -1)}
                                 >
                                     {unassignedPlaces.map((place, index) => (
                                         <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
@@ -827,6 +949,9 @@ export default function Studentenlightenment() {
                                                 draggable
                                                 onDragStart={event =>
                                                     handleDragStart(event, place, 'unassigned', index)
+                                                }
+                                                onTouchStart={(event) =>
+                                                    handleDragStart(event, place, "unassigned", index)
                                                 }
                                                 className={styles.itinerarycirclediv} >
                                                 <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
@@ -847,6 +972,8 @@ export default function Studentenlightenment() {
                                             className={styles.daySection}
                                             onDrop={event => handleDrop(event, 'itinerary', index)}
                                             onDragOver={event => event.preventDefault()}
+                                            onTouchMove={handleTouchMove}
+                                            onTouchEnd={(event) => handleTouchEnd(event, "itinerary", index)}
                                         >
                                             {day.places.map((place, placeIndex) => (
                                                 <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
@@ -854,7 +981,11 @@ export default function Studentenlightenment() {
                                                         draggable
                                                         onDragStart={event =>
                                                             handleDragStart(event, place, 'itinerary', index)
-                                                        } className={styles.itinerarycirclediv} >
+                                                        } 
+                                                        onTouchStart={(event) =>
+                                                            handleDragStart(event, place, "itinerary", index)
+                                                        }
+                                                        className={styles.itinerarycirclediv} >
                                                         <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
                                                             <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
                                                         </div>
@@ -885,10 +1016,12 @@ export default function Studentenlightenment() {
 
 
             {showFullHotelOverlay && (
-                <div className={`${styles.overlay}`} style={{ zIndex: "1500" }}>
-                    <button className="btn btn-danger p-2" style={{ position: "absolute", top: "5px", right: "5px", fontSize: "15px" }} onClick={() => setShowFullHotelOverlay(false)}>Back</button>
+                <div className={`${styles.overlay}`} style={{ zIndex: "1800" }}>
                     <div className={styles.fullhoteloverlayContentContainer}>
                         <div className={`${styles.overlayContent} ${styles.fhoverlayContent}`}  >
+                            <div className='w-100 pt-2' style={{ cursor: "pointer" }}>
+                                <h6 className=" text-danger" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</h6>
+                            </div>
                             <div className={styles.fhImageDescription}  >
                                 <div className={styles.fhdescription}>
                                     <h2 className='mb-0'>{selectedHotel.name}</h2>
@@ -896,12 +1029,12 @@ export default function Studentenlightenment() {
                                     <a href={selectedHotel.map} target="_blank">View On Map</a>
                                     <p style={{ fontSize: "3vmin", margin: "0px", marginTop: "3px", marginBottom: "4px" }}>{rating(selectedHotel.ratingValue)} ({selectedHotel.ratingValue}/5.0 Rating)</p>
                                     <p style={{ fontSize: "3vmin", margin: "0px", marginTop: "3px", marginBottom: "4px" }}>Type - {selectedHotel.type}</p>
-                                    <p className={`text-muted mt-4 ${styles.fhdescriptionpara}`} style={{ width: "90%" }}>{selectedHotel.description}</p>
+                                    <p className={`text-muted ${styles.fhdescriptionpara}`}>{selectedHotel.description}</p>
                                 </div>
-                                <div className={styles.fhImage} >
-                                    <Carousel interval={2500} pause={false} autoPlay infiniteLoop>
+                                <div className={styles.fhImage} style={{ zIndex: "1" }}>
+                                    <Carousel interval={2500} pause={false} autoPlay infiniteLoop style={{ zIndex: "1" }}>
                                         {selectedHotel.img.map((image, index) => (
-                                            <div key={index} className='w-100 h-100'>
+                                            <div key={index} className='w-100 h-100' style={{ zIndex: "1" }}>
                                                 <Image src={image} alt={`Hotel Image ${index}`} width={300} height={400} objectFit='cover' />
                                             </div>
                                         ))}
@@ -909,8 +1042,8 @@ export default function Studentenlightenment() {
                                 </div>
                             </div>
                             <div className={styles.fhfacilitiesContainer}>
-                                <div className={`${styles.fhfacilities} mb-4 mt-2`}>
-                                    <h4 className='text-success'>What this place Offers?</h4>
+                                <div className={`${styles.fhfacilities}`}>
+                                    <h4 className='text-dark' style={{ borderBottom: "1px solid blue", width: "max-content" }}>What this place Offers?</h4>
                                     <ul className={`inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", flexWrap: "wrap" }}>
                                         {selectedHotel.amenities.map((item, index) => (
                                             <li key={index} className='m-2'><i className="fa fa-check" aria-hidden="true" style={{ color: "#2a9d8f", marginRight: "10px", fontSize: "18px", width: "max-content" }}></i>{item}</li>
@@ -919,7 +1052,7 @@ export default function Studentenlightenment() {
                                     </ul>
                                 </div>
                                 <div className={styles.fhfacilities}>
-                                    <h4 className='text-danger'>Additional Info</h4>
+                                    <h4 className='text-dark' style={{ borderBottom: "1px solid blue", width: "max-content" }}>Additional Info</h4>
                                     <ul className="m-0 pb-0" style={{ listStyle: "circle" }}>
                                         {selectedHotel.AdditionalInfo.map((info, index) => (
                                             <li key={index}>
@@ -929,11 +1062,11 @@ export default function Studentenlightenment() {
                                     </ul>
                                 </div>
                             </div>
-                            <h3 className='mt-5'>Rooms</h3>
+                            <h3 className='mt-5' style={{ borderBottom: "1px solid blue" }}>Rooms</h3>
                             <div className={`mb-5 ${styles.roomContainer}`} >
                                 {selectedHotel.rooms.map((room, index) => (
                                     <div key={index} className={styles.roomcard}>
-                                        <div style={{ width: "100%", height: "200px" }}>
+                                        <div style={{ width: "100%", height: "200px", background: "#bdbaba" }}>
                                             <Carousel interval={2500} pause={false} autoPlay infiniteLoop>
                                                 {room.img.map((roomImg, idx) => (
                                                     <div key={idx} style={{ width: "100%", height: "200px", background: "grey" }}>
@@ -944,7 +1077,7 @@ export default function Studentenlightenment() {
                                         </div>
                                         <h4 className='mt-1'>{room.roomName}</h4>
                                         <div className='d-flex flex-column'>
-                                            <ul className={`inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", flexWrap: "wrap", paddingLeft: "20px" }}>
+                                            <ul className={`w-100 inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
                                                 {room.amenities.map((item, index) => (
                                                     <li key={index} className='m-2'><i className="fa fa-check" aria-hidden="true" style={{ color: "#2a9d8f", marginRight: "10px", fontSize: "18px", width: "max-content" }}></i>{item}</li>
                                                 ))}
@@ -959,7 +1092,7 @@ export default function Studentenlightenment() {
                                         </div>
                                         <div className='d-flex w-100 justify-content-between p-3 bg-light'>
                                             <p className='text-danger'>Get At: <span style={{ textDecoration: "line-through" }}>{incprice(room.price)} </span><span className='text-dark'>₹{room.price}</span></p>
-                                            <button className="btn btn-primary" onClick={() => handleRoomSubmit(room.roomName, room.roomid, selectedHotel.hotelId, selectedHotel.name, selectedHotel.ratingValue, selectedHotel.location, selectedHotel.img[0], room.price)}>
+                                            <button className="btn btn-primary" style={{ height: "max-content" }} onClick={() => handleRoomSubmit(room.roomName, room.roomid, selectedHotel.hotelId, selectedHotel.name, selectedHotel.ratingValue, selectedHotel.location, selectedHotel.img[0], room.price)}>
                                                 Select
                                             </button>
                                         </div>
@@ -973,14 +1106,17 @@ export default function Studentenlightenment() {
 
 
             {showAllHotelsOverlay && (
-                <div className={styles.overlay} style={{ zIndex: "900" }}>
-                    <button className="btn btn-danger" onClick={() => setShowAllHotelsOverlay(false)} style={{ position: "absolute", top: "10px", right: "10px", fontSize: "15px" }}>Back</button>
+                <div className={styles.overlay} style={{ zIndex: "1000" }}>
                     <div className={styles.allhoverlaycontainer}>
-                        <h2 className='text-dark'>Available Hotels</h2>
-                        <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} >
+                        <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
+                            <h6 className=" text-danger" onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</h6>
+                        </div>
+                        <h2 className='text-dark m-0 p-0'>Available Hotels</h2>
+                        <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} style={{width:"98%"}}>
+
                             <div className={styles.hotelGrid} style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                                 {allHotels.map((hotel, index) => (
-                                    <div key={index} className={`${styles.hotelCard} ${styles.allhotelcard}`} >
+                                    <div key={index} className={`${styles.hotelCard} ${styles.allhotelcard}`} style={{ cursor: "pointer" }} onClick={() => handleViewHotel(hotel.hotelId)} >
                                         <div className={styles.allhotelcardcorosaldiv}>
                                             <Carousel interval={2500} pause={false} autoPlay infiniteLoop>
                                                 {hotel.img.map((img, idx) => (
@@ -1012,7 +1148,7 @@ export default function Studentenlightenment() {
                         <h4>Select Local Activities</h4>
                         <div style={{ maxHeight: "400px", overflowY: "auto", display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                             {activityAvailable.map((activity) => (
-                                
+
                                 <label key={activity.aid} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", maxWidth: "250px" }} >
                                     <input type="checkbox" checked={selectedActivities.includes(activity.aid)} onChange={() => toggleActivitySelection(activity.aid)} />
                                     <div className={styles.itinerarycirclediv} style={{ height: "max-content", width: "max-content", display: "flex", justifyContent: "center", alignItems: "center", margin: "3px", borderRadius: "15px", overflow: "hidden", border: "1px solid #2a9d8f", color: " #2a9d8f", backgroundColor: " #e7f7f9" }}>
@@ -1040,119 +1176,119 @@ export default function Studentenlightenment() {
 
 
             {showFormOverlay && (
-              <div className={styles.overlay}>
-              <div className={`${styles.formDiv} ${styles.overlayContent}`}>
-                <button className={`btn btn-danger ${styles.formclosebtn}`} onClick={() => setShowFormOverlay(false)}>Back</button>
-                <form onSubmit={handleFormSubmit} style={{width:"90%"}}>
-                  <h3>Submit Your Query</h3>
-                  
-                  <div className="mb-2">
-                    <label htmlFor="packageName" className="form-label m-0">Package Name</label>
-                    <input
-                      type="text"
-                      name="packageName"
-                      value={formData.packageName}
-                      onChange={handleFormChange}
-                      disabled
-                      className="form-control m-0"
-                    />
-                  </div>
-            
-                  <div className="mb-2">
-                    <label htmlFor="name" className="form-label m-0">Your Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleFormChange}
-                      className="form-control m-0" 
-                      required
-                    />
-                  </div>
-            
-                  <div className="mb-2">
-                    <label htmlFor="number" className="form-label m-0">Your Number</label>
-                    <input
-                      type="tel"
-                      name="number"
-                      value={formData.number}
-                      onChange={(e) => {
-                        handleFormChange(e);
-                        handlePhoneInput(e);  // Ensure only numbers are entered
-                      }}
-                      className="form-control m-0"
-                      required
-                    />
-                  </div>
-            
-                  <div className="mb-2">
-                    <label htmlFor="email" className="form-label m-0">Your Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleFormChange}
-                      className="form-control m-0"
-                      required
-                    />
-                  </div>
-            
-                  <div className="row mb-2">
-                    <div className="col-md-6">
-                      <label htmlFor="dateOfArrival" className="form-label m-0">Date of Arrival</label>
-                      <input
-                        type="date"
-                        name="dateOfArrival"
-                        value={formData.dateOfArrival}
-                        onChange={handleFormChange}
-                        className="form-control m-0"
-                      required
+                <div className={styles.overlay}>
+                    <div className={`${styles.formDiv} ${styles.overlayContent}`}>
+                        <button className={`btn btn-danger ${styles.formclosebtn}`} onClick={() => setShowFormOverlay(false)}>Back</button>
+                        <form onSubmit={handleFormSubmit} style={{ width: "90%" }}>
+                            <h3>Submit Your Query</h3>
 
-                      />
+                            <div className="mb-2">
+                                <label htmlFor="packageName" className="form-label m-0">Package Name</label>
+                                <input
+                                    type="text"
+                                    name="packageName"
+                                    value={formData.packageName}
+                                    onChange={handleFormChange}
+                                    disabled
+                                    className="form-control m-0"
+                                />
+                            </div>
+
+                            <div className="mb-2">
+                                <label htmlFor="name" className="form-label m-0">Your Name</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleFormChange}
+                                    className="form-control m-0"
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-2">
+                                <label htmlFor="number" className="form-label m-0">Your Number</label>
+                                <input
+                                    type="tel"
+                                    name="number"
+                                    value={formData.number}
+                                    onChange={(e) => {
+                                        handleFormChange(e);
+                                        handlePhoneInput(e);  // Ensure only numbers are entered
+                                    }}
+                                    className="form-control m-0"
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-2">
+                                <label htmlFor="email" className="form-label m-0">Your Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleFormChange}
+                                    className="form-control m-0"
+                                    required
+                                />
+                            </div>
+
+                            <div className="row mb-2">
+                                <div className="col-md-6">
+                                    <label htmlFor="dateOfArrival" className="form-label m-0">Date of Arrival</label>
+                                    <input
+                                        type="date"
+                                        name="dateOfArrival"
+                                        value={formData.dateOfArrival}
+                                        onChange={handleFormChange}
+                                        className="form-control m-0"
+                                        required
+
+                                    />
+                                </div>
+
+                                <div className="col-md-6">
+                                    <label htmlFor="dateOfDeparture" className="form-label m-0">Date of Departure</label>
+                                    <input
+                                        type="date"
+                                        name="dateOfDeparture"
+                                        value={formData.dateOfDeparture}
+                                        onChange={handleFormChange}
+                                        className="form-control m-0"
+                                        required
+
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="mb-2">
+                                <label htmlFor="noOfPersons" className="form-label m-0">Number of Persons</label>
+                                <input
+                                    type="text"
+                                    name="noOfPersons"
+                                    value={formData.noOfPersons}
+                                    onChange={(e) => {
+                                        handleFormChange(e);
+                                        handlePhoneInput(e);  // Ensure only numbers are entered
+                                    }}
+                                    className="form-control m-0"
+                                    required
+
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-100"
+                                id="submitBtn"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Submitting...' : 'Submit'}
+                            </button>
+                        </form>
                     </div>
-            
-                    <div className="col-md-6">
-                      <label htmlFor="dateOfDeparture" className="form-label m-0">Date of Departure</label>
-                      <input
-                        type="date"
-                        name="dateOfDeparture"
-                        value={formData.dateOfDeparture}
-                        onChange={handleFormChange}
-                        className="form-control m-0"
-                      required
+                </div>
 
-                      />
-                    </div>
-                  </div>
-            
-                  <div className="mb-2">
-                    <label htmlFor="noOfPersons" className="form-label m-0">Number of Persons</label>
-                    <input
-                      type="text"
-                      name="noOfPersons"
-                      value={formData.noOfPersons}
-                      onChange={(e) => {
-                        handleFormChange(e);
-                        handlePhoneInput(e);  // Ensure only numbers are entered
-                      }}
-                      className="form-control m-0"
-                      required
-
-                    />
-                  </div>
-            
-                  <button
-                    type="submit"
-                    className="btn btn-primary w-100"
-                    id="submitBtn"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? 'Submitting...' : 'Submit'}
-                  </button>
-                </form>
-              </div>
-            </div>
-            
             )}
 
             <Footer />
