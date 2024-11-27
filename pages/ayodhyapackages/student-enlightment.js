@@ -276,6 +276,7 @@ export default function Studentenlightenment() {
 
     const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
+   
     const handleDragStart = (place, section, index) => {
         setDraggedPlace({ place, section, index });
         setDragging(true);
@@ -293,18 +294,30 @@ export default function Studentenlightenment() {
         setTouchPosition({ x: touch.clientX, y: touch.clientY });
     };
 
+    const handleTouchEnd = (e, targetSection, targetIndex) => {
+        if (draggedPlace) {
+            handleDrop(null, targetSection, targetIndex); // Pass null instead of the event object
+        }
+        setDragging(false);
+    };
+    
+    
+
     const handleDrop = (e, targetSection, targetIndex) => {
-        e.preventDefault();
+        if (e) {
+            e.preventDefault();
+        }
+    
         if (!draggedPlace) return;
-
+    
         const { place, section: sourceSection, index: sourceIndex } = draggedPlace;
-
+    
         if (sourceSection === "unassigned" && targetSection === "itinerary") {
             const updatedTempItinerary = [...tempItinerary];
             if (updatedTempItinerary[targetIndex].places.length < 6) {
                 updatedTempItinerary[targetIndex].places.push(place);
                 setTempItinerary(updatedTempItinerary);
-
+    
                 const updatedUnassignedPlaces = [...unassignedPlaces];
                 updatedUnassignedPlaces.splice(sourceIndex, 1);
                 setUnassignedPlaces(updatedUnassignedPlaces);
@@ -317,7 +330,7 @@ export default function Studentenlightenment() {
                 (p) => p.pid !== place.pid
             );
             setTempItinerary(updatedTempItinerary);
-
+    
             const updatedUnassignedPlaces = [...unassignedPlaces];
             updatedUnassignedPlaces.push(place);
             setUnassignedPlaces(updatedUnassignedPlaces);
@@ -325,10 +338,10 @@ export default function Studentenlightenment() {
             const updatedTempItinerary = [...tempItinerary];
             const sourceDay = updatedTempItinerary[sourceIndex];
             const targetDay = updatedTempItinerary[targetIndex];
-
+    
             const placeToMove = sourceDay.places.find((p) => p.pid === place.pid);
             sourceDay.places = sourceDay.places.filter((p) => p.pid !== place.pid);
-
+    
             if (targetDay.places.length < 6) {
                 targetDay.places.push(placeToMove);
                 setTempItinerary(updatedTempItinerary);
@@ -336,15 +349,12 @@ export default function Studentenlightenment() {
                 alert("You cannot add more than 6 places to a day.");
             }
         }
+        console.log({"odfd":draggedPlace, targetSection, targetIndex });
 
         setDragging(false);
         setDraggedPlace(null);
     };
-
-    const handleTouchEnd = (e, targetSection, targetIndex) => {
-        handleDrop(e, targetSection, targetIndex);
-    };
-
+    
     const handleDragOver = (e) => e.preventDefault();
 
     const saveChanges = () => {
@@ -355,6 +365,25 @@ export default function Studentenlightenment() {
         setIsOverlayVisible(false);
         calculateAndUpdatePrice(packageObject);
     };
+    useEffect(() => {
+        const container = document.querySelector(".your-container-class"); // Replace with the actual container class
+        if (!container) return;
+
+        const handleTouchWrapper = (callback) => (e) => {
+            if (dragging) callback(e);
+        };
+
+        container.addEventListener("touchstart", handleTouchWrapper(handleTouchStart), { passive: false });
+        container.addEventListener("touchmove", handleTouchWrapper(handleTouchMove), { passive: false });
+        container.addEventListener("touchend", handleTouchWrapper(handleTouchEnd), { passive: false });
+
+        return () => {
+            container.removeEventListener("touchstart", handleTouchWrapper(handleTouchStart));
+            container.removeEventListener("touchmove", handleTouchWrapper(handleTouchMove));
+            container.removeEventListener("touchend", handleTouchWrapper(handleTouchEnd));
+        };
+    }, [dragging]);
+    
     // useEffect(() => {
     //     if (isOverlayVisible) {
     //         // Deep clone the itinerary to avoid direct mutation
