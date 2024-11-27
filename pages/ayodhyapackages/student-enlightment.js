@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Navbar from '../../components/Navbar.js';
 import Footer from '../../components/Footer.js';
 import styles from '../../styles/Fullpackage.module.css';
@@ -266,22 +266,32 @@ export default function Studentenlightenment() {
             setUnassignedPlaces(unassigned);
         }
     }, [isOverlayVisible]);
+
     const [draggedPlace, setDraggedPlace] = useState(null);
+    const [dragging, setDragging] = useState(false);
+    const [translucentOverlay, setTranslucentOverlay] = useState(false); // For translucent overlay on mobile
+    const [draggedItem, setDraggedItem] = useState(null);
+    
+    const handleDesktopDragStart = (event, place, sourceType, sourceIndex) => {
+        event.dataTransfer.setData("place", JSON.stringify(place));
+        event.dataTransfer.setData("sourceType", sourceType);
+        event.dataTransfer.setData("sourceIndex", sourceIndex);
+    };
+    
+    const handleMobileDragStart = (event, place, sourceType, sourceIndex) => {
+        setDraggedPlace({ place, sourceType, sourceIndex });
+        setTranslucentOverlay(true); // Show translucent overlay
+        setDragging(true); // Set dragging state to true
+    };
+    
     const handleDragStart = (event, place, sourceType, sourceIndex) => {
         if (event.type === "touchstart") {
-            setDraggedPlace({ place, sourceType, sourceIndex });
+            handleMobileDragStart(event, place, sourceType, sourceIndex);
         } else {
-            event.dataTransfer.setData("place", JSON.stringify(place));
-            event.dataTransfer.setData("sourceType", sourceType);
-            event.dataTransfer.setData("sourceIndex", sourceIndex);
+            handleDesktopDragStart(event, place, sourceType, sourceIndex);
         }
     };
-
-    // const handleDragStart = (event, place, sourceType, sourceIndex) => {
-    //     event.dataTransfer.setData('place', JSON.stringify(place));
-    //     event.dataTransfer.setData('sourceType', sourceType);
-    //     event.dataTransfer.setData('sourceIndex', sourceIndex);
-    // };
+    
     const handleTouchMove = (event) => {
         const touch = event.touches[0];
         const element = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -294,6 +304,7 @@ export default function Studentenlightenment() {
             element.classList.add("drag-over");
         }
     };
+    
     const handleTouchEnd = (event, targetType, targetIndex) => {
         if (draggedPlace) {
             const { place, sourceType, sourceIndex } = draggedPlace;
@@ -312,6 +323,8 @@ export default function Studentenlightenment() {
                 targetIndex
             );
             setDraggedPlace(null);
+            setTranslucentOverlay(false); // Remove translucent overlay
+            setDragging(false); // Reset dragging state
         }
     
         // Clean up visual feedback
@@ -319,28 +332,15 @@ export default function Studentenlightenment() {
             el.classList.remove("drag-over")
         );
     };
+    
     const handleDrop = (event, targetType, targetIndex) => {
         try {
-            // Determine if the event is from desktop or touch (mobile)
-            let place, sourceType, sourceIndex;
+            const place = JSON.parse(event.dataTransfer.getData('place'));
+            const sourceType = event.dataTransfer.getData('sourceType');
+            const sourceIndex = parseInt(event.dataTransfer.getData('sourceIndex'));
     
-            if (event.type === "drop" && event.dataTransfer) {
-                // Desktop drag-and-drop
-                event.preventDefault(); // Prevent default drag behavior
-                place = JSON.parse(event.dataTransfer.getData("place"));
-                sourceType = event.dataTransfer.getData("sourceType");
-                sourceIndex = parseInt(event.dataTransfer.getData("sourceIndex"), 10);
-            } else if (draggedPlace) {
-                // Mobile touch-based drag
-                ({ place, sourceType, sourceIndex } = draggedPlace);
-            } else {
-                console.error("Invalid event type or missing draggedPlace");
-                return;
-            }
-    
-            // Validate extracted data
-            if (!place || isNaN(targetIndex)) {
-                console.error("Invalid drop data");
+            if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
+                console.error('Invalid drop data');
                 return;
             }
     
@@ -349,51 +349,173 @@ export default function Studentenlightenment() {
             const updatedUnassignedPlaces = deepClone(unassignedPlaces);
     
             // Validate target and source
-            if (targetType === "itinerary" && !updatedTempItinerary[targetIndex]) {
-                console.error("Invalid target day index");
+            if (targetType === 'itinerary' && !updatedTempItinerary[targetIndex]) {
+                console.error('Invalid target day index');
                 return;
             }
     
-            if (sourceType === "itinerary" && !updatedTempItinerary[sourceIndex]) {
-                console.error("Invalid source day index");
+            if (sourceType === 'itinerary' && !updatedTempItinerary[sourceIndex]) {
+                console.error('Invalid source day index');
                 return;
             }
     
-            // Check the target type and manage duplicates
-            if (targetType === "itinerary" && updatedTempItinerary[targetIndex].places.some(p => p.pid === place.pid)) {
-                console.warn("Duplicate place detected in target day. Skipping.");
+            if (targetType === 'itinerary' && updatedTempItinerary[targetIndex].places.length >= 6) {
+                alert('You can add a maximum of 6 places to a day.');
                 return;
             }
     
-            if (sourceType === "unassigned") {
-                // Remove the place from unassigned places
-                const placeIndex = updatedUnassignedPlaces.findIndex(p => p.pid === place.pid);
-                if (placeIndex > -1) {
-                    updatedUnassignedPlaces.splice(placeIndex, 1);
-                }
-            } else if (sourceType === "itinerary") {
-                // Remove the place from the source day
+            // Remove the place from the source
+            if (sourceType === 'itinerary') {
                 const sourceDay = updatedTempItinerary[sourceIndex];
                 sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
+            } else if (sourceType === 'unassigned') {
+                setUnassignedPlaces(updatedUnassignedPlaces.filter(p => p.pid !== place.pid));
             }
     
             // Add the place to the target
-            if (targetType === "itinerary") {
+            if (targetType === 'itinerary') {
                 updatedTempItinerary[targetIndex].places.push(place);
-            } else if (targetType === "unassigned") {
+            } else if (targetType === 'unassigned') {
                 updatedUnassignedPlaces.push(place);
+                setUnassignedPlaces(updatedUnassignedPlaces);  // Update the state
             }
     
             // Update the state
             setTempItinerary(updatedTempItinerary);
-            setUnassignedPlaces(updatedUnassignedPlaces);
-            setDraggedPlace(null); // Clear the draggedPlace for touch inputs
         } catch (error) {
-            console.error("Error during drop operation:", error);
+            console.error('Error during drop operation:', error);
         }
     };
     
+    const memoizedDragStart = useCallback((event, place, section, index) => {
+        handleDragStart(event, place, section, index);
+    }, [handleDragStart]);
+
+
+
+//     const [draggedPlace, setDraggedPlace] = useState(null);
+
+//     const handleDesktopDragStart = (event, place, sourceType, sourceIndex) => {
+//         event.dataTransfer.setData("place", JSON.stringify(place));
+//         event.dataTransfer.setData("sourceType", sourceType);
+//         event.dataTransfer.setData("sourceIndex", sourceIndex);
+//     };
     
+//     const handleMobileDragStart = (event, place, sourceType, sourceIndex) => {
+//         setDraggedPlace({ place, sourceType, sourceIndex });
+//     };
+//     const handleDragStart = (event, place, sourceType, sourceIndex) => {
+//     if (event.type === "touchstart") {
+//         handleMobileDragStart(event, place, sourceType, sourceIndex);
+//     } else {
+//         handleDesktopDragStart(event, place, sourceType, sourceIndex);
+//     }
+// };
+
+// const handleTouchMove = (event) => {
+//     const touch = event.touches[0];
+//     const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+//     // Highlight drop target (optional, for visual feedback)
+//     document.querySelectorAll("[data-drop-target]").forEach((el) =>
+//         el.classList.remove("drag-over")
+//     );
+//     if (element && element.dataset.dropTarget) {
+//         element.classList.add("drag-over");
+//     }
+// };
+
+// const handleTouchEnd = (event, targetType, targetIndex) => {
+//     if (draggedPlace) {
+//         const { place, sourceType, sourceIndex } = draggedPlace;
+
+//         handleDrop(
+//             {
+//                 dataTransfer: {
+//                     getData: (key) => {
+//                         if (key === "place") return JSON.stringify(place);
+//                         if (key === "sourceType") return sourceType;
+//                         if (key === "sourceIndex") return sourceIndex.toString();
+//                     },
+//                 },
+//             },
+//             targetType,
+//             targetIndex
+//         );
+//         setDraggedPlace(null);
+//     }
+
+//     // Clean up visual feedback
+//     document.querySelectorAll("[data-drop-target]").forEach((el) =>
+//         el.classList.remove("drag-over")
+//     );
+// };
+// const handleDrop = (event, targetType, targetIndex) => {
+//     try {
+//         const place = JSON.parse(event.dataTransfer.getData('place'));
+//         const sourceType = event.dataTransfer.getData('sourceType');
+//         const sourceIndex = parseInt(event.dataTransfer.getData('sourceIndex'));
+
+//         if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
+//             console.error('Invalid drop data');
+//             return;
+//         }
+
+//         // Deep clone the state to avoid direct mutations
+//         const updatedTempItinerary = deepClone(tempItinerary);
+//         const updatedUnassignedPlaces = deepClone(unassignedPlaces);
+
+//         // Validate target and source
+//         if (targetType === 'itinerary' && !updatedTempItinerary[targetIndex]) {
+//             console.error('Invalid target day index');
+//             return;
+//         }
+
+//         if (sourceType === 'itinerary' && !updatedTempItinerary[sourceIndex]) {
+//             console.error('Invalid source day index');
+//             return;
+//         }
+
+//         if (targetType === 'itinerary' && updatedTempItinerary[targetIndex].places.length >= 6) {
+//             alert('You can add a maximum of 6 places to a day.');
+//             return;
+//         }
+
+//         // Remove the place from the source
+//         if (sourceType === 'itinerary') {
+//             const sourceDay = updatedTempItinerary[sourceIndex];
+//             sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
+//         } else if (sourceType === 'unassigned') {
+//             setUnassignedPlaces(updatedUnassignedPlaces.filter(p => p.pid !== place.pid));
+//         }
+
+//         // Add the place to the target
+//         if (targetType === 'itinerary') {
+//             updatedTempItinerary[targetIndex].places.push(place);
+//         } else if (targetType === 'unassigned') {
+//             updatedUnassignedPlaces.push(place);
+//             setUnassignedPlaces(updatedUnassignedPlaces);  // Update the state
+//         }
+
+//         // Update the state
+//         setTempItinerary(updatedTempItinerary);
+//     } catch (error) {
+//         console.error('Error during drop operation:', error);
+//     }
+// };
+// const [dragging, setDragging] = useState(false);
+// const [draggedItem, setDraggedItem] = useState(null);
+
+
+// const memoizedDragStart = useCallback((event, place, section, index) => {
+//     handleDragStart(event, place, section, index);
+// }, [handleDragStart]);
+    // const handleDragStart = (event, place, sourceType, sourceIndex) => {
+    //     event.dataTransfer.setData('place', JSON.stringify(place));
+    //     event.dataTransfer.setData('sourceType', sourceType);
+    //     event.dataTransfer.setData('sourceIndex', sourceIndex);
+    // };
+  
     
     // const handleDrop = (event, targetType, targetIndex) => {
     //     try {
@@ -934,7 +1056,7 @@ export default function Studentenlightenment() {
             {/* Overlay */}
             {isOverlayVisible && (
                 <div className={styles.overlay}>
-
+ <div className={translucentOverlay ? 'styles.overlaygrey' : ''}></div>
                     <div className={styles.overlayContent}>
                         <h6 className='text-muted text-center my-2 mb-3'>Drag and Drop the Places , Click on places to know more</h6>
                         <div className='d-flex w-100 flex-column' style={{ height: "90%" }}>
@@ -950,22 +1072,24 @@ export default function Studentenlightenment() {
                                     onTouchEnd={(event) => handleTouchEnd(event, "unassigned", -1)}
                                 >
                                     {unassignedPlaces.map((place, index) => (
-                                        <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                        // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
                                             <div key={index}
                                                 draggable
-                                                onDragStart={event =>
-                                                    handleDragStart(event, place, 'unassigned', index)
-                                                }
-                                                onTouchStart={(event) =>
-                                                    handleDragStart(event, place, "unassigned", index)
-                                                }
+                                                onDragStart={event => memoizedDragStart(event, place, 'unassigned', index)}
+                                                onTouchStart={(event) => memoizedDragStart(event, place, "unassigned", index)}
+                                                // onDragStart={event =>
+                                                //     handleDragStart(event, place, 'unassigned', index)
+                                                // }
+                                                // onTouchStart={(event) =>
+                                                //     handleDragStart(event, place, "unassigned", index)
+                                                // }
                                                 className={styles.itinerarycirclediv} >
                                                 <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
                                                     <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
                                                 </div>
                                                 <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
                                             </div>
-                                        </a>
+                                        // </a>
                                     ))}
                                 </div>
                             </div>
@@ -982,22 +1106,24 @@ export default function Studentenlightenment() {
                                             onTouchEnd={(event) => handleTouchEnd(event, "itinerary", index)}
                                         >
                                             {day.places.map((place, placeIndex) => (
-                                                <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                                // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
                                                     <div key={placeIndex}
                                                         draggable
-                                                        onDragStart={event =>
-                                                            handleDragStart(event, place, 'itinerary', index)
-                                                        } 
-                                                        onTouchStart={(event) =>
-                                                            handleDragStart(event, place, "itinerary", index)
-                                                        }
+                                                        onDragStart={event => memoizedDragStart(event, place, 'itinerary', index)}
+                                                onTouchStart={(event) => memoizedDragStart(event, place, "itinerary", index)}
+                                                        // onDragStart={event =>
+                                                        //     handleDragStart(event, place, 'itinerary', index)
+                                                        // } 
+                                                        // onTouchStart={(event) =>
+                                                        //     handleDragStart(event, place, "itinerary", index)
+                                                        // }
                                                         className={styles.itinerarycirclediv} >
                                                         <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
                                                             <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
                                                         </div>
                                                         <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
                                                     </div>
-                                                </a>
+                                                // </a>
 
                                             ))}
                                         </div>

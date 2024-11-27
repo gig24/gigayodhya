@@ -38,7 +38,15 @@
 .drag-over {
     background-color: #e0e0e0;
 }
-
+.overlaygrey{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10;
+}
 .roomcard{
     width: 350px;
     height: max-content;
