@@ -321,6 +321,7 @@ export default function Studentenlightenment() {
     };
     const handleDrop = (event, targetType, targetIndex) => {
         try {
+            // Determine if the event is from desktop or touch (mobile)
             let place, sourceType, sourceIndex;
     
             if (event.type === "drop" && event.dataTransfer) {
@@ -338,7 +339,7 @@ export default function Studentenlightenment() {
             }
     
             // Validate extracted data
-            if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
+            if (!place || isNaN(targetIndex)) {
                 console.error("Invalid drop data");
                 return;
             }
@@ -358,17 +359,22 @@ export default function Studentenlightenment() {
                 return;
             }
     
-            if (targetType === "itinerary" && updatedTempItinerary[targetIndex].places.length >= 6) {
-                alert("You can add a maximum of 6 places to a day.");
+            // Check the target type and manage duplicates
+            if (targetType === "itinerary" && updatedTempItinerary[targetIndex].places.some(p => p.pid === place.pid)) {
+                console.warn("Duplicate place detected in target day. Skipping.");
                 return;
             }
     
-            // Remove the place from the source
-            if (sourceType === "itinerary") {
+            if (sourceType === "unassigned") {
+                // Remove the place from unassigned places
+                const placeIndex = updatedUnassignedPlaces.findIndex(p => p.pid === place.pid);
+                if (placeIndex > -1) {
+                    updatedUnassignedPlaces.splice(placeIndex, 1);
+                }
+            } else if (sourceType === "itinerary") {
+                // Remove the place from the source day
                 const sourceDay = updatedTempItinerary[sourceIndex];
-                sourceDay.places = sourceDay.places.filter((p) => p.pid !== place.pid);
-            } else if (sourceType === "unassigned") {
-                setUnassignedPlaces(updatedUnassignedPlaces.filter((p) => p.pid !== place.pid));
+                sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
             }
     
             // Add the place to the target
@@ -376,11 +382,11 @@ export default function Studentenlightenment() {
                 updatedTempItinerary[targetIndex].places.push(place);
             } else if (targetType === "unassigned") {
                 updatedUnassignedPlaces.push(place);
-                setUnassignedPlaces(updatedUnassignedPlaces); // Update the state
             }
     
             // Update the state
             setTempItinerary(updatedTempItinerary);
+            setUnassignedPlaces(updatedUnassignedPlaces);
             setDraggedPlace(null); // Clear the draggedPlace for touch inputs
         } catch (error) {
             console.error("Error during drop operation:", error);

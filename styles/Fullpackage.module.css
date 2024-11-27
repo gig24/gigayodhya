@@ -35,6 +35,9 @@
 .roomContainer{
     display: flex;
 } */
+.drag-over {
+    background-color: #e0e0e0;
+}
 
 .roomcard{
     width: 350px;
