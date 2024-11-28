@@ -234,7 +234,7 @@ const DragDropOverlay = ({ unassignedPlaces, tempItinerary, saveChanges, closeOv
 
       
       </div>
-      <div className={styles.overlayBottom}>
+        <div className={styles.overlayBottom}>
           <button onClick={closeOverlay} className="btn btn-secondary">Close</button>
           <button onClick={saveChanges} className="btn btn-primary">Save Changes</button>
         </div>

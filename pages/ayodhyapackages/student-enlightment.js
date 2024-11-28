@@ -14,7 +14,7 @@ import activityData from '../../data/activity.json'
 import poojaData from '../../data/pooja.json'
 import ItineraryDragDrop from '@/components/itinerary.js';
 import ItineraryCustomization from '@/components/dragdrop.js';
-import DragDropOverlay from '../drag.js';
+import DragDropOverlay from '../../components/drag.js';
 
 
 
