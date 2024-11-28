@@ -9,7 +9,7 @@ import Prepackage from "../components/PrePackage.js";
 import Whyus from "../components/Whyus.js";
 import Review from "../components/Review.js";
 import Enquiry from "../components/Enquiry.js";
-import DragDragDropMobile from "../components/dragdrop.js";
+import DragDropMobile from "../components/dragdrop.js";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
