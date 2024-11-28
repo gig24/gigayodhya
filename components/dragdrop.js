@@ -4,7 +4,7 @@ const DragDrop = () => {
     const [lists, setLists] = useState([
         ["Item 1", "Item 2", "Item 3"], // List for Div 1
         ["Item 4", "Item 5", "Item 6"], // List for Div 2
-        ["Item 7", "Item 8", "Item 9"], // List for Div 3
+        ["Item 7", "Item 8", "Item 69"], // List for Div 3
     ]);
 
     const [draggedItem, setDraggedItem] = useState(null);
