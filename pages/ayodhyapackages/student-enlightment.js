@@ -269,188 +269,78 @@ export default function Studentenlightenment() {
     }, [isOverlayVisible]);
     const [draggedPlace, setDraggedPlace] = useState(null); // Track the dragged place
     const [dragging, setDragging] = useState(false);
-
-
-    const [placeholder, setPlaceholder] = useState(null);
-
-    useEffect(() => {
-      // Cleanup for placeholder if component unmounts mid-drag
-      return () => {
-        if (placeholder && placeholder.parentNode) {
-          placeholder.remove();
-        }
-      };
-    }, [placeholder]);
-  
-    const createPlaceholder = () => {
-      if (!placeholder) {
-        const tempPlaceholder = document.createElement("div");
-        tempPlaceholder.className = styles.placeholder;
-        tempPlaceholder.textContent = "Drop here";
-        setPlaceholder(tempPlaceholder);
-      }
-    };
-  
-    const handleDragStart = (place, section, index) => {
-      setDraggedPlace({ place, section, index });
-      setDragging(true);
-      createPlaceholder();
-    };
-  
-    const handleDrop = (e, targetSection, targetIndex) => {
-      e.preventDefault();
-      if (!draggedPlace) return;
-  
-      const { place, section: sourceSection, index: sourceIndex } = draggedPlace;
-  
-      if (sourceSection === "unassigned" && targetSection === "itinerary") {
-        const updatedTempItinerary = [...tempItinerary];
-        if (updatedTempItinerary[targetIndex].places.length < 6) {
-          updatedTempItinerary[targetIndex].places.push(place);
-          setTempItinerary(updatedTempItinerary);
-  
-          const updatedUnassignedPlaces = [...unassignedPlaces];
-          updatedUnassignedPlaces.splice(sourceIndex, 1);
-          setUnassignedPlaces(updatedUnassignedPlaces);
-        } else {
-          alert("You cannot add more than 6 places to a day.");
-        }
-      } else if (sourceSection === "itinerary" && targetSection === "unassigned") {
-        const updatedTempItinerary = [...tempItinerary];
-        updatedTempItinerary[sourceIndex].places = updatedTempItinerary[sourceIndex].places.filter(
-          (p) => p.pid !== place.pid
-        );
-        setTempItinerary(updatedTempItinerary);
-  
-        const updatedUnassignedPlaces = [...unassignedPlaces];
-        if (!updatedUnassignedPlaces.some((p) => p.pid === place.pid)) {
-          updatedUnassignedPlaces.push(place);
-          setUnassignedPlaces(updatedUnassignedPlaces);
-        }
-      } else if (sourceSection === "itinerary" && targetSection === "itinerary") {
-        const updatedTempItinerary = [...tempItinerary];
-        const sourceDay = updatedTempItinerary[sourceIndex];
-        const targetDay = updatedTempItinerary[targetIndex];
-  
-        const placeToMove = sourceDay.places.find((p) => p.pid === place.pid);
-        sourceDay.places = sourceDay.places.filter((p) => p.pid !== place.pid);
-  
-        if (targetDay.places.length < 6) {
-          targetDay.places.push(placeToMove);
-          setTempItinerary(updatedTempItinerary);
-        } else {
-          alert("You cannot add more than 6 places to a day.");
-        }
-      }
-  
-      setDragging(false);
-      setDraggedPlace(null);
-  
-      if (placeholder && placeholder.parentNode) {
-        placeholder.remove();
-      }
-      setPlaceholder(null);
-    };
-  
-    const handleDragOver = (e) => {
-      e.preventDefault();
-      if (!placeholder) return;
-  
-      const potentialContainer = e.target.closest("[data-drop-target]");
-      if (potentialContainer && placeholder) {
-        potentialContainer.appendChild(placeholder);
-      }
-    };
-  
-    const handleDragEnd = () => {
-      setDragging(false);
-      setDraggedPlace(null);
-  
-      if (placeholder && placeholder.parentNode) {
-        placeholder.remove();
-      }
-      setPlaceholder(null);
-    };
-
-
-
-
-
-
-
-
     // Handle starting the drag action
-    // const handleDragStart = (place, section, index) => {
-    //     setDraggedPlace({ place, section, index });
-    //     setDragging(true); // Mark that we're dragging
-    // };
+    const handleDragStart = (place, section, index) => {
+        setDraggedPlace({ place, section, index });
+        setDragging(true); // Mark that we're dragging
+    };
     
-    // // Handle drop action
-    // const handleDrop = (e, targetSection, targetIndex) => {
-    //     e.preventDefault();
+    // Handle drop action
+    const handleDrop = (e, targetSection, targetIndex) => {
+        e.preventDefault();
         
-    //     if (!draggedPlace) return; // Check if something is being dragged
+        if (!draggedPlace) return; // Check if something is being dragged
         
-    //     const { place, section: sourceSection, index: sourceIndex } = draggedPlace;
+        const { place, section: sourceSection, index: sourceIndex } = draggedPlace;
         
-    //     if (sourceSection === 'unassigned' && targetSection === 'itinerary') {
-    //         // Add the place from 'unassigned' to the itinerary
-    //         const updatedTempItinerary = [...tempItinerary];
-    //         if (updatedTempItinerary[targetIndex].places.length < 6) {
-    //             updatedTempItinerary[targetIndex].places.push(place);
-    //             setTempItinerary(updatedTempItinerary);
+        if (sourceSection === 'unassigned' && targetSection === 'itinerary') {
+            // Add the place from 'unassigned' to the itinerary
+            const updatedTempItinerary = [...tempItinerary];
+            if (updatedTempItinerary[targetIndex].places.length < 6) {
+                updatedTempItinerary[targetIndex].places.push(place);
+                setTempItinerary(updatedTempItinerary);
                 
-    //             // Remove from unassigned places
-    //             const updatedUnassignedPlaces = [...unassignedPlaces];
-    //             updatedUnassignedPlaces.splice(sourceIndex, 1);
-    //             setUnassignedPlaces(updatedUnassignedPlaces);
-    //         } else {
-    //             alert('You cannot add more than 6 places to a day.');
-    //         }
-    //     } else if (sourceSection === 'itinerary' && targetSection === 'unassigned') {
-    //         // Remove the place from itinerary and add to 'unassigned'
-    //         const updatedTempItinerary = [...tempItinerary];
-    //         updatedTempItinerary[sourceIndex].places = updatedTempItinerary[sourceIndex].places.filter(p => p.pid !== place.pid);
-    //         setTempItinerary(updatedTempItinerary);
+                // Remove from unassigned places
+                const updatedUnassignedPlaces = [...unassignedPlaces];
+                updatedUnassignedPlaces.splice(sourceIndex, 1);
+                setUnassignedPlaces(updatedUnassignedPlaces);
+            } else {
+                alert('You cannot add more than 6 places to a day.');
+            }
+        } else if (sourceSection === 'itinerary' && targetSection === 'unassigned') {
+            // Remove the place from itinerary and add to 'unassigned'
+            const updatedTempItinerary = [...tempItinerary];
+            updatedTempItinerary[sourceIndex].places = updatedTempItinerary[sourceIndex].places.filter(p => p.pid !== place.pid);
+            setTempItinerary(updatedTempItinerary);
     
-    //         const updatedUnassignedPlaces = [...unassignedPlaces];
-    //         if (!updatedUnassignedPlaces.some(p => p.pid === place.pid)) {
-    //             updatedUnassignedPlaces.push(place);
-    //             setUnassignedPlaces(updatedUnassignedPlaces);
-    //         }
-    //     } else if (sourceSection === 'itinerary' && targetSection === 'itinerary') {
-    //         // Move a place within the itinerary between days
-    //         const updatedTempItinerary = [...tempItinerary];
-    //         const sourceDay = updatedTempItinerary[sourceIndex];
-    //         const targetDay = updatedTempItinerary[targetIndex];
+            const updatedUnassignedPlaces = [...unassignedPlaces];
+            if (!updatedUnassignedPlaces.some(p => p.pid === place.pid)) {
+                updatedUnassignedPlaces.push(place);
+                setUnassignedPlaces(updatedUnassignedPlaces);
+            }
+        } else if (sourceSection === 'itinerary' && targetSection === 'itinerary') {
+            // Move a place within the itinerary between days
+            const updatedTempItinerary = [...tempItinerary];
+            const sourceDay = updatedTempItinerary[sourceIndex];
+            const targetDay = updatedTempItinerary[targetIndex];
             
-    //         // Remove place from source day
-    //         const placeToMove = sourceDay.places.find(p => p.pid === place.pid);
-    //         sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
+            // Remove place from source day
+            const placeToMove = sourceDay.places.find(p => p.pid === place.pid);
+            sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
             
-    //         // Add place to target day
-    //         if (targetDay.places.length < 6) {
-    //             targetDay.places.push(placeToMove);
-    //             setTempItinerary(updatedTempItinerary);
-    //         } else {
-    //             alert('You cannot add more than 6 places to a day.');
-    //         }
-    //     }
+            // Add place to target day
+            if (targetDay.places.length < 6) {
+                targetDay.places.push(placeToMove);
+                setTempItinerary(updatedTempItinerary);
+            } else {
+                alert('You cannot add more than 6 places to a day.');
+            }
+        }
         
-    //     setDragging(false); // End dragging
-    //     setDraggedPlace(null); // Clear dragged place state
-    // };
+        setDragging(false); // End dragging
+        setDraggedPlace(null); // Clear dragged place state
+    };
     
-    // // Handle the drag over event
-    // const handleDragOver = (e) => {
-    //     e.preventDefault(); // Necessary to allow drop
-    // };
+    // Handle the drag over event
+    const handleDragOver = (e) => {
+        e.preventDefault(); // Necessary to allow drop
+    };
     
-    // // Handle the drag end event
-    // const handleDragEnd = () => {
-    //     setDragging(false); // End drag when touch or mouse ends
-    //     setDraggedPlace(null); // Clear dragged place
-    // };
+    // Handle the drag end event
+    const handleDragEnd = () => {
+        setDragging(false); // End drag when touch or mouse ends
+        setDraggedPlace(null); // Clear dragged place
+    };
 
     const saveChanges = () => {
         setPackageObject(prev => ({
