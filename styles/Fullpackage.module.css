@@ -38,6 +38,13 @@
 .drag-over {
     background-color: #e0e0e0;
 }
+.dragging {
+    position: absolute;
+    z-index: 1000;
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
 .overlaygrey{
     position: fixed;
     top: 0;

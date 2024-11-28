@@ -1,8 +1,15 @@
 import "@/styles/globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from 'next/head';
+import 'drag-drop-touch';
+import { useEffect} from 'react';
 
 export default function App({ Component, pageProps }) {
+  useEffect(() => {
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+        import('drag-drop-touch'); // Dynamically import the polyfill
+    }
+}, []);
   return (
     <>
       <Head>
