@@ -12,7 +12,6 @@ import hotelData from '../../data/hotels.json'
 import cabData from '../../data/cabs.json'
 import activityData from '../../data/activity.json'
 import poojaData from '../../data/pooja.json'
-import DragDropOverlay from '../../components/drag.js';
 
 
 
@@ -22,6 +21,7 @@ const deepClone = obj => JSON.parse(JSON.stringify(obj));
 export default function Studentenlightenment() {
     const [packageObject, setPackageObject] = useState(packageObjectData);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+    const [isMobileOverlayVisible, setIsMobileOverlayVisible] = useState(false)
     const [tempItinerary, setTempItinerary] = useState([]);
     const [unassignedPlaces, setUnassignedPlaces] = useState([]);
 
@@ -260,14 +260,14 @@ export default function Studentenlightenment() {
     };
 
     useEffect(() => {
-        if (isOverlayVisible) {
+        if (isOverlayVisible || isMobileOverlayVisible) {
             // Deep clone the itinerary to avoid direct mutation
             const assignedPlaces = packageObject.itinerary.flatMap(day => day.places.map(p => p.pid));
             const unassigned = placesData.places.filter(place => !assignedPlaces.includes(place.pid));
             setTempItinerary(deepClone(packageObject.itinerary));
             setUnassignedPlaces(unassigned);
         }
-    }, [isOverlayVisible]);
+    }, [isOverlayVisible, isMobileOverlayVisible]);
     const [draggedPlace, setDraggedPlace] = useState(null); // Track the dragged place
     const [dragging, setDragging] = useState(false);
     // Handle starting the drag action
@@ -275,22 +275,22 @@ export default function Studentenlightenment() {
         setDraggedPlace({ place, section, index });
         setDragging(true); // Mark that we're dragging
     };
-    
+
     // Handle drop action
     const handleDrop = (e, targetSection, targetIndex) => {
         e.preventDefault();
-        
+
         if (!draggedPlace) return; // Check if something is being dragged
-        
+
         const { place, section: sourceSection, index: sourceIndex } = draggedPlace;
-        
+
         if (sourceSection === 'unassigned' && targetSection === 'itinerary') {
             // Add the place from 'unassigned' to the itinerary
             const updatedTempItinerary = [...tempItinerary];
             if (updatedTempItinerary[targetIndex].places.length < 6) {
                 updatedTempItinerary[targetIndex].places.push(place);
                 setTempItinerary(updatedTempItinerary);
-                
+
                 // Remove from unassigned places
                 const updatedUnassignedPlaces = [...unassignedPlaces];
                 updatedUnassignedPlaces.splice(sourceIndex, 1);
@@ -303,7 +303,7 @@ export default function Studentenlightenment() {
             const updatedTempItinerary = [...tempItinerary];
             updatedTempItinerary[sourceIndex].places = updatedTempItinerary[sourceIndex].places.filter(p => p.pid !== place.pid);
             setTempItinerary(updatedTempItinerary);
-    
+
             const updatedUnassignedPlaces = [...unassignedPlaces];
             if (!updatedUnassignedPlaces.some(p => p.pid === place.pid)) {
                 updatedUnassignedPlaces.push(place);
@@ -314,11 +314,11 @@ export default function Studentenlightenment() {
             const updatedTempItinerary = [...tempItinerary];
             const sourceDay = updatedTempItinerary[sourceIndex];
             const targetDay = updatedTempItinerary[targetIndex];
-            
+
             // Remove place from source day
             const placeToMove = sourceDay.places.find(p => p.pid === place.pid);
             sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
-            
+
             // Add place to target day
             if (targetDay.places.length < 6) {
                 targetDay.places.push(placeToMove);
@@ -327,16 +327,16 @@ export default function Studentenlightenment() {
                 alert('You cannot add more than 6 places to a day.');
             }
         }
-        
+
         setDragging(false); // End dragging
         setDraggedPlace(null); // Clear dragged place state
     };
-    
+
     // Handle the drag over event
     const handleDragOver = (e) => {
         e.preventDefault(); // Necessary to allow drop
     };
-    
+
     // Handle the drag end event
     const handleDragEnd = () => {
         setDragging(false); // End drag when touch or mouse ends
@@ -350,6 +350,7 @@ export default function Studentenlightenment() {
             // accommodation: deepClone(packageObject.accommodation), 
         }));
         setIsOverlayVisible(false);
+        setIsMobileOverlayVisible(false)
         //for price updation
         return calculateAndUpdatePrice(packageObject);
     };
@@ -358,6 +359,84 @@ export default function Studentenlightenment() {
         // Close overlay without saving changes
         setIsOverlayVisible(false);
     };
+    const handleMoveToDay = (place, targetDayIndex) => {
+        const updatedTempItinerary = [...tempItinerary];
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+
+        // Remove place from unassigned if it's there (unassigned -> any day)
+        const placeIndexInUnassigned = updatedUnassignedPlaces.findIndex(p => p.pid === place.pid);
+        if (placeIndexInUnassigned !== -1) {
+            updatedUnassignedPlaces.splice(placeIndexInUnassigned, 1);  // Remove from unassigned
+        } else {
+            // Remove place from the source day (it can only be in a day, not in both)
+            const placeIndexInSourceDay = updatedTempItinerary.findIndex(day =>
+                day.places.some(p => p.pid === place.pid)
+            );
+            if (placeIndexInSourceDay !== -1) {
+                const placeIndexInSourceDayArray = updatedTempItinerary[placeIndexInSourceDay].places.findIndex(p => p.pid === place.pid);
+                if (placeIndexInSourceDayArray !== -1) {
+                    updatedTempItinerary[placeIndexInSourceDay].places.splice(placeIndexInSourceDayArray, 1); // Remove from current day
+                }
+            }
+        }
+
+        // Add the place to the target day
+        updatedTempItinerary[targetDayIndex].places.push(place);
+
+        // Update the states
+        setTempItinerary(updatedTempItinerary);
+        setUnassignedPlaces(updatedUnassignedPlaces);
+    };
+
+
+
+    // Move place back to unassigned
+    const handleMoveToUnassigned = (place, sourceDayIndex) => {
+        const updatedTempItinerary = [...tempItinerary];
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+
+        // Remove place from the source day
+        const placeIndexInDay = updatedTempItinerary[sourceDayIndex].places.findIndex(p => p.pid === place.pid);
+        if (placeIndexInDay !== -1) {
+            updatedTempItinerary[sourceDayIndex].places.splice(placeIndexInDay, 1);
+        }
+
+        // Add place back to unassigned
+        updatedUnassignedPlaces.push(place);
+
+        // Update the states
+        setTempItinerary(updatedTempItinerary);
+        setUnassignedPlaces(updatedUnassignedPlaces);
+    };
+
+    // Handle up arrow movement
+    const handleUpArrow = (place, sourceDayIndex) => {
+
+        // Move the place based on its current position
+        if (sourceDayIndex === 0) {
+            handleMoveToUnassigned(place, sourceDayIndex); // Move to unassigned if it's already in day 1
+        } else {
+            // Before moving to the previous day, remove it from the source day
+            handleMoveToDay(place, sourceDayIndex - 1); // Move up to the previous day
+        }
+    };
+
+
+    // Handle down arrow movement
+    const handleDownArrow = (place, targetDayIndex) => {
+        // Check if the targetDayIndex is valid and within the limits
+        if (targetDayIndex === tempItinerary.length) return; // If already at the last day
+
+        // Check if we are moving from unassigned places
+        if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
+            handleMoveToDay(place, targetDayIndex); // Move to the first day
+        } else {
+            // Move to the next day if we're not in the first day
+            handleMoveToDay(place, targetDayIndex + 1);
+        }
+    };
+
+
     const handleViewHotel = (hotelId) => {
         // Find the specific hotel by hotelId
         const selectedHotel = hotelData.hotels.find(hotel => hotel.hotelId === hotelId);
@@ -519,7 +598,6 @@ export default function Studentenlightenment() {
                             {packageObject.packageOverview}
                         </div>
                     </div>
-                    {/* <DragDropOverlay unassignedPlaces={unassignedPlaces} tempItinerary={tempItinerary} saveChanges={saveChanges} closeOverlay={closeOverlay}/> */}
 
                     {/* Itinirary */}
                     <div id="itinerary" className={`itinirarydiv ${styles.overviewdiv}`}>
@@ -528,8 +606,14 @@ export default function Studentenlightenment() {
                                 Itinerary
                             </h4>
                             <button
-                                className="btn btn-primary"
+                                className={`btn btn-primary ${styles.deskItenerybtn}`}
                                 onClick={() => setIsOverlayVisible(true)}
+                            >
+                                Customize Itinerary
+                            </button>
+                            <button
+                                className={`btn btn-primary ${styles.mobItenerybtn}`}
+                                onClick={() => setIsMobileOverlayVisible(true)}
                             >
                                 Customize Itinerary
                             </button>
@@ -625,7 +709,7 @@ export default function Studentenlightenment() {
                         <h4 className="text-dark" style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}>Incity Transfer</h4>
                         <div className={styles.accomodationdiv}>
                             <div className={styles.accomodationimgdiv} style={{ borderRadius: "25px", overflow: "hidden", background: "grey", height: "180px" }}>
-                                <Image src={packageObject.cab[0].img} alt="Image 2" width={280} objectFit="cover" height={190} loading="lazy" />
+                                <Image src={packageObject.cab[0].img} alt="Image 2" width={340} objectFit="cover" height={190} loading="lazy" />
                             </div>
                             <div className={styles.traveldetaildiv}>
                                 <h5 className='m-0 p-0'>{packageObject.cab[0].name}</h5>
@@ -742,7 +826,7 @@ export default function Studentenlightenment() {
                     {showPoojaOverlay && (
                         <div style={{ position: "fixed", top: "0", left: "0", width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000 }}>
                             <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "8px", maxWidth: "600px", width: "90%" }}>
-                                <h4>Select Pooja</h4>
+                                <h4 className='text-dark'>Select Pooja</h4>
                                 {poojaAvailable.length > 0 ? (
                                     <div style={{ maxHeight: "400px", overflowY: "auto", display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                                         {poojaAvailable.map((pooja) => (
@@ -763,11 +847,11 @@ export default function Studentenlightenment() {
                                     <p className="text-muted">No Special Pooja arrangements available</p>
                                 )}
                                 <div style={{ marginTop: "20px", textAlign: "right" }}>
-                                    <button onClick={handlePoojaSave} className="btn btn-success mx-2">
+                                    <button onClick={handlePoojaSave} className="btn btn-primary mx-2">
                                         Save
                                     </button>
-                                    <button className="btn btn-danger" onClick={() => setShowPoojaOverlay(false)} >
-                                        Cancel
+                                    <button className="btn btn-secondary" onClick={() => setShowPoojaOverlay(false)} >
+                                        Back
                                     </button>
                                 </div>
                             </div>
@@ -831,10 +915,7 @@ export default function Studentenlightenment() {
             </div>
             {/* Overlay */}
             {isOverlayVisible && (
-             
-                // <DragDropOverlay unassignedPlaces={unassignedPlaces} tempItinerary={tempItinerary} saveChanges={saveChanges} closeOverlay={closeOverlay}/>
                 <div className={styles.overlay}>
-                    {/* <div className={translucentOverlay ? 'styles.overlaygrey' : ''}></div> */}
                     <div className={styles.overlayContent}>
                         <h6 className='text-muted text-center my-2 mb-3'>Drag and Drop the Places , Click on places to know more</h6>
                         <div className='d-flex w-100 flex-column' style={{ height: "90%" }}>
@@ -846,7 +927,7 @@ export default function Studentenlightenment() {
                                     onDrop={(e) => handleDrop(e, 'unassigned', -1)}
                                     data-drop-target="true"
                                     className={styles.unassignedPlacesSection}
-                             
+
                                 >
                                     {unassignedPlaces.map((place, index) => (
                                         // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
@@ -875,7 +956,7 @@ export default function Studentenlightenment() {
                                             onDragOver={handleDragOver} // Enable dragging over
                                             onDrop={(e) => handleDrop(e, 'itinerary', index)}
                                             className={styles.daySection}
-                                     
+
                                         >
                                             {day.places.map((place, placeIndex) => (
                                                 // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
@@ -915,13 +996,115 @@ export default function Studentenlightenment() {
 
             )}
 
+            {isMobileOverlayVisible && (
+                <div className={styles.overlay}>
+                    <div className={styles.itineraryoverlayContent}>
+                        <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
+                            <div className="d-flex w-100 justify-content-between">
+                                <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
+                                <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
+                                </button>
+                                <button className="btn btn-primary m-2" onClick={saveChanges}>
+                                    Save Changes
+                                </button>
 
+                            </div>
+                            <h6 className="text-muted text-center my-2 mb-3">Use Up/Down arrows to move places</h6>
+
+                        </div>
+                        <div className="d-flex w-100 flex-column" style={{ marginTop: "700px" }}>
+                            {/* Unassigned Places */}
+                            <div className={styles.unassignedcontainer}>
+                                <h6 className='px-2'>More Places To Explore</h6>
+                                <div className={styles.unassignedPlacesSection}>
+                                    {unassignedPlaces.map((place, index) => (
+                                        <div key={index} className={styles.itinerarycircleoverlaymobdiv}>
+                                            <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                    <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                </div>
+                                                <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                    <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                </a>
+                                            </div>
+                                            <div className={styles.arrows} >
+                                                <button
+                                                    // onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                    className={`bt btn-ino ${styles.upArrow}`}
+                                                    disabled={true}
+
+                                                // disabled={dayIndex === 0 && !unassignedPlaces.some(p => p.pid === place.pid)}
+                                                >
+                                                    ↑
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDownArrow(place, 0)} // Move down
+                                                    className={`bt btn-inf ${styles.downArrow}`}
+                                                // disabled={dayIndex === tempItinerary.length - 1}
+                                                >
+                                                    ↓
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Itinerary Days */}
+                            {tempItinerary.map((day, dayIndex) => (
+                                <div key={dayIndex} className={styles.daysectioncontainer}>
+                                    <h5 className='m-0 p-0 px-2'>{day.day}</h5>
+
+                                    <div key={dayIndex} className={styles.daySection}>
+                                        <div className='w-100'>
+                                            {day.places.map((place, placeIndex) => (
+                                                <div key={placeIndex} className={styles.itinerarycircleoverlaymobdiv}>
+                                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                        <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                            <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                        </div>
+                                                        <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                            <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                        </a>
+                                                    </div>
+                                                    <div className={styles.arrows}>
+                                                        <button
+                                                            onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                            className={styles.upArrow}
+                                                        >
+                                                            ↑
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDownArrow(place, dayIndex)} // Move down
+                                                            className={styles.downArrow}
+                                                            disabled={dayIndex === tempItinerary.length - 1}
+                                                        >
+                                                            ↓
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                        </div>
+
+
+                        {/* Save & Close Buttons */}
+
+                    </div>
+
+                </div>
+            )}
             {showFullHotelOverlay && (
                 <div className={`${styles.overlay}`} style={{ zIndex: "1800" }}>
                     <div className={styles.fullhoteloverlayContentContainer}>
                         <div className={`${styles.overlayContent} ${styles.fhoverlayContent}`}  >
                             <div className='w-100 pt-2' style={{ cursor: "pointer" }}>
-                                <h6 className=" text-danger" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</h6>
+                                <button className=" btn btn-secondary mb-2" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                             </div>
                             <div className={styles.fhImageDescription}  >
                                 <div className={styles.fhdescription}>
@@ -1010,7 +1193,7 @@ export default function Studentenlightenment() {
                 <div className={styles.overlay} style={{ zIndex: "1000" }}>
                     <div className={styles.allhoverlaycontainer}>
                         <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
-                            <h6 className=" text-danger" onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</h6>
+                            <button className=" btn btn-secondary  mt-2"  onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                         </div>
                         <h2 className='text-dark m-0 p-0'>Available Hotels</h2>
                         <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} style={{ width: "98%" }}>
@@ -1064,11 +1247,11 @@ export default function Studentenlightenment() {
                             ))}
                         </div>
                         <div style={{ marginTop: "20px", textAlign: "right" }}>
-                            <button onClick={handleSave} className='btn btn-success mx-2'>
+                            <button onClick={handleSave} className='btn btn-primary mx-2'>
                                 Save
                             </button>
-                            <button className='btn btn-danger' onClick={() => setShowActivityOverlay(false)}>
-                                Cancel
+                            <button className='btn btn-secondary' onClick={() => setShowActivityOverlay(false)}>
+                                Back
                             </button>
                         </div>
                     </div>

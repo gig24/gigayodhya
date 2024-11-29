@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Navbar from '../../components/Navbar.js';
 import Footer from '../../components/Footer.js';
 import styles from '../../styles/Fullpackage.module.css';
@@ -15,11 +15,13 @@ import poojaData from '../../data/pooja.json'
 
 
 
+
 const deepClone = obj => JSON.parse(JSON.stringify(obj));
 
 export default function Mokshayatra() {
     const [packageObject, setPackageObject] = useState(packageObjectData);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+    const [isMobileOverlayVisible, setIsMobileOverlayVisible] = useState(false)
     const [tempItinerary, setTempItinerary] = useState([]);
     const [unassignedPlaces, setUnassignedPlaces] = useState([]);
 
@@ -258,70 +260,89 @@ export default function Mokshayatra() {
     };
 
     useEffect(() => {
-        if (isOverlayVisible) {
+        if (isOverlayVisible || isMobileOverlayVisible) {
             // Deep clone the itinerary to avoid direct mutation
             const assignedPlaces = packageObject.itinerary.flatMap(day => day.places.map(p => p.pid));
             const unassigned = placesData.places.filter(place => !assignedPlaces.includes(place.pid));
             setTempItinerary(deepClone(packageObject.itinerary));
             setUnassignedPlaces(unassigned);
         }
-    }, [isOverlayVisible]);
-    const handleDragStart = (event, place, sourceType, sourceIndex) => {
-        event.dataTransfer.setData('place', JSON.stringify(place));
-        event.dataTransfer.setData('sourceType', sourceType);
-        event.dataTransfer.setData('sourceIndex', sourceIndex);
+    }, [isOverlayVisible, isMobileOverlayVisible]);
+    const [draggedPlace, setDraggedPlace] = useState(null); // Track the dragged place
+    const [dragging, setDragging] = useState(false);
+    // Handle starting the drag action
+    const handleDragStart = (place, section, index) => {
+        setDraggedPlace({ place, section, index });
+        setDragging(true); // Mark that we're dragging
     };
-    const handleDrop = (event, targetType, targetIndex) => {
-        try {
-            const place = JSON.parse(event.dataTransfer.getData('place'));
-            const sourceType = event.dataTransfer.getData('sourceType');
-            const sourceIndex = parseInt(event.dataTransfer.getData('sourceIndex'));
 
-            if (!place || isNaN(sourceIndex) || isNaN(targetIndex)) {
-                console.error('Invalid drop data');
-                return;
-            }
+    // Handle drop action
+    const handleDrop = (e, targetSection, targetIndex) => {
+        e.preventDefault();
 
-            // Deep clone the state to avoid direct mutations
-            const updatedTempItinerary = deepClone(tempItinerary);
-            const updatedUnassignedPlaces = deepClone(unassignedPlaces);
+        if (!draggedPlace) return; // Check if something is being dragged
 
-            // Validate target and source
-            if (targetType === 'itinerary' && !updatedTempItinerary[targetIndex]) {
-                console.error('Invalid target day index');
-                return;
-            }
+        const { place, section: sourceSection, index: sourceIndex } = draggedPlace;
 
-            if (sourceType === 'itinerary' && !updatedTempItinerary[sourceIndex]) {
-                console.error('Invalid source day index');
-                return;
-            }
-            if (targetType === 'itinerary' && updatedTempItinerary[targetIndex].places.length >= 6) {
-                alert('You can add a maximum of 6 places to a day.');
-                return;
-            }
-            // Remove the place from the source
-            if (sourceType === 'itinerary') {
-                const sourceDay = updatedTempItinerary[sourceIndex];
-                sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
-            } else if (sourceType === 'unassigned') {
-                setUnassignedPlaces(updatedUnassignedPlaces.filter(p => p.pid !== place.pid));
-            }
-
-            // Add the place to the target
-            if (targetType === 'itinerary') {
+        if (sourceSection === 'unassigned' && targetSection === 'itinerary') {
+            // Add the place from 'unassigned' to the itinerary
+            const updatedTempItinerary = [...tempItinerary];
+            if (updatedTempItinerary[targetIndex].places.length < 6) {
                 updatedTempItinerary[targetIndex].places.push(place);
-            } else if (targetType === 'unassigned') {
-                updatedUnassignedPlaces.push(place);
-                setUnassignedPlaces(updatedUnassignedPlaces);  // Update the state
-            }
+                setTempItinerary(updatedTempItinerary);
 
-            // Update the state
+                // Remove from unassigned places
+                const updatedUnassignedPlaces = [...unassignedPlaces];
+                updatedUnassignedPlaces.splice(sourceIndex, 1);
+                setUnassignedPlaces(updatedUnassignedPlaces);
+            } else {
+                alert('You cannot add more than 6 places to a day.');
+            }
+        } else if (sourceSection === 'itinerary' && targetSection === 'unassigned') {
+            // Remove the place from itinerary and add to 'unassigned'
+            const updatedTempItinerary = [...tempItinerary];
+            updatedTempItinerary[sourceIndex].places = updatedTempItinerary[sourceIndex].places.filter(p => p.pid !== place.pid);
             setTempItinerary(updatedTempItinerary);
-        } catch (error) {
-            console.error('Error during drop operation:', error);
+
+            const updatedUnassignedPlaces = [...unassignedPlaces];
+            if (!updatedUnassignedPlaces.some(p => p.pid === place.pid)) {
+                updatedUnassignedPlaces.push(place);
+                setUnassignedPlaces(updatedUnassignedPlaces);
+            }
+        } else if (sourceSection === 'itinerary' && targetSection === 'itinerary') {
+            // Move a place within the itinerary between days
+            const updatedTempItinerary = [...tempItinerary];
+            const sourceDay = updatedTempItinerary[sourceIndex];
+            const targetDay = updatedTempItinerary[targetIndex];
+
+            // Remove place from source day
+            const placeToMove = sourceDay.places.find(p => p.pid === place.pid);
+            sourceDay.places = sourceDay.places.filter(p => p.pid !== place.pid);
+
+            // Add place to target day
+            if (targetDay.places.length < 6) {
+                targetDay.places.push(placeToMove);
+                setTempItinerary(updatedTempItinerary);
+            } else {
+                alert('You cannot add more than 6 places to a day.');
+            }
         }
+
+        setDragging(false); // End dragging
+        setDraggedPlace(null); // Clear dragged place state
     };
+
+    // Handle the drag over event
+    const handleDragOver = (e) => {
+        e.preventDefault(); // Necessary to allow drop
+    };
+
+    // Handle the drag end event
+    const handleDragEnd = () => {
+        setDragging(false); // End drag when touch or mouse ends
+        setDraggedPlace(null); // Clear dragged place
+    };
+
     const saveChanges = () => {
         setPackageObject(prev => ({
             ...prev,
@@ -329,6 +350,7 @@ export default function Mokshayatra() {
             // accommodation: deepClone(packageObject.accommodation), 
         }));
         setIsOverlayVisible(false);
+        setIsMobileOverlayVisible(false)
         //for price updation
         return calculateAndUpdatePrice(packageObject);
     };
@@ -337,6 +359,84 @@ export default function Mokshayatra() {
         // Close overlay without saving changes
         setIsOverlayVisible(false);
     };
+    const handleMoveToDay = (place, targetDayIndex) => {
+        const updatedTempItinerary = [...tempItinerary];
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+
+        // Remove place from unassigned if it's there (unassigned -> any day)
+        const placeIndexInUnassigned = updatedUnassignedPlaces.findIndex(p => p.pid === place.pid);
+        if (placeIndexInUnassigned !== -1) {
+            updatedUnassignedPlaces.splice(placeIndexInUnassigned, 1);  // Remove from unassigned
+        } else {
+            // Remove place from the source day (it can only be in a day, not in both)
+            const placeIndexInSourceDay = updatedTempItinerary.findIndex(day =>
+                day.places.some(p => p.pid === place.pid)
+            );
+            if (placeIndexInSourceDay !== -1) {
+                const placeIndexInSourceDayArray = updatedTempItinerary[placeIndexInSourceDay].places.findIndex(p => p.pid === place.pid);
+                if (placeIndexInSourceDayArray !== -1) {
+                    updatedTempItinerary[placeIndexInSourceDay].places.splice(placeIndexInSourceDayArray, 1); // Remove from current day
+                }
+            }
+        }
+
+        // Add the place to the target day
+        updatedTempItinerary[targetDayIndex].places.push(place);
+
+        // Update the states
+        setTempItinerary(updatedTempItinerary);
+        setUnassignedPlaces(updatedUnassignedPlaces);
+    };
+
+
+
+    // Move place back to unassigned
+    const handleMoveToUnassigned = (place, sourceDayIndex) => {
+        const updatedTempItinerary = [...tempItinerary];
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+
+        // Remove place from the source day
+        const placeIndexInDay = updatedTempItinerary[sourceDayIndex].places.findIndex(p => p.pid === place.pid);
+        if (placeIndexInDay !== -1) {
+            updatedTempItinerary[sourceDayIndex].places.splice(placeIndexInDay, 1);
+        }
+
+        // Add place back to unassigned
+        updatedUnassignedPlaces.push(place);
+
+        // Update the states
+        setTempItinerary(updatedTempItinerary);
+        setUnassignedPlaces(updatedUnassignedPlaces);
+    };
+
+    // Handle up arrow movement
+    const handleUpArrow = (place, sourceDayIndex) => {
+
+        // Move the place based on its current position
+        if (sourceDayIndex === 0) {
+            handleMoveToUnassigned(place, sourceDayIndex); // Move to unassigned if it's already in day 1
+        } else {
+            // Before moving to the previous day, remove it from the source day
+            handleMoveToDay(place, sourceDayIndex - 1); // Move up to the previous day
+        }
+    };
+
+
+    // Handle down arrow movement
+    const handleDownArrow = (place, targetDayIndex) => {
+        // Check if the targetDayIndex is valid and within the limits
+        if (targetDayIndex === tempItinerary.length) return; // If already at the last day
+
+        // Check if we are moving from unassigned places
+        if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
+            handleMoveToDay(place, targetDayIndex); // Move to the first day
+        } else {
+            // Move to the next day if we're not in the first day
+            handleMoveToDay(place, targetDayIndex + 1);
+        }
+    };
+
+
     const handleViewHotel = (hotelId) => {
         // Find the specific hotel by hotelId
         const selectedHotel = hotelData.hotels.find(hotel => hotel.hotelId === hotelId);
@@ -428,6 +528,7 @@ export default function Mokshayatra() {
 
     return (
         <div>
+
             <Head>
                 <title>{packageObject.name}</title>
                 <meta
@@ -470,7 +571,7 @@ export default function Mokshayatra() {
                     <div className={`packageimglistdiv ${styles.corousalcontainer}`}>
                         <Carousel infiniteLoop showThumbs={false} showStatus={false} dynamicHeight autoPlay interval={3000} transitionTime={500} className={styles.imgcorousel}>
                             {packageObject.pimageslist.map((link, index) => (
-                                <div key={index} className='w-100 h-100'>
+                                <div className='w-100 h-100' key={index}>
                                     <img src={link} alt="Image 1" className={styles.packageImage} loading="lazy" />
                                 </div>
                             ))}
@@ -505,8 +606,14 @@ export default function Mokshayatra() {
                                 Itinerary
                             </h4>
                             <button
-                                className="btn btn-primary"
+                                className={`btn btn-primary ${styles.deskItenerybtn}`}
                                 onClick={() => setIsOverlayVisible(true)}
+                            >
+                                Customize Itinerary
+                            </button>
+                            <button
+                                className={`btn btn-primary ${styles.mobItenerybtn}`}
+                                onClick={() => setIsMobileOverlayVisible(true)}
                             >
                                 Customize Itinerary
                             </button>
@@ -534,7 +641,6 @@ export default function Mokshayatra() {
                             </div>
                         ))}
                     </div>
-
                     {/*Accomadation section*/}
                     <div id="accommodation" className={styles.overviewdiv}>
                         <h4 className="text-dark" style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}>Accomodation</h4>
@@ -603,7 +709,7 @@ export default function Mokshayatra() {
                         <h4 className="text-dark" style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}>Incity Transfer</h4>
                         <div className={styles.accomodationdiv}>
                             <div className={styles.accomodationimgdiv} style={{ borderRadius: "25px", overflow: "hidden", background: "grey", height: "180px" }}>
-                                <Image src={packageObject.cab[0].img} alt="Image 2" width={280} objectFit="cover" height={190} loading="lazy" />
+                                <Image src={packageObject.cab[0].img} alt="Image 2" width={340} objectFit="cover" height={190} loading="lazy" />
                             </div>
                             <div className={styles.traveldetaildiv}>
                                 <h5 className='m-0 p-0'>{packageObject.cab[0].name}</h5>
@@ -720,7 +826,7 @@ export default function Mokshayatra() {
                     {showPoojaOverlay && (
                         <div style={{ position: "fixed", top: "0", left: "0", width: "100%", height: "100%", backgroundColor: "rgba(0,0,0,0.5)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 1000 }}>
                             <div style={{ backgroundColor: "#fff", padding: "20px", borderRadius: "8px", maxWidth: "600px", width: "90%" }}>
-                                <h4>Select Pooja</h4>
+                                <h4 className='text-dark'>Select Pooja</h4>
                                 {poojaAvailable.length > 0 ? (
                                     <div style={{ maxHeight: "400px", overflowY: "auto", display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                                         {poojaAvailable.map((pooja) => (
@@ -741,11 +847,11 @@ export default function Mokshayatra() {
                                     <p className="text-muted">No Special Pooja arrangements available</p>
                                 )}
                                 <div style={{ marginTop: "20px", textAlign: "right" }}>
-                                    <button onClick={handlePoojaSave} className="btn btn-success mx-2">
+                                    <button onClick={handlePoojaSave} className="btn btn-primary mx-2">
                                         Save
                                     </button>
-                                    <button className="btn btn-danger" onClick={() => setShowPoojaOverlay(false)} >
-                                        Cancel
+                                    <button className="btn btn-secondary" onClick={() => setShowPoojaOverlay(false)} >
+                                        Back
                                     </button>
                                 </div>
                             </div>
@@ -782,6 +888,7 @@ export default function Mokshayatra() {
                             </ul>
                         </div>
                     </div>
+
                 </div>
 
                 {/* Cost Section */}
@@ -809,7 +916,6 @@ export default function Mokshayatra() {
             {/* Overlay */}
             {isOverlayVisible && (
                 <div className={styles.overlay}>
-
                     <div className={styles.overlayContent}>
                         <h6 className='text-muted text-center my-2 mb-3'>Drag and Drop the Places , Click on places to know more</h6>
                         <div className='d-flex w-100 flex-column' style={{ height: "90%" }}>
@@ -817,50 +923,56 @@ export default function Mokshayatra() {
                                 <h6 className='m-0' style={{ paddingLeft: "15px" }}>More Places To Explore</h6>
 
                                 <div
+                                    onDragOver={handleDragOver} // Enable dragging over
+                                    onDrop={(e) => handleDrop(e, 'unassigned', -1)}
+                                    data-drop-target="true"
                                     className={styles.unassignedPlacesSection}
-                                    onDrop={event => handleDrop(event, 'unassigned', -1)}
-                                    onDragOver={event => event.preventDefault()}
+
                                 >
                                     {unassignedPlaces.map((place, index) => (
-                                        <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
-                                            <div key={index}
-                                                draggable
-                                                onDragStart={event =>
-                                                    handleDragStart(event, place, 'unassigned', index)
-                                                }
-                                                className={styles.itinerarycirclediv} >
-                                                <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                                                    <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
-                                                </div>
-                                                <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
+                                        // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                        <div key={index}
+                                            draggable
+                                            onTouchStart={() => handleDragStart(place, 'unassigned', index)} // Start dragging on touch
+                                            onMouseDown={() => handleDragStart(place, 'unassigned', index)} // Start dragging on mouse down
+                                            onTouchEnd={handleDragEnd} // End dragging on touch end
+                                            onMouseUp={handleDragEnd}
+                                            className={styles.itinerarycirclediv} >
+                                            <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
+                                                <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
                                             </div>
-                                        </a>
+                                            <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
+                                        </div>
+                                        // </a>
                                     ))}
                                 </div>
                             </div>
                             <div className={`w-100 ${styles.daysectioncontainer}`}>
                                 {tempItinerary.map((day, index) => (
 
-                                    <div key={index} className='mt-3'><h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
+                                    <div className='mt-3' key={index}><h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
                                         <div
                                             key={index}
+                                            onDragOver={handleDragOver} // Enable dragging over
+                                            onDrop={(e) => handleDrop(e, 'itinerary', index)}
                                             className={styles.daySection}
-                                            onDrop={event => handleDrop(event, 'itinerary', index)}
-                                            onDragOver={event => event.preventDefault()}
+
                                         >
                                             {day.places.map((place, placeIndex) => (
-                                                <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
-                                                    <div key={placeIndex}
-                                                        draggable
-                                                        onDragStart={event =>
-                                                            handleDragStart(event, place, 'itinerary', index)
-                                                        } className={styles.itinerarycirclediv} >
-                                                        <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                                                            <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
-                                                        </div>
-                                                        <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
+                                                // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                                <div key={placeIndex}
+                                                    draggable
+                                                    onDragStart={() => handleDragStart(place, 'itinerary', index)}
+                                                    onTouchStart={() => handleDragStart(place, 'itinerary', index)}  // Touch start for mobile
+                                                    onTouchEnd={handleDragEnd}
+                                                    onMouseUp={handleDragEnd}
+                                                    className={styles.itinerarycirclediv} >
+                                                    <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
+                                                        <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
                                                     </div>
-                                                </a>
+                                                    <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
+                                                </div>
+                                                // </a>
 
                                             ))}
                                         </div>
@@ -881,15 +993,118 @@ export default function Mokshayatra() {
                         </button>
                     </div>
                 </div>
+
             )}
 
+            {isMobileOverlayVisible && (
+                <div className={styles.overlay}>
+                    <div className={styles.itineraryoverlayContent}>
+                        <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
+                            <div className="d-flex w-100 justify-content-between">
+                                <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
+                                <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
+                                </button>
+                                <button className="btn btn-primary m-2" onClick={saveChanges}>
+                                    Save Changes
+                                </button>
 
+                            </div>
+                            <h6 className="text-muted text-center my-2 mb-3">Use Up/Down arrows to move places</h6>
+
+                        </div>
+                        <div className="d-flex w-100 flex-column" style={{ marginTop: "700px" }}>
+                            {/* Unassigned Places */}
+                            <div className={styles.unassignedcontainer}>
+                                <h6 className='px-2'>More Places To Explore</h6>
+                                <div className={styles.unassignedPlacesSection}>
+                                    {unassignedPlaces.map((place, index) => (
+                                        <div key={index} className={styles.itinerarycircleoverlaymobdiv}>
+                                            <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                    <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                </div>
+                                                <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                    <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                </a>
+                                            </div>
+                                            <div className={styles.arrows} >
+                                                <button
+                                                    // onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                    className={`bt btn-ino ${styles.upArrow}`}
+                                                    disabled={true}
+
+                                                // disabled={dayIndex === 0 && !unassignedPlaces.some(p => p.pid === place.pid)}
+                                                >
+                                                    ↑
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDownArrow(place, 0)} // Move down
+                                                    className={`bt btn-inf ${styles.downArrow}`}
+                                                // disabled={dayIndex === tempItinerary.length - 1}
+                                                >
+                                                    ↓
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Itinerary Days */}
+                            {tempItinerary.map((day, dayIndex) => (
+                                <div key={dayIndex} className={styles.daysectioncontainer}>
+                                    <h5 className='m-0 p-0 px-2'>{day.day}</h5>
+
+                                    <div key={dayIndex} className={styles.daySection}>
+                                        <div className='w-100'>
+                                            {day.places.map((place, placeIndex) => (
+                                                <div key={placeIndex} className={styles.itinerarycircleoverlaymobdiv}>
+                                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                        <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                            <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                        </div>
+                                                        <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                            <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                        </a>
+                                                    </div>
+                                                    <div className={styles.arrows}>
+                                                        <button
+                                                            onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                            className={styles.upArrow}
+                                                        >
+                                                            ↑
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDownArrow(place, dayIndex)} // Move down
+                                                            className={styles.downArrow}
+                                                            disabled={dayIndex === tempItinerary.length - 1}
+                                                        >
+                                                            ↓
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                        </div>
+
+
+                        {/* Save & Close Buttons */}
+
+                    </div>
+
+                </div>
+            )}
             {showFullHotelOverlay && (
-                <div className={`${styles.overlay}`} style={{ zIndex: "1500" }}>
+                <div className={`${styles.overlay}`} style={{ zIndex: "1800" }}>
                     <div className={styles.fullhoteloverlayContentContainer}>
                         <div className={`${styles.overlayContent} ${styles.fhoverlayContent}`}  >
                             <div className='w-100 pt-2' style={{ cursor: "pointer" }}>
-                                <h6 className=" text-danger" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</h6>
+                                <button className=" btn btn-secondary mb-2" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                             </div>
                             <div className={styles.fhImageDescription}  >
                                 <div className={styles.fhdescription}>
@@ -946,7 +1161,7 @@ export default function Mokshayatra() {
                                         </div>
                                         <h4 className='mt-1'>{room.roomName}</h4>
                                         <div className='d-flex flex-column'>
-                                            <ul className={`inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", flexWrap: "wrap", paddingLeft: "20px" }}>
+                                            <ul className={`w-100 inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
                                                 {room.amenities.map((item, index) => (
                                                     <li key={index} className='m-2'><i className="fa fa-check" aria-hidden="true" style={{ color: "#2a9d8f", marginRight: "10px", fontSize: "18px", width: "max-content" }}></i>{item}</li>
                                                 ))}
@@ -978,7 +1193,7 @@ export default function Mokshayatra() {
                 <div className={styles.overlay} style={{ zIndex: "1000" }}>
                     <div className={styles.allhoverlaycontainer}>
                         <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
-                            <h6 className=" text-danger" onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</h6>
+                            <button className=" btn btn-secondary  mt-2"  onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                         </div>
                         <h2 className='text-dark m-0 p-0'>Available Hotels</h2>
                         <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} style={{ width: "98%" }}>
@@ -1017,7 +1232,8 @@ export default function Mokshayatra() {
                         <h4>Select Local Activities</h4>
                         <div style={{ maxHeight: "400px", overflowY: "auto", display: "flex", flexWrap: "wrap", gap: "1rem" }}>
                             {activityAvailable.map((activity) => (
-                                <label key={activity.aid} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", maxWidth: "250px" }}>
+
+                                <label key={activity.aid} style={{ display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", maxWidth: "250px" }} >
                                     <input type="checkbox" checked={selectedActivities.includes(activity.aid)} onChange={() => toggleActivitySelection(activity.aid)} />
                                     <div className={styles.itinerarycirclediv} style={{ height: "max-content", width: "max-content", display: "flex", justifyContent: "center", alignItems: "center", margin: "3px", borderRadius: "15px", overflow: "hidden", border: "1px solid #2a9d8f", color: " #2a9d8f", backgroundColor: " #e7f7f9" }}>
                                         <div style={{ width: "70px", height: "70px", overflow: "hidden" }}>
@@ -1031,11 +1247,11 @@ export default function Mokshayatra() {
                             ))}
                         </div>
                         <div style={{ marginTop: "20px", textAlign: "right" }}>
-                            <button onClick={handleSave} className='btn btn-success mx-2'>
+                            <button onClick={handleSave} className='btn btn-primary mx-2'>
                                 Save
                             </button>
-                            <button className='btn btn-danger' onClick={() => setShowActivityOverlay(false)}>
-                                Cancel
+                            <button className='btn btn-secondary' onClick={() => setShowActivityOverlay(false)}>
+                                Back
                             </button>
                         </div>
                     </div>

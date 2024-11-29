@@ -1,242 +1,196 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend"; // Correct import
+import Image from "next/image";
+import styles from '../styles/Fullpackage.module.css';
 
 const DragDropComponent = () => {
-  const containersRef = useRef([]);
-  const draggablesRef = useRef([]);
+  const [unassignedPlaces, setUnassigned] = useState([
+    {
+      pid: 6,
+      name: "Nageshwarnath Temple",
+      img: "https://ayodhyadhaam.in/images/NAGESHWAR%20NATH%20TEMPLE.jpeg",
+      link: "/blogs/nageshwarnath-temple",
+    },
+    {
+      pid: 7,
+      name: "Naya Ghat",
+      img: "https://cdnimg.prabhatkhabar.com/wp-content/uploads/Prabhatkhabar/2024-01/1be85ee3-650e-476a-94db-dc94af5a8c2c/WhatsApp_Image_2024_01_03_at_2_37_43_PM__2_.jpeg",
+      link: "/blogs/naya-ghat",
+    },
+  ]);
 
-  useEffect(() => {
-    const containers = containersRef.current;
-    const draggables = draggablesRef.current;
-
-    let activeElement = null;
-    let placeholder = null;
-
-    // Create a placeholder element for drag and drop
-    function createPlaceholder() {
-      if (!placeholder) {
-        placeholder = document.createElement("div");
-        placeholder.classList.add("placeholder");
-        placeholder.textContent = "Drop here";
-      }
-    }
-
-    // Helper function to get the correct insertion point for the dragged item
-    function getDragAfterElement(container, y) {
-      const draggableElements = [
-        ...container.querySelectorAll(".draggable:not(.dragging)"),
-      ];
-
-      return draggableElements.reduce(
-        (closest, child) => {
-          const box = child.getBoundingClientRect();
-          const offset = y - box.top - box.height / 2;
-          if (offset < 0 && offset > closest.offset) {
-            return { offset: offset, element: child };
-          } else {
-            return closest;
-          }
+  const [tempItinerary, setTempItinerary] = useState([
+    {
+      day: "Day 1",
+      places: [
+        {
+          pid: 1,
+          name: "Ram Mandir",
+          img: "https://www.aljazeera.com/wp-content/uploads/2024/01/AP24021340859855-1705847861.jpg?resize=1920%2C1440",
+          link: "/blogs/ram-mandir",
         },
-        { offset: Number.NEGATIVE_INFINITY }
-      ).element;
-    }
+        {
+          pid: 3,
+          name: "Dashrath Mahal",
+          img: "https://www.visitayodhyadhaam.com/wp-content/uploads/2024/01/dashrath-mahal-visit-ayodhya-dham-e1704393540692.jpg",
+          link: "/blogs/dashrath-mahal",
+        },
+        {
+          pid: 2,
+          name: "Hanuman Garhi",
+          img: "https://upload.wikimedia.org/wikipedia/commons/f/f8/Hanuman_Garhi_Temple%2C_a_major_religious_site_in_Ayodhya_utter_pradesh.jpg",
+          link: "/blogs/hanuman-garhi",
+        },
+        {
+          pid: 4,
+          name: "Kanak Bhawan",
+          img: "https://www.trawell.in/admin/images/upload/599531656Kanak_Bhawan.jpg",
+          link: "/blogs/kanak-bhawan",
+        },
+      ],
+    },
+    {
+      day: "Day 2",
+      places: [
+        {
+          pid: 5,
+          name: "Saryu River Ghats",
+          img: "https://rishikeshdaytour.com/blog/wp-content/uploads/2023/09/Saryu-Ghat-Ayodhya-India.jpg",
+          link: "/blogs/saryu-ghat",
+        },
+        {
+          pid: 8,
+          name: "Birla Mandir",
+          img: "https://www.nativeplanet.com/photos/325x244x100/2019/01/photo-92-155031-1.jpg",
+          link: "/blogs/birla-mandir",
+        },
+      ],
+    },
+  ]);
 
-    // Event listeners for draggable items
-    draggables.forEach((draggable) => {
-      draggable.addEventListener("touchstart", (e) => {
-        draggable.classList.add("dragging");
-        activeElement = draggable;
-        createPlaceholder();
-        e.preventDefault(); // Prevent scroll behavior during touch
-      });
+  // Dragging hook
+  const useDraggable = (place) => {
+    const [{ isDragging }, drag] = useDrag(() => ({
+      type: "PLACE",
+      item: { ...place },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    }));
 
-      draggable.addEventListener("touchmove", (e) => {
-        const touch = e.touches[0];
-        draggable.style.position = "absolute";
-        draggable.style.left = `${touch.clientX}px`;
-        draggable.style.top = `${touch.clientY}px`;
-        draggable.style.width = "300px";
+    return {
+      isDragging,
+      drag,
+    };
+  };
 
-        const potentialContainer = document
-          .elementFromPoint(touch.clientX, touch.clientY)
-          .closest(".container");
+  // Drop hook
+  const useDroppable = (dayIndex) => {
+    const [, drop] = useDrop(() => ({
+      accept: "PLACE",
+      drop: (item) => handleDrop(item, dayIndex),
+    }));
 
-        if (potentialContainer && placeholder) {
-          const afterElement = getDragAfterElement(
-            potentialContainer,
-            touch.clientY
-          );
-          if (afterElement) {
-            potentialContainer.insertBefore(placeholder, afterElement);
-          } else {
-            potentialContainer.appendChild(placeholder);
-          }
-        }
-        e.preventDefault();
-      });
+    return drop;
+  };
 
-      draggable.addEventListener("touchend", () => {
-        draggable.classList.remove("dragging");
-        if (activeElement && placeholder && placeholder.parentNode) {
-          placeholder.parentNode.insertBefore(activeElement, placeholder);
-          placeholder.remove();
-          activeElement.style.position = "static";
-          activeElement.style.left = "";
-          activeElement.style.top = "";
-          activeElement.style.width = "";
-        }
-        activeElement = null;
-        placeholder = null;
-      });
+  // Handle the drop logic
+  const handleDrop = (place, dayIndex) => {
+    if (!place || !place.pid || dayIndex < 0) return; // Check for valid place and dayIndex
 
-      draggable.addEventListener("dragstart", () => {
-        draggable.classList.add("dragging");
-      });
+    setTempItinerary((prev) => {
+      const newItinerary = [...prev];
+      const placeIndex = unassignedPlaces.findIndex((p) => p.pid === place.pid);
 
-      draggable.addEventListener("dragend", () => {
-        draggable.classList.remove("dragging");
-      });
+      if (placeIndex > -1) {
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+        updatedUnassignedPlaces.splice(placeIndex, 1); // Remove the place from unassigned
+        newItinerary[dayIndex].places.push(place); // Add the place to the itinerary
+
+        // Update unassigned places in a functional update to ensure the latest state
+        setUnassigned(updatedUnassignedPlaces);
+      }
+      return newItinerary;
     });
+  };
 
-    // Event listeners for containers
-    containers.forEach((container) => {
-      container.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(container, e.clientY);
-        const draggable = document.querySelector(".dragging");
-        if (afterElement == null) {
-          container.appendChild(draggable);
-        } else {
-          container.insertBefore(draggable, afterElement);
-        }
-      });
+  // Handle removing a place from the itinerary
+  const handleRemovePlace = (place, dayIndex) => {
+    if (!place || !place.pid || dayIndex < 0) return; // Check for valid place and dayIndex
+
+    setTempItinerary((prev) => {
+      const newItinerary = [...prev];
+      const placeIndex = newItinerary[dayIndex].places.findIndex(
+        (p) => p.pid === place.pid
+      );
+      if (placeIndex > -1) {
+        newItinerary[dayIndex].places.splice(placeIndex, 1);
+        setUnassigned((prev) => [...prev, place]); // Add the place back to unassigned
+      }
+      return newItinerary;
     });
-  }, []);
+  };
 
   return (
-    <>
-      <style jsx>{`
-        .draggable {
-          padding: 1rem;
-          background-color: white;
-          border: 1px solid black;
-          cursor: grab;
-        }
-
-        .draggable.dragging {
-          opacity: 0.8;
-          background-color: skyblue;
-          cursor: grabbing;
-        }
-
-        .draggable,
-        .container {
-          touch-action: none;
-        }
-
-        .placeholder {
-          border: 2px dashed #666;
-          padding: 1rem;
-          background-color: #f0f0f0;
-          opacity: 0.5;
-        }
-
-        .container {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          padding: 1rem;
-          border-radius: 8px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          min-height: 300px;
-        }
-
-        .container.bg-indigo-500 {
-          background-color: #6366f1;
-        }
-
-        .container.bg-orange-500 {
-          background-color: #fb923c;
-        }
-
-        .container.bg-green-500 {
-          background-color: #22c55e;
-        }
-
-        .mx-auto {
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        .space-x-2 {
-          margin-left: 8px;
-          margin-right: 8px;
-        }
-
-        .w-4/5 {
-          width: 80%;
-        }
-
-        .h-[300px] {
-          height: 300px;
-        }
-
-        .mt-10 {
-          margin-top: 2.5rem;
-        }
-
-        .flex {
-          display: flex;
-        }
-
-        .items-center {
-          align-items: center;
-        }
-
-        .justify-center {
-          justify-content: center;
-        }
-
-        .shadow-lg {
-          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-      `}</style>
-
-      <div className="mx-auto mt-10 space-x-2 w-4/5 flex items-center justify-center">
-        <div
-          ref={(el) => (containersRef.current[0] = el)}
-          className="flex flex-col container bg-indigo-500"
-        >
-          <p ref={(el) => (draggablesRef.current[0] = el)} className="draggable m-1 w-full" draggable="true">
-            Item 1
-          </p>
-          <p ref={(el) => (draggablesRef.current[1] = el)} className="draggable m-1 w-full" draggable="true">
-            Item 2
-          </p>
+    <DndProvider backend={HTML5Backend}>
+      <div className="d-flex flex-column justify-center">
+        <div className="container bg-indigo-500">
+          <h4>Unassigned Places</h4>
+          {unassignedPlaces.length > 0 ? ( // Check if there are unassigned places
+            unassignedPlaces.map((place, index) => {
+              const { drag, isDragging } = useDraggable(place);
+              return (
+                <div
+                  key={place.pid}
+                  ref={drag}
+                  className={`${
+                    isDragging ? "opacity-50" : ""
+                  } ${styles.itinerarycirclediv}`}
+                >
+                  <div style={{ width: "70px", height: "70px", overflow: "hidden" }}>
+                    <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit="cover" />
+                  </div>
+                  <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
+                </div>
+              );
+            })
+          ) : (
+            <p>No unassigned places available</p>
+          )}
         </div>
-        <div
-          ref={(el) => (containersRef.current[1] = el)}
-          className="flex flex-col container bg-orange-500"
-        >
-          <p ref={(el) => (draggablesRef.current[2] = el)} className="draggable m-1 w-full" draggable="true">
-            Item 3
-          </p>
-          <p ref={(el) => (draggablesRef.current[3] = el)} className="draggable m-1 w-full" draggable="true">
-            Item 4
-          </p>
-        </div>
-        <div
-          ref={(el) => (containersRef.current[2] = el)}
-          className="flex flex-col container bg-green-500"
-        >
-          <p ref={(el) => (draggablesRef.current[4] = el)} className="draggable m-1 w-full" draggable="true">
-            Item 5
-          </p>
-          <p ref={(el) => (draggablesRef.current[5] = el)} className="draggable m-1 w-full" draggable="true">
-            Item 6
-          </p>
-        </div>
+
+        {tempItinerary.map((day, dayIndex) => {
+          const drop = useDroppable(dayIndex);
+          return (
+            <div className="mt-3" key={dayIndex}>
+              <div
+                ref={drop}
+                className={`${styles.daySection} bg-gray-200 p-4`}
+                style={{ minHeight: "200px" }}
+              >
+                <h4>{day.day}</h4>
+                {day.places.length > 0 ? ( // Ensure places array is valid
+                  day.places.map((place) => (
+                    <div
+                      key={place.pid}
+                      className="draggable"
+                      onClick={() => handleRemovePlace(place, dayIndex)}
+                    >
+                      <h6>{place.name}</h6>
+                      <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                    </div>
+                  ))
+                ) : (
+                  <p>No places assigned</p>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </>
+    </DndProvider>
   );
 };
 
