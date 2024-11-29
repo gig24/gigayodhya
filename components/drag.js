@@ -1,45 +1,123 @@
-import React, { useEffect, useRef, useState } from "react";
-import Image from 'next/image';
-import styles from '../styles/Fullpackage.module.css';
+import React, { useState, useRef, useEffect } from "react";
 
-const DragDropOverlay = ({ unassignedPlaces, tempItinerary, saveChanges, closeOverlay }) => {
+const DragDropItinerary = () => {
+  const [itinerary, setItinerary] = useState([
+    {
+      day: "Day 1",
+      places: [
+        {
+          pid: 1,
+          name: "Ram Mandir",
+          img: "https://www.aljazeera.com/wp-content/uploads/2024/01/AP24021340859855-1705847861.jpg?resize=1920%2C1440",
+          link: "/blogs/ram-mandir",
+        },
+        {
+          pid: 3,
+          name: "Dashrath Mahal",
+          img: "https://www.visitayodhyadham.com/wp-content/uploads/2024/01/dashrath-mahal-visit-ayodhya-dham-e1704393540692.jpg",
+          link: "/blogs/dashrath-mahal",
+        },
+      ],
+    },
+    {
+      day: "Day 2",
+      places: [
+        {
+          pid: 5,
+          name: "Saryu River Ghats",
+          img: "https://rishikeshdaytour.com/blog/wp-content/uploads/2023/09/Saryu-Ghat-Ayodhya-India.jpg",
+          link: "/blogs/saryu-ghat",
+        },
+      ],
+    },
+  ]);
+
+  const [unassigned, setUnassigned] = useState([
+    {
+      pid: 6,
+      name: "Nageshwarnath Temple",
+      img: "https://ayodhyadhaam.in/images/NAGESHWAR%20NATH%20TEMPLE.jpeg",
+      link: "/blogs/nageshwarnath-temple",
+    },
+    {
+      pid: 7,
+      name: "Naya Ghat",
+      img: "https://cdnimg.prabhatkhabar.com/wp-content/uploads/Prabhatkhabar/2024-01/1be85ee3-650e-476a-94db-dc94af5a8c2c/WhatsApp_Image_2024_01_03_at_2_37_43_PM__2_.jpeg",
+      link: "/blogs/naya-ghat",
+    },
+  ]);
+
   const containersRef = useRef([]);
   const draggablesRef = useRef([]);
-  const [activeElement, setActiveElement] = useState(null);
-  const [placeholder, setPlaceholder] = useState(null);
-  const [draggingElement, setDraggingElement] = useState(null);
+  const activeItemRef = useRef(null);
 
-  const handleDragEnd = () => {
-    if (activeElement && placeholder && placeholder.parentNode) {
-      // Re-insert the dragged item in the correct location
-      placeholder.parentNode.insertBefore(activeElement, placeholder);
-      placeholder.remove();
+  useEffect(() => {
+    const containers = containersRef.current;
 
-      // Reset the dragged element's style
-      activeElement.style.position = "static";
-      activeElement.style.left = "";
-      activeElement.style.top = "";
-      activeElement.style.width = "";
+    containers.forEach((container) => {
+      container.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(container, e.clientY);
+        const activeItem = activeItemRef.current;
 
-      // Clean up the state
-      setActiveElement(null);
-      setPlaceholder(null);
-      setDraggingElement(null);
-    }
-  };
+        if (activeItem) {
+          if (afterElement == null) {
+            container.appendChild(activeItem);
+          } else {
+            container.insertBefore(activeItem, afterElement);
+          }
+        }
+      });
 
-  const handleDragStart = (place, section, index) => {
-    setActiveElement(draggablesRef.current[index]);
-    createPlaceholder();
-    setDraggingElement(draggablesRef.current[index]);
-  };
+      container.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const activeItem = activeItemRef.current;
 
-  const createPlaceholder = () => {
-    if (!placeholder) {
-      const newPlaceholder = document.createElement("div");
-      newPlaceholder.classList.add("placeholder");
-      newPlaceholder.textContent = "Drop here";
-      setPlaceholder(newPlaceholder);
+        if (activeItem) {
+          const newDayIndex = container.dataset.dayIndex;
+          const itemData = JSON.parse(activeItem.dataset.item);
+
+          if (newDayIndex === "unassigned") {
+            setUnassigned((prev) => [...prev, itemData]);
+          } else {
+            setItinerary((prev) =>
+              prev.map((day, index) => {
+                if (index === parseInt(newDayIndex)) {
+                  return { ...day, places: [...day.places, itemData] };
+                }
+                return day;
+              })
+            );
+          }
+
+          activeItemRef.current.remove();
+          activeItemRef.current = null;
+        }
+      });
+    });
+  }, [itinerary, unassigned]);
+
+  const handleDragStart = (e, item) => {
+    activeItemRef.current = e.target;
+    e.target.classList.add("dragging");
+
+    // Remove from original list
+    const itemData = JSON.parse(e.target.dataset.item);
+    const { dayIndex, placeIndex } = itemData;
+
+    if (dayIndex === "unassigned") {
+      setUnassigned((prev) => prev.filter((_, i) => i !== placeIndex));
+    } else {
+      setItinerary((prev) =>
+        prev.map((day, index) =>
+          index === parseInt(dayIndex)
+            ? {
+                ...day,
+                places: day.places.filter((_, i) => i !== placeIndex),
+              }
+            : day
+        )
+      );
     }
   };
 
@@ -53,193 +131,69 @@ const DragDropOverlay = ({ unassignedPlaces, tempItinerary, saveChanges, closeOv
         const box = child.getBoundingClientRect();
         const offset = y - box.top - box.height / 2;
         if (offset < 0 && offset > closest.offset) {
-          return { offset: offset, element: child };
-        } else {
-          return closest;
+          return { offset, element: child };
         }
+        return closest;
       },
       { offset: Number.NEGATIVE_INFINITY }
     ).element;
   };
 
-  const handleDrop = (e, section, index) => {
-    e.preventDefault();
-    const draggedElement = draggingElement;
-    const targetContainer = e.target.closest("[data-drop-target]");
-
-    if (targetContainer && draggedElement) {
-      if (section === "unassigned") {
-        // Logic to move the item to the unassigned section
-        targetContainer.appendChild(draggedElement);
-      } else if (section === "itinerary") {
-        // Logic to move the item to the itinerary day section
-        const afterElement = getDragAfterElement(targetContainer, e.clientY);
-        if (afterElement == null) {
-          targetContainer.appendChild(draggedElement);
-        } else {
-          targetContainer.insertBefore(draggedElement, afterElement);
-        }
-      }
-      handleDragEnd();
-    }
-  };
-
-  useEffect(() => {
-    const containers = containersRef.current;
-    const draggables = draggablesRef.current;
-
-    if (draggables.length > 0) {
-      draggables.forEach((draggable) => {
-        if (draggable) {
-          draggable.addEventListener("touchstart", (e) => {
-            draggable.classList.add("dragging");
-            setActiveElement(draggable);
-            createPlaceholder();
-            e.preventDefault();
-            setDraggingElement(draggable); // Set dragging element
-          });
-
-          draggable.addEventListener("touchmove", (e) => {
-            const touch = e.touches[0];
-            draggable.style.position = "absolute";
-            draggable.style.left = `${touch.clientX}px`;
-            draggable.style.top = `${touch.clientY}px`;
-            draggable.style.width = "auto"; // Fix width resizing issue
-
-            const potentialContainer = document
-              .elementFromPoint(touch.clientX, touch.clientY)
-              .closest(".container");
-
-            if (potentialContainer && placeholder) {
-              const afterElement = getDragAfterElement(
-                potentialContainer,
-                touch.clientY
-              );
-              if (afterElement) {
-                potentialContainer.insertBefore(placeholder, afterElement);
-              } else {
-                potentialContainer.appendChild(placeholder);
-              }
-            }
-            e.preventDefault();
-          });
-
-          draggable.addEventListener("touchend", (e) => {
-            draggable.classList.remove("dragging");
-            handleDragEnd();
-            e.preventDefault();
-          });
-
-          // Desktop dragstart / dragend events
-          draggable.addEventListener("dragstart", () => {
-            draggable.classList.add("dragging");
-          });
-
-          draggable.addEventListener("dragend", () => {
-            draggable.classList.remove("dragging");
-            handleDragEnd();
-          });
-        }
-      });
-    }
-
-    if (containers.length > 0) {
-      containers.forEach((container) => {
-        if (container) {
-          container.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            const afterElement = getDragAfterElement(container, e.clientY);
-            const draggable = document.querySelector(".dragging");
-            if (afterElement == null) {
-              container.appendChild(draggable);
-            } else {
-              container.insertBefore(draggable, afterElement);
-            }
-          });
-        }
-      });
-    }
-  }, [unassignedPlaces, tempItinerary, activeElement, placeholder, draggingElement]);
-
   return (
-    <div className={styles.overlay}>
-      <div className={styles.overlayContent}>
-        <h6 className="text-muted text-center my-2 mb-3">Drag and Drop the Places, Click on places to know more</h6>
-
-        <div className="d-flex w-100 flex-column" style={{ height: "90%" }}>
-          {/* Unassigned Places Section */}
-          <div className={`d-flex flex-column w-100 ${styles.unassignedcontainer}`}>
-            <h6 className="m-0" style={{ paddingLeft: "15px" }}>More Places To Explore</h6>
-
+    <div className="flex">
+      {itinerary.map((day, dayIndex) => (
+        <div
+          key={dayIndex}
+          className="container"
+          data-day-index={dayIndex}
+          ref={(el) => (containersRef.current[dayIndex] = el)}
+        >
+          <h3>{day.day}</h3>
+          {day.places.map((place, placeIndex) => (
             <div
-              ref={(el) => containersRef.current.push(el)}
-              onDragOver={(e) => e.preventDefault()} // Enable dragging over
-              onDrop={(e) => handleDrop(e, 'unassigned', -1)}
-              data-drop-target="true"
-              className={styles.unassignedPlacesSection}
+              key={place.pid}
+              className="draggable"
+              draggable="true"
+              onDragStart={(e) =>
+                handleDragStart(e, { ...place, dayIndex, placeIndex })
+              }
+              data-item={JSON.stringify({
+                ...place,
+                dayIndex,
+                placeIndex,
+              })}
             >
-              {unassignedPlaces.map((place, index) => (
-                <div
-                  key={index}
-                  ref={(el) => draggablesRef.current.push(el)}
-                  draggable
-                  onTouchStart={() => handleDragStart(place, 'unassigned', index)}  // Start dragging on touch
-                  onMouseDown={() => handleDragStart(place, 'unassigned', index)}  // Start dragging on mouse down
-                  onTouchEnd={handleDragEnd}  // End drag on touch
-                  onMouseUp={handleDragEnd}   // End drag on mouse up
-                  className={`${styles.itinerarycirclediv} draggable`}
-                >
-                  <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                    <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit="cover" />
-                  </div>
-                  <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
-                </div>
-              ))}
+              {place.name}
             </div>
-          </div>
-
-          {/* Day Sections */}
-          <div className={`w-100 ${styles.daysectioncontainer}`}>
-            {tempItinerary.map((day, index) => (
-              <div className="mt-3" key={index}>
-                <h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
-                <div
-                  ref={(el) => containersRef.current.push(el)}
-                  onDragOver={(e) => e.preventDefault()} // Enable dragging over
-                  onDrop={(e) => handleDrop(e, 'itinerary', index)}
-                  className={styles.daySection}
-                >
-                  {day.places.map((place, placeIndex) => (
-                    <div
-                      key={placeIndex}
-                      ref={(el) => draggablesRef.current.push(el)}
-                      draggable
-                      onDragStart={() => handleDragStart(place, 'itinerary', index)} // Start dragging
-                      onTouchStart={() => handleDragStart(place, 'itinerary', index)} // Touch start
-                      onTouchEnd={handleDragEnd}
-                      onMouseUp={handleDragEnd}
-                      className={`${styles.itinerarycirclediv} draggable`}
-                    >
-                      <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                        <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit="cover" />
-                      </div>
-                      <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
-
-      
+      ))}
+      <div
+        className="container"
+        data-day-index="unassigned"
+        ref={(el) => (containersRef.current[itinerary.length] = el)}
+      >
+        <h3>Unassigned</h3>
+        {unassigned.map((place, placeIndex) => (
+          <div
+            key={place.pid}
+            className="draggable"
+            draggable="true"
+            onDragStart={(e) =>
+              handleDragStart(e, { ...place, dayIndex: "unassigned", placeIndex })
+            }
+            data-item={JSON.stringify({
+              ...place,
+              dayIndex: "unassigned",
+              placeIndex,
+            })}
+          >
+            {place.name}
+          </div>
+        ))}
       </div>
-        <div className={styles.overlayBottom}>
-          <button onClick={closeOverlay} className="btn btn-secondary">Close</button>
-          <button onClick={saveChanges} className="btn btn-primary">Save Changes</button>
-        </div>
     </div>
   );
 };
 
-export default DragDropOverlay;
+export default DragDropItinerary;

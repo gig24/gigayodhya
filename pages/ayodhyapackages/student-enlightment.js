@@ -12,8 +12,6 @@ import hotelData from '../../data/hotels.json'
 import cabData from '../../data/cabs.json'
 import activityData from '../../data/activity.json'
 import poojaData from '../../data/pooja.json'
-import ItineraryDragDrop from '@/components/itinerary.js';
-import ItineraryCustomization from '@/components/dragdrop.js';
 import DragDropOverlay from '../../components/drag.js';
 
 
@@ -521,6 +519,7 @@ export default function Studentenlightenment() {
                             {packageObject.packageOverview}
                         </div>
                     </div>
+                    {/* <DragDropOverlay unassignedPlaces={unassignedPlaces} tempItinerary={tempItinerary} saveChanges={saveChanges} closeOverlay={closeOverlay}/> */}
 
                     {/* Itinirary */}
                     <div id="itinerary" className={`itinirarydiv ${styles.overviewdiv}`}>
@@ -558,7 +557,6 @@ export default function Studentenlightenment() {
                             </div>
                         ))}
                     </div>
-{/* <ItineraryCustomization packageObject={packageObject} setPackageObject={setPackageObject}/> */}
                     {/*Accomadation section*/}
                     <div id="accommodation" className={styles.overviewdiv}>
                         <h4 className="text-dark" style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}>Accomodation</h4>
@@ -806,6 +804,7 @@ export default function Studentenlightenment() {
                             </ul>
                         </div>
                     </div>
+
                 </div>
 
                 {/* Cost Section */}
@@ -832,86 +831,87 @@ export default function Studentenlightenment() {
             </div>
             {/* Overlay */}
             {isOverlayVisible && (
-                <DragDropOverlay unassignedPlaces={unassignedPlaces} tempItinerary={tempItinerary} saveChanges={saveChanges} closeOverlay={closeOverlay}/>
-                // <div className={styles.overlay}>
-                //     {/* <div className={translucentOverlay ? 'styles.overlaygrey' : ''}></div> */}
-                //     <div className={styles.overlayContent}>
-                //         <h6 className='text-muted text-center my-2 mb-3'>Drag and Drop the Places , Click on places to know more</h6>
-                //         <div className='d-flex w-100 flex-column' style={{ height: "90%" }}>
-                //             <div className={`d-flex flex-column flex-wrap w-100 ${styles.unassignedcontainer}`}>
-                //                 <h6 className='m-0' style={{ paddingLeft: "15px" }}>More Places To Explore</h6>
+             
+                // <DragDropOverlay unassignedPlaces={unassignedPlaces} tempItinerary={tempItinerary} saveChanges={saveChanges} closeOverlay={closeOverlay}/>
+                <div className={styles.overlay}>
+                    {/* <div className={translucentOverlay ? 'styles.overlaygrey' : ''}></div> */}
+                    <div className={styles.overlayContent}>
+                        <h6 className='text-muted text-center my-2 mb-3'>Drag and Drop the Places , Click on places to know more</h6>
+                        <div className='d-flex w-100 flex-column' style={{ height: "90%" }}>
+                            <div className={`d-flex flex-column flex-wrap w-100 ${styles.unassignedcontainer}`}>
+                                <h6 className='m-0' style={{ paddingLeft: "15px" }}>More Places To Explore</h6>
 
-                //                 <div
-                //                     onDragOver={handleDragOver} // Enable dragging over
-                //                     onDrop={(e) => handleDrop(e, 'unassigned', -1)}
-                //                     data-drop-target="true"
-                //                     className={styles.unassignedPlacesSection}
+                                <div
+                                    onDragOver={handleDragOver} // Enable dragging over
+                                    onDrop={(e) => handleDrop(e, 'unassigned', -1)}
+                                    data-drop-target="true"
+                                    className={styles.unassignedPlacesSection}
                              
-                //                 >
-                //                     {unassignedPlaces.map((place, index) => (
-                //                         // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
-                //                         <div key={index}
-                //                             draggable
-                //                             onTouchStart={() => handleDragStart(place, 'unassigned', index)} // Start dragging on touch
-                //                             onMouseDown={() => handleDragStart(place, 'unassigned', index)} // Start dragging on mouse down
-                //                             onTouchEnd={handleDragEnd} // End dragging on touch end
-                //                             onMouseUp={handleDragEnd}
-                //                             className={styles.itinerarycirclediv} >
-                //                             <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                //                                 <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
-                //                             </div>
-                //                             <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
-                //                         </div>
-                //                         // </a>
-                //                     ))}
-                //                 </div>
-                //             </div>
-                //             <div className={`w-100 ${styles.daysectioncontainer}`}>
-                //                 {tempItinerary.map((day, index) => (
+                                >
+                                    {unassignedPlaces.map((place, index) => (
+                                        // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                        <div key={index}
+                                            draggable
+                                            onTouchStart={() => handleDragStart(place, 'unassigned', index)} // Start dragging on touch
+                                            onMouseDown={() => handleDragStart(place, 'unassigned', index)} // Start dragging on mouse down
+                                            onTouchEnd={handleDragEnd} // End dragging on touch end
+                                            onMouseUp={handleDragEnd}
+                                            className={styles.itinerarycirclediv} >
+                                            <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
+                                                <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
+                                            </div>
+                                            <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
+                                        </div>
+                                        // </a>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className={`w-100 ${styles.daysectioncontainer}`}>
+                                {tempItinerary.map((day, index) => (
 
-                //                     <div className='mt-3' key={index}><h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
-                //                         <div
-                //                             key={index}
-                //                             onDragOver={handleDragOver} // Enable dragging over
-                //                             onDrop={(e) => handleDrop(e, 'itinerary', index)}
-                //                             className={styles.daySection}
+                                    <div className='mt-3' key={index}><h5 style={{ paddingLeft: "15px", margin: "0" }}>{day.day}</h5>
+                                        <div
+                                            key={index}
+                                            onDragOver={handleDragOver} // Enable dragging over
+                                            onDrop={(e) => handleDrop(e, 'itinerary', index)}
+                                            className={styles.daySection}
                                      
-                //                         >
-                //                             {day.places.map((place, placeIndex) => (
-                //                                 // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
-                //                                 <div key={placeIndex}
-                //                                     draggable
-                //                                     onDragStart={() => handleDragStart(place, 'itinerary', index)}
-                //                                     onTouchStart={() => handleDragStart(place, 'itinerary', index)}  // Touch start for mobile
-                //                                     onTouchEnd={handleDragEnd}
-                //                                     onMouseUp={handleDragEnd}
-                //                                     className={styles.itinerarycirclediv} >
-                //                                     <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                //                                         <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
-                //                                     </div>
-                //                                     <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
-                //                                 </div>
-                //                                 // </a>
+                                        >
+                                            {day.places.map((place, placeIndex) => (
+                                                // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                                <div key={placeIndex}
+                                                    draggable
+                                                    onDragStart={() => handleDragStart(place, 'itinerary', index)}
+                                                    onTouchStart={() => handleDragStart(place, 'itinerary', index)}  // Touch start for mobile
+                                                    onTouchEnd={handleDragEnd}
+                                                    onMouseUp={handleDragEnd}
+                                                    className={styles.itinerarycirclediv} >
+                                                    <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
+                                                        <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
+                                                    </div>
+                                                    <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
+                                                </div>
+                                                // </a>
 
-                //                             ))}
-                //                         </div>
-                //                     </div>
-                //                 ))}
-                //             </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
 
 
-                //         </div>
+                        </div>
 
-                //     </div>
-                //     <div className='d-flex'>
-                //         <button className="btn btn-primary m-2" onClick={saveChanges}>
-                //             Save Changes
-                //         </button>
-                //         <button className="btn btn-secondary m-2" onClick={closeOverlay}>
-                //             Back
-                //         </button>
-                //     </div>
-                // </div>
+                    </div>
+                    <div className='d-flex'>
+                        <button className="btn btn-primary m-2" onClick={saveChanges}>
+                            Save Changes
+                        </button>
+                        <button className="btn btn-secondary m-2" onClick={closeOverlay}>
+                            Back
+                        </button>
+                    </div>
+                </div>
 
             )}
 

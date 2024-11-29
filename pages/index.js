@@ -9,6 +9,9 @@ import Prepackage from "../components/PrePackage.js";
 import Whyus from "../components/Whyus.js";
 import Review from "../components/Review.js";
 import Enquiry from "../components/Enquiry.js";
+import DragDropComponent from "../components/dragdrop.js";
+
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -41,6 +44,7 @@ export default function Home({ allBlog }) {
           <Review/>
           <Enquiry/>
         </div>
+        {/* <DragDropComponent/> */}
       </div>
       <Footer/>
     </>

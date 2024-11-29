@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
-const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
-  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+const DragDropComponent = () => {
   const containersRef = useRef([]);
   const draggablesRef = useRef([]);
-  const unassignedPlacesRef = useRef([]);
 
   useEffect(() => {
     const containers = containersRef.current;
     const draggables = draggablesRef.current;
-    const unassignedPlaces = unassignedPlacesRef.current;
 
     let activeElement = null;
     let placeholder = null;
 
+    // Create a placeholder element for drag and drop
     function createPlaceholder() {
       if (!placeholder) {
         placeholder = document.createElement("div");
@@ -22,6 +20,7 @@ const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
       }
     }
 
+    // Helper function to get the correct insertion point for the dragged item
     function getDragAfterElement(container, y) {
       const draggableElements = [
         ...container.querySelectorAll(".draggable:not(.dragging)"),
@@ -41,13 +40,13 @@ const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
       ).element;
     }
 
-    // Handle drag events for each draggable item
+    // Event listeners for draggable items
     draggables.forEach((draggable) => {
       draggable.addEventListener("touchstart", (e) => {
         draggable.classList.add("dragging");
         activeElement = draggable;
         createPlaceholder();
-        e.preventDefault();
+        e.preventDefault(); // Prevent scroll behavior during touch
       });
 
       draggable.addEventListener("touchmove", (e) => {
@@ -55,6 +54,7 @@ const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
         draggable.style.position = "absolute";
         draggable.style.left = `${touch.clientX}px`;
         draggable.style.top = `${touch.clientY}px`;
+        draggable.style.width = "300px";
 
         const potentialContainer = document
           .elementFromPoint(touch.clientX, touch.clientY)
@@ -82,6 +82,7 @@ const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
           activeElement.style.position = "static";
           activeElement.style.left = "";
           activeElement.style.top = "";
+          activeElement.style.width = "";
         }
         activeElement = null;
         placeholder = null;
@@ -96,7 +97,7 @@ const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
       });
     });
 
-    // Event listeners for containers (Days and Unassigned places)
+    // Event listeners for containers
     containers.forEach((container) => {
       container.addEventListener("dragover", (e) => {
         e.preventDefault();
@@ -109,135 +110,134 @@ const ItineraryCustomization = ({ packageObject, setPackageObject }) => {
         }
       });
     });
-
-    // Event listener for the "Unassigned Places" container
-    unassignedPlaces.forEach((unassignedContainer) => {
-      unassignedContainer.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(unassignedContainer, e.clientY);
-        const draggable = document.querySelector(".dragging");
-        if (afterElement == null) {
-          unassignedContainer.appendChild(draggable);
-        } else {
-          unassignedContainer.insertBefore(draggable, afterElement);
-        }
-      });
-    });
-  }, [packageObject]);
-
-  const handleSave = () => {
-    const updatedItinerary = containersRef.current.map((container, index) => {
-      const day = packageObject.itinerary[index];
-      const places = Array.from(container.querySelectorAll(".draggable")).map(
-        (draggable) => {
-          const pid = draggable.dataset.pid;
-          return day.places.find((place) => place.pid == pid);
-        }
-      );
-      return { ...day, places };
-    });
-
-    setPackageObject({
-      ...packageObject,
-      itinerary: updatedItinerary,
-    });
-    setIsOverlayVisible(false);
-  };
+  }, []);
 
   return (
     <>
-      <div id="itinerary" className="itinerary-container">
-        <div className="header">
-          <h4>Itinerary</h4>
-          <button onClick={() => setIsOverlayVisible(true)}>Customize Itinerary</button>
-        </div>
-
-        {packageObject.itinerary.map((dayData, index) => (
-          <div key={index} className="day-container">
-            <div className="day-header">
-              <h5>{dayData.day}</h5>
-            </div>
-            <div
-              ref={(el) => (containersRef.current[index] = el)}
-              className="day-places-container container"
-            >
-              {dayData.places.map((place, placeIndex) => (
-                <div
-                  key={placeIndex}
-                  data-pid={place.pid}
-                  className="draggable place-item bg-light"
-                >
-                  <img src={place.img} alt={place.name} width={70} height={70} />
-                  <h6>{place.name}</h6>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {isOverlayVisible && (
-          <div className="overlay">
-            <div className="unassigned-places" ref={unassignedPlacesRef}>
-              {packageObject.itinerary.flatMap((day) => day.places).map((place) => (
-                <div
-                  key={place.pid}
-                  data-pid={place.pid}
-                  className="draggable place-item"
-                >
-                  <img src={place.img} alt={place.name} width={70} height={70} />
-                  <h6>{place.name}</h6>
-                </div>
-              ))}
-            </div>
-
-            <div className="buttons">
-              <button onClick={handleSave}>Save Changes</button>
-              <button onClick={() => setIsOverlayVisible(false)}>Cancel</button>
-            </div>
-          </div>
-        )}
-      </div>
-
       <style jsx>{`
         .draggable {
+          padding: 1rem;
+          background-color: white;
+          border: 1px solid black;
           cursor: grab;
         }
 
         .draggable.dragging {
-          opacity: 0.5;
+          opacity: 0.8;
+          background-color: skyblue;
           cursor: grabbing;
+        }
+
+        .draggable,
+        .container {
+          touch-action: none;
+        }
+
+        .placeholder {
+          border: 2px dashed #666;
+          padding: 1rem;
+          background-color: #f0f0f0;
+          opacity: 0.5;
         }
 
         .container {
           display: flex;
           flex-direction: column;
+          justify-content: center;
+          padding: 1rem;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          min-height: 300px;
         }
 
-        .overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: rgba(0, 0, 0, 0.5);
+        .container.bg-indigo-500 {
+          background-color: #6366f1;
+        }
+
+        .container.bg-orange-500 {
+          background-color: #fb923c;
+        }
+
+        .container.bg-green-500 {
+          background-color: #22c55e;
+        }
+
+        .mx-auto {
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .space-x-2 {
+          margin-left: 8px;
+          margin-right: 8px;
+        }
+
+        .w-4/5 {
+          width: 80%;
+        }
+
+        .h-[300px] {
+          height: 300px;
+        }
+
+        .mt-10 {
+          margin-top: 2.5rem;
+        }
+
+        .flex {
           display: flex;
+        }
+
+        .items-center {
           align-items: center;
+        }
+
+        .justify-center {
           justify-content: center;
         }
 
-        .unassigned-places {
-          display: flex;
-          flex-wrap: wrap;
-        }
-
-        .buttons {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 20px;
+        .shadow-lg {
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
         }
       `}</style>
+
+      <div className="mx-auto mt-10 space-x-2 w-4/5 flex items-center justify-center">
+        <div
+          ref={(el) => (containersRef.current[0] = el)}
+          className="flex flex-col container bg-indigo-500"
+        >
+          <p ref={(el) => (draggablesRef.current[0] = el)} className="draggable m-1 w-full" draggable="true">
+            Item 1
+          </p>
+          <p ref={(el) => (draggablesRef.current[1] = el)} className="draggable m-1 w-full" draggable="true">
+            Item 2
+          </p>
+        </div>
+        <div
+          ref={(el) => (containersRef.current[1] = el)}
+          className="flex flex-col container bg-orange-500"
+        >
+          <p ref={(el) => (draggablesRef.current[2] = el)} className="draggable m-1 w-full" draggable="true">
+            Item 3
+          </p>
+          <p ref={(el) => (draggablesRef.current[3] = el)} className="draggable m-1 w-full" draggable="true">
+            Item 4
+          </p>
+        </div>
+        <div
+          ref={(el) => (containersRef.current[2] = el)}
+          className="flex flex-col container bg-green-500"
+        >
+          <p ref={(el) => (draggablesRef.current[4] = el)} className="draggable m-1 w-full" draggable="true">
+            Item 5
+          </p>
+          <p ref={(el) => (draggablesRef.current[5] = el)} className="draggable m-1 w-full" draggable="true">
+            Item 6
+          </p>
+        </div>
+      </div>
     </>
   );
 };
 
-export default ItineraryCustomization;
+export default DragDropComponent;
