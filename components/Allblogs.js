@@ -72,7 +72,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                 {/* <h6 className={styles.headingexplore}>
                                     Your One Stop <span style={{ color: "#670c0b" }}>Darshan Solution !</span>
                                 </h6> */}
-                                <h4 className={styles.typewriter2}>
+                                <h5 className={styles.typewriter2}>
                                     <Typewriter
                                         options={{
                                             strings: [
@@ -88,7 +88,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                         style={{ lineHeight: "1" }}
 
                                     />
-                                </h4>
+                                </h5>
                                 {/* <p className="text-center m-0 p-0 mb-4" style={{ fontSize: "2vmin",marginTop:"-8px" }}>
                                     Your One Stop <strong><span style={{ color: "orange" }}>Darshan Solution !</span></strong>
                                 </p> */}
