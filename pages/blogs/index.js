@@ -112,14 +112,14 @@ export default function Allblogs() {
             <Head>
                 {/* Basic Meta Tags */}
                 <title>All Blogs - Explore Ayodhya's Treasures</title>
-                <meta name="description" content="Discover everything you can do in Ayodhya! Explore captivating blogs about Ayodhya's sacred landmarks, history, and culture. Plan your darshan with our expert guidance as your Local Rishtedars." />
+                <meta name="description" content="Discover everything you can do in Ayodhya! Explore captivating blogs about Ayodhya&apos;s sacred landmarks, history, and culture. Plan your darshan with our expert guidance as your Local Rishtedars." />
                 <meta name="keywords" content="Places to visit in ayodhya,Ayodhya blogs, Ram Mandir, Hanuman Garhi, Kanak Bhawan, spiritual travel, Indian culture, heritage places, Ayodhya tourism" />
                 <meta name="author" content="GIG Ayodhya" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
                 {/* Open Graph for Social Sharing */}
-                <meta property="og:title" content="Explore Ayodhya's Treasures" />
-                <meta property="og:description" content="Discover everything you can do in Ayodhya! Explore captivating blogs about Ayodhya's sacred landmarks, history, and culture. Plan your darshan with our expert guidance as your Local Rishtedars." />
+                <meta property="og:title" content="Explore Ayodhya&apos;s Treasures" />
+                <meta property="og:description" content="Discover everything you can do in Ayodhya! Explore captivating blogs about Ayodhya&apos;s sacred landmarks, history, and culture. Plan your darshan with our expert guidance as your Local Rishtedars." />
                 <meta property="og:image" content="/logo.png" /> {/* Replace with your feature image URL */}
                 <meta property="og:url" content="/logo.png" />
                 <meta property="og:type" content="website" />
