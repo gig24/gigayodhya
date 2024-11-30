@@ -824,7 +824,7 @@ export default function Planbot() {
                 {step === 0 && chatIndex && (
                     <div className={styles.options} style={{ marginLeft: "50px", marginTop: "0px" }}>
                         <button
-                            className="btn btn-warning"
+                            className="btn btn-secondary"
                             onClick={() => {
                                 addToChat("user", "Browse Traditional Packages");
                                 handleNavigation('packages')
@@ -833,7 +833,7 @@ export default function Planbot() {
                             Browse Traditional Packages
                         </button>
                         <button
-                            className="btn btn-info mx-2 my-2"
+                            className="btn btn-primary mx-2 my-2"
                             onClick={() => {
                                 addToChat("user", "Customize My Journey");
                                 setStep(1);
@@ -881,13 +881,13 @@ export default function Planbot() {
                         </label>
                         <div className={styles.options}>
                             <button
-                                className="btn btn-warning"
+                                className="btn btn-primary"
                                 onClick={calculateDuration}
                                 disabled={!dates.arrivalDate || !dates.departureDate}
                             >
                                 Proceed
                             </button>
-                            <button className="btn btn-danger mx-2 my-2" onClick={() => handleTravelBack()}>Back</button>
+                            <button className="btn btn-secondary mx-2 my-2" onClick={() => handleTravelBack()}>Back</button>
                         </div>
                     </div>
                 )}
@@ -895,10 +895,10 @@ export default function Planbot() {
                 {/* Step 2: Duration Summary */}
                 {step === 2 && chatIndex && (
                     <div className={styles.options} style={{ marginLeft: "50px", marginTop: "0px", width: "70%" }}>
-                        <button className="btn btn-warning" onClick={fetchItinerary} id="show-itinerary-btn">
+                        <button className="btn btn-primary" onClick={fetchItinerary} id="show-itinerary-btn">
                             Show Itinerary
                         </button>
-                        <button className="btn btn-danger mx-2 my-2" onClick={() => handleDurationBack()}>Back</button>
+                        <button className="btn btn-secondary mx-2 my-2" onClick={() => handleDurationBack()}>Back</button>
 
                     </div>
                 )}
@@ -1007,13 +1007,13 @@ export default function Planbot() {
                         </div>
                         <div className={styles.options}>
                             <button
-                                className="btn btn-warning mx-2"
+                                className="btn btn-primary mx-2"
                                 onClick={useThisItinerary}
                             >
                                 Use This Itinerary
                             </button>
                             <button
-                                className="btn btn-danger mx-2"
+                                className="btn btn-secondary mx-2"
                                 onClick={handleItineraryBack}
                             >
                                 Back
@@ -1345,7 +1345,7 @@ export default function Planbot() {
                                         <p className="mt-1">
                                             {rating(hotel.ratingValue)} ({hotel.ratingValue}/5.0 Rating)
                                         </p>
-                                        <p className="text-danger m-0">
+                                        <p className="text-secondary m-0">
                                             Starting At:{" "}
                                             <span style={{ textDecoration: "line-through" }}>
                                                 {incprice(hotel.startprice)}
@@ -1378,11 +1378,11 @@ export default function Planbot() {
                                     You Choosed <span style={{ color: "orange" }}>{selectedRoom}</span> in {selectedHotel.name}{" "}
                                     {rating(selectedHotel.ratingValue)}
                                 </p>
-                                <button className="btn btn-warning" onClick={() => handleAccom()}>
-                                    Confirm Accommodation
+                                <button className="btn btn-primary" onClick={() => handleAccom()}>
+                                    Confirm Stay
                                 </button>
                                 <button
-                                    className="btn btn-danger mx-2 my-2"
+                                    className="btn btn-secondary mx-2 my-2"
                                     onClick={() => handleAccomBack()}
                                 >
                                     Back
@@ -1402,14 +1402,14 @@ export default function Planbot() {
                                     Select Accommodation according to your need
                                 </p>
                                 <button
-                                    className="btn btn-warning"
+                                    className="btn btn-primary"
                                     onClick={() => handleAccom()}
                                     disabled
                                 >
                                     Confirm Accommodation
                                 </button>
                                 <button
-                                    className="btn btn-danger mx-2 my-2"
+                                    className="btn btn-secondary mx-2 my-2"
                                     onClick={() => handleAccomBack()}
                                 >
                                     Back
@@ -1495,7 +1495,7 @@ export default function Planbot() {
                                                 </ul>
                                             </div>
                                             <div className='d-flex w-100 justify-content-between p-3 bg-light'>
-                                                <p className='text-danger'>Get At: <span style={{ textDecoration: "line-through" }}>{incprice(room.price)} </span><span className='text-dark'>₹{room.price}</span></p>
+                                                <p className='text-secondary'>Get At: <span style={{ textDecoration: "line-through" }}>{incprice(room.price)} </span><span className='text-dark'>₹{room.price}</span></p>
                                                 <button className="btn btn-primary" style={{ height: "max-content" }} onClick={() => handleRoomSubmit(room.roomName, room.roomid, selectedHotel.hotelId, selectedHotel.name, selectedHotel.ratingValue, selectedHotel.location, selectedHotel.img[0], room.price)}>
                                                     Select
                                                 </button>
@@ -1563,10 +1563,10 @@ export default function Planbot() {
                             }}>
                             {selectedCab ? `Selected Cab: ${selectedCab.name}` : "Click to choose a cab"}
                         </p>
-                        <button className="btn btn-warning" onClick={handleTravelConfirm} disabled={!selectedCab}>
+                        <button className="btn btn-primary" onClick={handleTravelConfirm} disabled={!selectedCab}>
                             Confirm Cab
                         </button>
-                        <button className="btn btn-danger mx-2 my-2" onClick={handleTravelcabBack}>
+                        <button className="btn btn-secondary mx-2 my-2" onClick={handleTravelcabBack}>
                             Back
                         </button>
                     </div>
@@ -1651,10 +1651,10 @@ export default function Planbot() {
                                 "Choose your companion"
                             )}
                         </p>
-                        <button className="btn btn-warning mt-3" onClick={handleCompanionConfirm} disabled={!selectedGuide}>
+                        <button className="btn btn-primary mt-3" onClick={handleCompanionConfirm} disabled={!selectedGuide}>
                             Confirm Companion
                         </button>
-                        <button className="btn btn-danger mt-3 mx-2" onClick={handleCompanionBack}>
+                        <button className="btn btn-secondary mt-3 mx-2" onClick={handleCompanionBack}>
                             Back
                         </button>
                     </div>)}
@@ -1730,13 +1730,13 @@ export default function Planbot() {
                         </div>
 
                         <button
-                            className="btn btn-warning mt-3"
+                            className="btn btn-primary mt-3"
                             onClick={handleActivitySubmit}
                         >
                             Confirm Activites
                         </button>
                         <button
-                            className="btn btn-danger mt-3 mx-2"
+                            className="btn btn-secondary mt-3 mx-2"
                             onClick={handleActivityBack}
                         >
                             Back
@@ -1914,11 +1914,11 @@ export default function Planbot() {
                                 </p>
                             )}
                         </div>
-                        <button className="btn btn-warning mt-3" onClick={handlePoojaSubmit}>
+                        <button className="btn btn-primary mt-3" onClick={handlePoojaSubmit}>
                             Finalize Pooja
                         </button>
                         <button
-                            className="btn btn-danger mt-3 mx-2"
+                            className="btn btn-secondary mt-3 mx-2"
                             onClick={handlePoojaBack}
                         >
                             Back
@@ -2107,7 +2107,7 @@ export default function Planbot() {
 
                 {step === 10 && chatIndex && (
                     <div className={styles.widthCorrector}>
-                        <Link href="/"><button className="btn btn-warning">Go to Home</button></Link>
+                        <Link href="/"><button className="btn btn-primary">Go to Home</button></Link>
                         <a a href="https://wa.me/7505866498" target="_blank" className="btn btn-success mx-2">Contact Us</a>
                     </div>
                 )}
