@@ -1266,7 +1266,7 @@ if(addtostart){
             {showFormOverlay && (
                 <div className={styles.overlay}>
                     <div className={`${styles.formDiv} ${styles.overlayContent}`}>
-                        <button className={`btn btn-danger ${styles.formclosebtn}`} onClick={() => setShowFormOverlay(false)}>Back</button>
+                        <button className={`btn btn-danger mt-2 ${styles.formclosebtn}`} onClick={() => setShowFormOverlay(false)}>Back</button>
                         <form onSubmit={handleFormSubmit} style={{ width: "90%" }}>
                             <h3>Submit Your Query</h3>
 

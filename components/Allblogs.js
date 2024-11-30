@@ -69,9 +69,26 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                             )} */}
                         </div>
                         <div className={styles.mobileheading}>
-                                <h6 className={styles.headingexplore}>
+                                {/* <h6 className={styles.headingexplore}>
                                     Your One Stop <span style={{ color: "#670c0b" }}>Darshan Solution !</span>
-                                </h6>
+                                </h6> */}
+                                <h4 className={styles.typewriter2}>
+                                    <Typewriter
+                                        options={{
+                                            strings: [
+                                                'Your One Stop <span style="color: #670c0b;">Darshan Solution !</span>',
+                                                "Your <span style='color: red;'>Local Rishtedar </span>Of Ayodhya!",
+                                                " <span style='color: #334f74;'>Your Guide, Planner,</span> and Support!"
+                                            ],
+                                            autoStart: true,
+                                            loop: true,
+                                            deleteSpeed: 30,
+                                            typeSpeed: 290,
+                                        }}
+                                        style={{ lineHeight: "1" }}
+
+                                    />
+                                </h4>
                                 {/* <p className="text-center m-0 p-0 mb-4" style={{ fontSize: "2vmin",marginTop:"-8px" }}>
                                     Your One Stop <strong><span style={{ color: "orange" }}>Darshan Solution !</span></strong>
                                 </p> */}
