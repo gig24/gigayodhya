@@ -35,6 +35,15 @@
 
 /* Responsive Styles for Smaller Screens */
 @media (max-width: 600px) {
+    .mobileheading{
+        margin-top: -90px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin-bottom: -25px;
+    }
     .blogimgtext {
         font-size: 10px;
         width: 100%;
@@ -68,13 +77,21 @@
         min-height: max-content;
     
     }
+    .typewriter{
+        color: black;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 0;
+        display: none;
+    }
     .fullcontainer {
         height: max-content;
         width: 100%;
         margin-bottom: 20px;
         display: flex;
-        background:linear-gradient(135deg, #40577c, #5f7699, #8095b5);
-        background-image: url('https://s7ap1.scene7.com/is/image/incredibleindia/1-ram-ki-paidi-ayodhya-uttar-pradesh-attr-hero?qlt=82&ts=1726818931685');
+        color: black;
+        /* background:linear-gradient(135deg, #40577c, #5f7699, #8095b5); */
+        /* background-image: url('https://s7ap1.scene7.com/is/image/incredibleindia/1-ram-ki-paidi-ayodhya-uttar-pradesh-attr-hero?qlt=82&ts=1726818931685'); */
         background-size: cover;
         background-position: center;
         justify-content: center;
@@ -85,7 +102,7 @@
         overflow-x: visible; /* Prevent the blur effect from cutting content */
     }
     
-    .fullcontainer::before {
+    /* .fullcontainer::before {
         content: "";
         position: absolute;
         top: 0;
@@ -99,17 +116,17 @@
         filter: blur(3px) brightness(50%);
         z-index: 0;
         border-top: 1px solid black;
-    }
+    } */
     
     .fullcontainer > * {
         z-index: 1;
     }
-    .botcontainer{
+   
+    /* .botcontainer{
         width:100%; 
         display:flex;
-        /* background: #03d3f3; */
         margin-top: -90px;
-    }
+    } */
     .bot{
         min-width:30px;
          min-height:30px;
@@ -117,7 +134,14 @@
           max-height:120px;
            position:absolute; 
            bottom:0px; 
-           left:0px 
+           left:0px;
+           display: none;
+    }
+    .taglinepara{
+        display: none;
+    }
+    .letsplanbtn{
+        margin-bottom: -50px;
     }
     .p1 {
         font-family: "Times New Roman", Times, serif;
@@ -193,6 +217,23 @@
 
 /* Responsive Styles for Larger Screens */
 @media (min-width: 601px) {
+    .letsplanbtn{
+        margin-bottom: 10px;
+    }
+    .mobileheading{
+        display: none;
+    }
+    .typewriter{
+        color: white;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding: 0;
+    }
+    .taglinepara{
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
     .headingAbout{
         margin-bottom: 0;
     }

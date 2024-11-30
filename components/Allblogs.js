@@ -68,11 +68,19 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                 <p>No blogs available at the moment.</p>  // Fallback message
                             )} */}
                         </div>
-
+                        <div className={styles.mobileheading}>
+                                <h6 className={styles.headingexplore}>
+                                    Your One Stop <span style={{ color: "#670c0b" }}>Darshan Solution !</span>
+                                </h6>
+                                {/* <p className="text-center m-0 p-0 mb-4" style={{ fontSize: "2vmin",marginTop:"-8px" }}>
+                                    Your One Stop <strong><span style={{ color: "orange" }}>Darshan Solution !</span></strong>
+                                </p> */}
+                            </div>
                         <div className={styles.botcontainer}>
                             <div id="boy-waving-animation" className={styles.bot}></div>
-                            <div className=' text-light w-100' style={{ maxHeight: "fit-content", marginLeft: "0px", display: "flex", flexDirection: "column",justifyContent:"center",alignItems:"center" }}>
-                                <h1 className='mt-1 mb-0 p-0' style={{ fontFamily: "serif", textAlign: "center" }}>
+                           
+                            <div className=' text-light w-100' style={{ maxHeight: "fit-content", marginLeft: "0px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                                <h1 className={styles.typewriter}>
                                     <Typewriter
                                         options={{
                                             strings: [
@@ -85,14 +93,14 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                             deleteSpeed: 30,
                                             typeSpeed: 190,
                                         }}
-                                        style={{ lineHeight: "1"}}
+                                        style={{ lineHeight: "1" }}
 
                                     />
                                 </h1>
                                 <div className={styles.offerings}>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard1}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-hotel"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-hotel" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -105,7 +113,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard2}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-taxi"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-taxi" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -118,11 +126,11 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard3}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-map"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-map" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
-                                            Itineraries
+                                                Itineraries
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
                                                 Customize your Itineraries
@@ -131,20 +139,20 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard4}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-user"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-user" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
-                                                Guides
+                                                Companion
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
-                                                24*7 Guided Tours 
+                                                24*7 Guided Tours
                                             </div>
                                         </div>
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard5}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-gamepad"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-gamepad" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -157,7 +165,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard6}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-fire"  style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-fire" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -173,8 +181,8 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                             </div>
 
                         </div>
-                        <p className='m-0 p-0 text-light'>-Your One Stop Darshan Solution</p>
-                        <button className='btn btn-danger mt-2 mb-3'  onClick={handleNavigation}>Let&apos;s Plan Your Darshan</button>
+                        <p className={styles.taglinepara}>-Your One Stop Darshan Solution</p>
+                        <button className={` ${styles.letsplanbtn} btn btn-danger mt-2`} onClick={handleNavigation}>Let&apos;s Plan Your Darshan</button>
 
 
                     </div>
