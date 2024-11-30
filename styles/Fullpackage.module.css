@@ -279,7 +279,9 @@
     min-height: 95%;
 }
 
-
+.hotelGrid{
+    padding-bottom: 25px;
+}
 
 @media (min-width: 601px) {
     .traveldetaildiv {

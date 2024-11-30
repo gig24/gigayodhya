@@ -242,7 +242,7 @@ export default function Planbot() {
             setTempItinerary(deepClone(itinerary));
             setUnassignedPlaces(unassigned);
         }
-    }, [isOverlayVisible,isMobileOverlayVisible]);
+    }, [isOverlayVisible, isMobileOverlayVisible]);
     const fetchItinerary = () => {
         const itineraryForDuration = JSON.parse(JSON.stringify(itineraryData.itineraries[duration]));
         // const itineraryForDuration = itineraryData.itineraries[duration];
@@ -260,7 +260,7 @@ export default function Planbot() {
             addToChat("bot", "No itinerary available for the selected duration.");
         }
         setStep(3);
-       
+
 
 
 
@@ -346,7 +346,7 @@ export default function Planbot() {
         setMessageTracker((prev) => ({ ...prev, step3: false, step2: false }));
 
     };
-    const handleMoveToDay = (place, targetDayIndex,addtostart=false) => {
+    const handleMoveToDay = (place, targetDayIndex, addtostart = false) => {
         const updatedTempItinerary = [...tempItinerary];
         const updatedUnassignedPlaces = [...unassignedPlaces];
 
@@ -366,13 +366,13 @@ export default function Planbot() {
                 }
             }
         }
-if(addtostart){
-    updatedTempItinerary[targetDayIndex].places.unshift(place);
+        if (addtostart) {
+            updatedTempItinerary[targetDayIndex].places.unshift(place);
 
-}else{
-    updatedTempItinerary[targetDayIndex].places.push(place);
+        } else {
+            updatedTempItinerary[targetDayIndex].places.push(place);
 
-}
+        }
         // Add the place to the target day
 
         // Update the states
@@ -421,10 +421,10 @@ if(addtostart){
 
         // Check if we are moving from unassigned places
         if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
-            handleMoveToDay(place, targetDayIndex,true); // Move to the first day
+            handleMoveToDay(place, targetDayIndex, true); // Move to the first day
         } else {
             // Move to the next day if we're not in the first day
-            handleMoveToDay(place, targetDayIndex + 1,true);
+            handleMoveToDay(place, targetDayIndex + 1, true);
         }
     };
 
@@ -438,7 +438,7 @@ if(addtostart){
             console.warn('scrollToSection called in a non-browser environment');
         }
     };
-    
+
     const handleNavigation = (section) => {
         if (router.pathname === '/') {
             // Scroll to the specific section on the home page
@@ -575,24 +575,24 @@ if(addtostart){
             ...prev,
             activity: selectedActivities,
         }));
-    
+
         // Map selected activity IDs to their names
         const activityNames = selectedActivities.map((id) => {
             const activity = activityData.activities.find((act) => act.aid === id);
             return activity ? activity.name : "Unknown Activity";
         });
-    
+
         // Generate the message with activity names
         const activityMessage = activityNames.length > 0
             ? `Finalize ${activityNames.join(", ")} as my local activities.`
             : "No local activities selected.";
-    
+
         // Add the message to the chat
         addToChat("user", activityMessage);
         setStep(8);
     };
-    
-    
+
+
     const handleActivityBack = () => {
         setStep((prev) => prev - 1);
         setFinalUserPackage((prev) => ({
@@ -624,25 +624,25 @@ if(addtostart){
             ...prev,
             pooja: selectedPoojas,
         }));
-    
+
         // Map selected Pooja IDs to their names
         const poojaNames = selectedPoojas.map((id) => {
             const pooja = poojaData.pooja.find((p) => p.pid === id);
             return pooja ? pooja.name : "Unknown Pooja";
         });
-    
+
         // Generate the message with Pooja names
         const poojaMessage = poojaNames.length > 0
             ? `Finalize ${poojaNames.join(", ")} as my Pooja arrangements.`
             : "No Pooja arrangements selected.";
-    
+
         // Add the message to the chat
         addToChat("user", poojaMessage);
-    
+
         // Move to the next step
         setStep(9);
     };
-    
+
     const handlePoojaBack = () => {
         setStep((prev) => prev - 1);
         setFinalUserPackage((prev) => ({
@@ -674,7 +674,7 @@ if(addtostart){
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true); // Disable button and show submitting state
-    
+
         let submitButton;
         if (typeof window !== 'undefined') {
             submitButton = document.getElementById('submitBtn');
@@ -682,7 +682,7 @@ if(addtostart){
                 submitButton.innerText = 'Submitting...';
             }
         }
-    
+
         try {
             // Submit form data using fetch
             const response = await fetch('/api/addbooking', {
@@ -695,7 +695,7 @@ if(addtostart){
                     packageObject: finalUserPackage, // Add the packageObject separately
                 }),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 setFormData({
@@ -708,11 +708,11 @@ if(addtostart){
                     noOfPersons: '',
                 });
                 setIsSubmitting(false);
-    
+
                 if (submitButton) {
                     submitButton.innerText = 'Submit';
                 }
-    
+
                 alert('Query Added Successfully! You will be contacted soon.');
                 addToChat('user', 'Submit Details');
                 setStep(10);
@@ -724,7 +724,7 @@ if(addtostart){
             console.error('Error submitting data:', error);
         }
     };
-    
+
     const handlePhoneInput = (e) => {
         const value = e.target.value;
         // Allow only numbers by removing non-numeric characters
@@ -743,12 +743,12 @@ if(addtostart){
         setChatIndex(false);
     };
     // Function to scroll to the newly added step or chat message
-  
+
     if (typeof window !== "undefined") {
         // Get the container element
         const allchatContainer = document.getElementById('allchatContainer');
         console.log("all chat container: ", allchatContainer);
-    
+
         if (allchatContainer) {
             // Function to scroll to the latest chat
             function scrollToLatestChat() {
@@ -762,18 +762,18 @@ if(addtostart){
                     console.log("Function executed: Scrolled to latest chat.");
                 }
             }
-    
+
             // Create a MutationObserver instance
             const observer = new MutationObserver(() => {
                 scrollToLatestChat();
             });
-    
+
             // Start observing the container for child changes
             observer.observe(allchatContainer, {
                 childList: true, // Observe direct child additions/removals
                 subtree: false,  // Don't observe descendants
             });
-    
+
             // Cleanup logic to disconnect observer when no longer needed
             window.addEventListener("beforeunload", () => {
                 observer.disconnect();
@@ -783,7 +783,7 @@ if(addtostart){
             console.error("Element 'allchatContainer' not found.");
         }
     }
-    
+
     return (
         <div>
             <Navbar />
@@ -915,17 +915,17 @@ if(addtostart){
                                     Itinerary
                                 </h4>
                                 <button
-                                className={`btn btn-primary ${styles.deskItenerybtn}`}
-                                onClick={() => {setIsOverlayVisible(true);addToChat("user", "Customize Itinerary");}}
-                            >
-                                Customize Itinerary
-                            </button>
-                            <button
-                                className={`btn btn-primary ${styles.mobItenerybtn}`}
-                                onClick={() => {setIsMobileOverlayVisible(true);addToChat("user", "Customize Itinerary");}}
-                            >
-                                Customize Itinerary
-                            </button>
+                                    className={`btn btn-primary ${styles.deskItenerybtn}`}
+                                    onClick={() => { setIsOverlayVisible(true); addToChat("user", "Customize Itinerary"); }}
+                                >
+                                    Customize Itinerary
+                                </button>
+                                <button
+                                    className={`btn btn-primary ${styles.mobItenerybtn}`}
+                                    onClick={() => { setIsMobileOverlayVisible(true); addToChat("user", "Customize Itinerary"); }}
+                                >
+                                    Customize Itinerary
+                                </button>
                                 {/* <button
                                     className="btn btn-primary mx-2"
                                     onClick={() => { setIsOverlayVisible(true); addToChat("user", "Customize Itinerary"); }}>
@@ -1160,109 +1160,109 @@ if(addtostart){
                         </div>
                     </div>
                 )}
-                 {isMobileOverlayVisible && (
-                <div className={styles.overlay}>
-                    <div className={styles.itineraryoverlayContent}>
-                        <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
-                            <div className="d-flex w-100 justify-content-between">
-                                <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
-                                <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
-                                </button>
-                                <button className="btn btn-primary m-2" onClick={saveChanges}>
-                                    Save Changes
-                                </button>
+                {isMobileOverlayVisible && (
+                    <div className={styles.overlay}>
+                        <div className={styles.itineraryoverlayContent}>
+                            <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
+                                <div className="d-flex w-100 justify-content-between">
+                                    <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
+                                        <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
+                                    </button>
+                                    <button className="btn btn-primary m-2" onClick={saveChanges}>
+                                        Save Changes
+                                    </button>
 
-                            </div>
-                            <h6 className="text-muted text-center my-2 mb-3">Use Up/Down arrows to move places</h6>
-
-                        </div>
-                        <div className="d-flex w-100 flex-column" style={{ marginTop: "700px" }}>
-                            {/* Unassigned Places */}
-                            <div className={styles.unassignedcontainer}>
-                                <h6 className='px-2'>More Places To Explore</h6>
-                                <div className={styles.unassignedPlacesSection}>
-                                    {unassignedPlaces.map((place, index) => (
-                                        <div key={index} className={styles.itinerarycircleoverlaymobdiv}>
-                                            <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
-                                                <div style={{ width: '70px', height: '70px', background: 'grey' }}>
-                                                    <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
-                                                </div>
-                                                <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
-                                                    <h6 className=" bg-ifo mx-4">{place.name}</h6>
-                                                </a>
-                                            </div>
-                                            <div className={styles.arrows} >
-                                                <button
-                                                    // onClick={() => handleUpArrow(place, dayIndex)} // Move up
-                                                    className={`bt btn-ino ${styles.upArrow}`}
-                                                    disabled={true}
-
-                                                // disabled={dayIndex === 0 && !unassignedPlaces.some(p => p.pid === place.pid)}
-                                                >
-                                                    ↑
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDownArrow(place, 0)} // Move down
-                                                    className={`bt btn-inf ${styles.downArrow}`}
-                                                // disabled={dayIndex === tempItinerary.length - 1}
-                                                >
-                                                    ↓
-                                                </button>
-
-                                            </div>
-                                        </div>
-                                    ))}
                                 </div>
+                                <h6 className="text-muted text-center my-2 mb-3">Use ↑/↓ arrows to move, click to explore.</h6>
+
                             </div>
-
-                            {/* Itinerary Days */}
-                            {tempItinerary.map((day, dayIndex) => (
-                                <div key={dayIndex} className={styles.daysectioncontainer}>
-                                    <h5 className='m-0 p-0 px-2'>{day.day}</h5>
-
-                                    <div key={dayIndex} className={styles.daySection}>
-                                        <div className='w-100'>
-                                            {day.places.map((place, placeIndex) => (
-                                                <div key={placeIndex} className={styles.itinerarycircleoverlaymobdiv}>
-                                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
-                                                        <div style={{ width: '70px', height: '70px', background: 'grey' }}>
-                                                            <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
-                                                        </div>
-                                                        <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
-                                                            <h6 className=" bg-ifo mx-4">{place.name}</h6>
-                                                        </a>
+                            <div className="d-flex w-100 flex-column" style={{ marginTop: "700px" }}>
+                                {/* Unassigned Places */}
+                                <div className={styles.unassignedcontainer}>
+                                    <h6 className='px-2'>More Places To Explore</h6>
+                                    <div className={styles.unassignedPlacesSection}>
+                                        {unassignedPlaces.map((place, index) => (
+                                            <div key={index} className={styles.itinerarycircleoverlaymobdiv}>
+                                                <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                    <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                        <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
                                                     </div>
-                                                    <div className={styles.arrows}>
-                                                        <button
-                                                            onClick={() => handleUpArrow(place, dayIndex)} // Move up
-                                                            className={styles.upArrow}
-                                                        >
-                                                            ↑
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDownArrow(place, dayIndex)} // Move down
-                                                            className={styles.downArrow}
-                                                            disabled={dayIndex === tempItinerary.length - 1}
-                                                        >
-                                                            ↓
-                                                        </button>
-                                                    </div>
+                                                    <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                        <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                    </a>
                                                 </div>
-                                            ))}
-                                        </div>
+                                                <div className={styles.arrows} >
+                                                    <button
+                                                        // onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                        className={`bt btn-ino ${styles.upArrow}`}
+                                                        disabled={true}
+
+                                                    // disabled={dayIndex === 0 && !unassignedPlaces.some(p => p.pid === place.pid)}
+                                                    >
+                                                        ↑
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDownArrow(place, 0)} // Move down
+                                                        className={`bt btn-inf ${styles.downArrow}`}
+                                                    // disabled={dayIndex === tempItinerary.length - 1}
+                                                    >
+                                                        ↓
+                                                    </button>
+
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                            ))}
+
+                                {/* Itinerary Days */}
+                                {tempItinerary.map((day, dayIndex) => (
+                                    <div key={dayIndex} className={styles.daysectioncontainer}>
+                                        <h5 className='m-0 p-0 px-2'>{day.day}</h5>
+
+                                        <div key={dayIndex} className={styles.daySection}>
+                                            <div className='w-100'>
+                                                {day.places.map((place, placeIndex) => (
+                                                    <div key={placeIndex} className={styles.itinerarycircleoverlaymobdiv}>
+                                                        <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                            <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                                <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                            </div>
+                                                            <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                                <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                            </a>
+                                                        </div>
+                                                        <div className={styles.arrows}>
+                                                            <button
+                                                                onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                                className={styles.upArrow}
+                                                            >
+                                                                ↑
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDownArrow(place, dayIndex)} // Move down
+                                                                className={styles.downArrow}
+                                                                disabled={dayIndex === tempItinerary.length - 1}
+                                                            >
+                                                                ↓
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+
+                            </div>
+
+
+                            {/* Save & Close Buttons */}
 
                         </div>
 
-
-                        {/* Save & Close Buttons */}
-
                     </div>
-
-                </div>
-            )}
+                )}
 
                 {/* Step 4: Show Accomodation */}
                 {step === 4 && chatIndex && (
@@ -1375,7 +1375,7 @@ if(addtostart){
                                         fontWeight: "bolder"
                                     }}
                                 >
-                                    You Choosed <span style={{color:"orange"}}>{selectedRoom}</span> in {selectedHotel.name}{" "}
+                                    You Choosed <span style={{ color: "orange" }}>{selectedRoom}</span> in {selectedHotel.name}{" "}
                                     {rating(selectedHotel.ratingValue)}
                                 </p>
                                 <button className="btn btn-warning" onClick={() => handleAccom()}>
@@ -1420,10 +1420,12 @@ if(addtostart){
 
                 )}
                 {showFullHotelOverlay && (
-                    <div className={`${styles.overlay}`} style={{ zIndex: "1500" }}>
-                        <button className="btn btn-danger p-2" style={{ position: "absolute", top: "5px", right: "5px", fontSize: "15px" }} onClick={() => setShowFullHotelOverlay(false)}>Back</button>
+                    <div className={`${styles.overlay}`} style={{ zIndex: "1800" }}>
                         <div className={styles.fullhoteloverlayContentContainer}>
                             <div className={`${styles.overlayContent} ${styles.fhoverlayContent}`}  >
+                                <div className='w-100 pt-2' style={{ cursor: "pointer" }}>
+                                    <button className=" btn btn-secondary mb-2" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                                </div>
                                 <div className={styles.fhImageDescription}  >
                                     <div className={styles.fhdescription}>
                                         <h2 className='mb-0'>{selectedHotel.name}</h2>
@@ -1431,12 +1433,12 @@ if(addtostart){
                                         <a href={selectedHotel.map} target="_blank">View On Map</a>
                                         <p style={{ fontSize: "3vmin", margin: "0px", marginTop: "3px", marginBottom: "4px" }}>{rating(selectedHotel.ratingValue)} ({selectedHotel.ratingValue}/5.0 Rating)</p>
                                         <p style={{ fontSize: "3vmin", margin: "0px", marginTop: "3px", marginBottom: "4px" }}>Type - {selectedHotel.type}</p>
-                                        <p className={`text-muted mt-4 ${styles.fhdescriptionpara}`} style={{ width: "90%" }}>{selectedHotel.description}</p>
+                                        <p className={`text-muted ${styles.fhdescriptionpara}`}>{selectedHotel.description}</p>
                                     </div>
-                                    <div className={styles.fhImage} >
-                                        <Carousel interval={2500} pause={false} autoPlay infiniteLoop>
+                                    <div className={styles.fhImage} style={{ zIndex: "1" }}>
+                                        <Carousel interval={2500} pause={false} autoPlay infiniteLoop style={{ zIndex: "1" }}>
                                             {selectedHotel.img.map((image, index) => (
-                                                <div key={index} className='w-100 h-100'>
+                                                <div key={index} className='w-100 h-100' style={{ zIndex: "1" }}>
                                                     <Image src={image} alt={`Hotel Image ${index}`} width={300} height={400} objectFit='cover' />
                                                 </div>
                                             ))}
@@ -1444,16 +1446,17 @@ if(addtostart){
                                     </div>
                                 </div>
                                 <div className={styles.fhfacilitiesContainer}>
-                                    <div className={`${styles.fhfacilities} mb-4 mt-2`}>
-                                        <h4 className='text-success'>What this place Offers?</h4>
+                                    <div className={`${styles.fhfacilities}`}>
+                                        <h4 className='text-dark' style={{ borderBottom: "1px solid blue", width: "max-content" }}>What this place Offers?</h4>
                                         <ul className={`inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", flexWrap: "wrap" }}>
                                             {selectedHotel.amenities.map((item, index) => (
                                                 <li key={index} className='m-2'><i className="fa fa-check" aria-hidden="true" style={{ color: "#2a9d8f", marginRight: "10px", fontSize: "18px", width: "max-content" }}></i>{item}</li>
+
                                             ))}
                                         </ul>
                                     </div>
                                     <div className={styles.fhfacilities}>
-                                        <h4 className='text-danger'>Additional Info</h4>
+                                        <h4 className='text-dark' style={{ borderBottom: "1px solid blue", width: "max-content" }}>Additional Info</h4>
                                         <ul className="m-0 pb-0" style={{ listStyle: "circle" }}>
                                             {selectedHotel.AdditionalInfo.map((info, index) => (
                                                 <li key={index}>
@@ -1463,11 +1466,11 @@ if(addtostart){
                                         </ul>
                                     </div>
                                 </div>
-                                <h3 className='mt-5'>Rooms</h3>
+                                <h3 className='mt-5' style={{ borderBottom: "1px solid blue" }}>Rooms</h3>
                                 <div className={`mb-5 ${styles.roomContainer}`} >
                                     {selectedHotel.rooms.map((room, index) => (
                                         <div key={index} className={styles.roomcard}>
-                                            <div style={{ width: "100%", height: "200px" }}>
+                                            <div style={{ width: "100%", height: "200px", background: "#bdbaba" }}>
                                                 <Carousel interval={2500} pause={false} autoPlay infiniteLoop>
                                                     {room.img.map((roomImg, idx) => (
                                                         <div key={idx} style={{ width: "100%", height: "200px", background: "grey" }}>
@@ -1478,7 +1481,7 @@ if(addtostart){
                                             </div>
                                             <h4 className='mt-1'>{room.roomName}</h4>
                                             <div className='d-flex flex-column'>
-                                                <ul className={`inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", flexWrap: "wrap", paddingLeft: "20px" }}>
+                                                <ul className={`w-100 inclusionlistdiv ${styles.customlist}`} style={{ display: "flex", justifyContent: "flex-start", flexWrap: "wrap" }}>
                                                     {room.amenities.map((item, index) => (
                                                         <li key={index} className='m-2'><i className="fa fa-check" aria-hidden="true" style={{ color: "#2a9d8f", marginRight: "10px", fontSize: "18px", width: "max-content" }}></i>{item}</li>
                                                     ))}
@@ -1493,7 +1496,7 @@ if(addtostart){
                                             </div>
                                             <div className='d-flex w-100 justify-content-between p-3 bg-light'>
                                                 <p className='text-danger'>Get At: <span style={{ textDecoration: "line-through" }}>{incprice(room.price)} </span><span className='text-dark'>₹{room.price}</span></p>
-                                                <button className="btn btn-primary" onClick={() => handleRoomSubmit(room.roomName, room.roomid, selectedHotel.hotelId, selectedHotel.name, selectedHotel.ratingValue, selectedHotel.location, selectedHotel.img[0], room.price)}>
+                                                <button className="btn btn-primary" style={{ height: "max-content" }} onClick={() => handleRoomSubmit(room.roomName, room.roomid, selectedHotel.hotelId, selectedHotel.name, selectedHotel.ratingValue, selectedHotel.location, selectedHotel.img[0], room.price)}>
                                                     Select
                                                 </button>
                                             </div>
@@ -1649,7 +1652,7 @@ if(addtostart){
                             )}
                         </p>
                         <button className="btn btn-warning mt-3" onClick={handleCompanionConfirm} disabled={!selectedGuide}>
-                            Confirm Commpanion
+                            Confirm Companion
                         </button>
                         <button className="btn btn-danger mt-3 mx-2" onClick={handleCompanionBack}>
                             Back
@@ -1832,17 +1835,11 @@ if(addtostart){
                                         ))}
                                     </div>
                                     <div style={{ marginTop: "20px", textAlign: "right" }}>
-                                        <button
-                                            onClick={handleSave}
-                                            className="btn btn-success mx-2"
-                                        >
+                                        <button onClick={handleSave} className='btn btn-primary mx-2'>
                                             Save
                                         </button>
-                                        <button
-                                            className="btn btn-danger"
-                                            onClick={() => setShowActivityOverlay(false)}
-                                        >
-                                            Cancel
+                                        <button className='btn btn-secondary' onClick={() => setShowActivityOverlay(false)}>
+                                            Back
                                         </button>
                                     </div>
                                 </div>
@@ -2020,15 +2017,15 @@ if(addtostart){
                                     <div style={{ marginTop: "20px", textAlign: "right" }}>
                                         <button
                                             onClick={handleSavePooja}
-                                            className="btn btn-success mx-2"
+                                            className="btn btn-primary mx-2"
                                         >
                                             Save
                                         </button>
                                         <button
-                                            className="btn btn-danger"
+                                            className="btn btn-secondary"
                                             onClick={() => setShowPoojaOverlay(false)}
                                         >
-                                            Cancel
+                                            Back
                                         </button>
                                     </div>
                                 </div>

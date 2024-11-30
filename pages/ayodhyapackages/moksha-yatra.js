@@ -1012,7 +1012,7 @@ if(addtostart){
                                 </button>
 
                             </div>
-                            <h6 className="text-muted text-center my-2 mb-3">Use Up/Down arrows to move places</h6>
+                            <h6 className="text-muted text-center my-2 mb-3">Use ↑/↓ arrows to move, click to explore.</h6>
 
                         </div>
                         <div className="d-flex w-100 flex-column" style={{ marginTop: "700px" }}>
