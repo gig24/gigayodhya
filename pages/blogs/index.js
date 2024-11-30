@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Navbar from '../../components/Navbar.js';
 import Footer from '../../components/Footer.js';
 import styles from '../../styles/Allblogspage.module.css';
@@ -8,19 +8,36 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css'; // Import carous
 import Head from 'next/head';
 import packageObjectData from '../../data/student-enlightment.json';
 import Link from 'next/link.js';
+import { useRouter } from 'next/router';
 
 export default function Allblogs() {
+    const router = useRouter();
     const mainContainerRef = useRef(null);
     const aboveMainContainerRef = useRef(null);
+    const [maxLength, setMaxLength] = useState(300);
+    useEffect(() => {
+        const updateMaxLength = () => {
+            setMaxLength(window.innerWidth <= 768 ? 150 : 300);
+        };
 
-    const truncateDescription = (description) => {
-        const maxLength = window.innerWidth <= 768 ? 150 : 300; // Use 200 for mobile (width <= 768px), 300 for desktop
+        // Set the initial value
+        updateMaxLength();
+
+        // Listen for window resize events
+        window.addEventListener('resize', updateMaxLength);
+
+        return () => {
+            window.removeEventListener('resize', updateMaxLength);
+        };
+    }, []);
+
+
+    const truncateDescription = (description, maxLength) => {
         if (description.length > maxLength) {
             return description.substring(0, maxLength) + "...";
         }
         return description;
     };
-    
 
     // All Blogs Data
     const allBlogs = [
@@ -92,18 +109,39 @@ export default function Allblogs() {
 
     return (
         <div>
+            <Head>
+                {/* Basic Meta Tags */}
+                <title>All Blogs - Explore Ayodhya's Treasures</title>
+                <meta name="description" content="Discover everything you can do in Ayodhya! Explore captivating blogs about Ayodhya's sacred landmarks, history, and culture. Plan your darshan with our expert guidance as your Local Rishtedars." />
+                <meta name="keywords" content="Places to visit in ayodhya,Ayodhya blogs, Ram Mandir, Hanuman Garhi, Kanak Bhawan, spiritual travel, Indian culture, heritage places, Ayodhya tourism" />
+                <meta name="author" content="GIG Ayodhya" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+                {/* Open Graph for Social Sharing */}
+                <meta property="og:title" content="Explore Ayodhya's Treasures" />
+                <meta property="og:description" content="Discover everything you can do in Ayodhya! Explore captivating blogs about Ayodhya's sacred landmarks, history, and culture. Plan your darshan with our expert guidance as your Local Rishtedars." />
+                <meta property="og:image" content="/logo.png" /> {/* Replace with your feature image URL */}
+                <meta property="og:url" content="/logo.png" />
+                <meta property="og:type" content="website" />
+
+             
+                {/* Favicon */}
+
+                {/* Additional Resources (Optional) */}
+            </Head>
+
             <Navbar />
             <hr />
             <div className="share text-center d-flex align-items-center justify-content-center flex-column">
-                <div className="mr-3">Didnt <span style={{color: "red"}}> Planned?</span>
-                    <p className='text-muted m-0 text-center mb-2' style={{fontSize:"2vmin"}}>Plan Your Full Darshan With Us! You Should See What We Are <span style={{color: "green"}}> Offering!</span></p>
-                    <p className='m-0 text-center mb-2' style={{color: "orange"}}>YOU DONT HAVE TO PAY!</p>
+                <div className="mr-3">Didnt <span style={{ color: "red" }}> Planned?</span>
+                    <p className='text-muted m-0 text-center mb-2' style={{ fontSize: "2vmin" }}>Plan Your Full Darshan With Us! You Should See What We Are <span style={{ color: "green" }}> Offering!</span></p>
+                    <p className='m-0 text-center mb-2' style={{ color: "orange" }}>YOU DONT HAVE TO PAY!</p>
 
                 </div>
                 <Link href="/" className="btn btn-danger">Plan Now!</Link>
             </div>
             <hr />
-   
+
             {/* Above Main Content */}
             <div
                 ref={aboveMainContainerRef}
@@ -113,12 +151,11 @@ export default function Allblogs() {
             <div ref={mainContainerRef} className={styles.maincontainer}>
                 {/* Package Overview Section */}
                 <div className={styles.packageoverview}>
-                <h2 className='text-dark mx-2'>All Blogs</h2>
+                    <h2 className='text-dark mx-2'>All Blogs</h2>
                     {allBlogs.map((blog) => (
-                        <Link key={blog.id} href={blog.link} passHref style={{textDecoration:"none"}}>
-                        <div key={blog.id} className={`${styles.blogCard} ${styles.allblogcard}`} style={{ color: "black" }}>
+                        <div key={blog.id} className={`${styles.blogCard} ${styles.allblogcard}`} style={{ color: "black", cursor: "pointer" }} onClick={() => router.push(blog.link)}>
                             <div className={styles.allblogcardcorosaldiv}>
-                                <div className={styles.imageblog} style={{background:"grey"}} >
+                                <div className={styles.imageblog} style={{ background: "grey" }} >
                                     <Image src={blog.imageUrl} alt={blog.title} width={400} height={200} objectFit='cover' loading="lazy" />
                                 </div>
                             </div>
@@ -126,16 +163,15 @@ export default function Allblogs() {
                                 <p className='text-muted mx-2 mb-1' style={{ border: "1px solid #9DC0E4", borderRadius: "3px", color: "#9DC0E4", fontSize: "13px", padding: "0 3px", height: "max-content", width: "max-content", marginLeft: "10px", background: "#EDF2F7" }}>{blog.topic}</p>
                                 <h3 className='mb-0 p-0 mx-2'>{blog.title}</h3>
                                 <p className='mt-1 text-muted mx-2'>{truncateDescription(blog.description)}</p>
-                                <Link href={blog.link} style={{color:"rgb(62, 131, 192)"}}>Read More</Link>
+                                <Link href={blog.link} style={{ color: "rgb(62, 131, 192)" }}>Read More</Link>
                             </div>
                         </div>
-                        </Link>
                     ))}
                 </div>
 
                 {/* Cost Section */}
                 <div className={styles.costdiv}>
-                    <h3 className='mb-2 text-dark'>Our <span style={{color:"orange"}}>Offerings!</span></h3>
+                    <h3 className='mb-2 text-dark'>Our <span style={{ color: "orange" }}>Offerings!</span></h3>
                     <div className={styles.itinerarycirclediv}>
                         <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
                             <i className="fa fa-map" aria-hidden="true" style={{ fontSize: "40px" }}></i>
@@ -174,7 +210,7 @@ export default function Allblogs() {
                         <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>
                             Local Activities
                         </h6>
-                    </div> 
+                    </div>
                     <div className={styles.itinerarycirclediv} >
                         <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "white", display: "flex", justifyContent: "center", alignItems: "center" }}>
                             <i className="fa fa-fire" aria-hidden="true" style={{ fontSize: "40px" }}></i>
@@ -183,7 +219,7 @@ export default function Allblogs() {
                             Pooja Arrangements
                         </h6>
                     </div>
-                    
+
 
                     <div style={{ background: "#faecd4s", borderRadius: "25px", overflow: "hidden", border: "1px solid #ffd68f", marginBottom: "10px", width: "100%" }} >
                         <h4 style={{ padding: "15px", color: "black", margin: "0" }}><span><i className="fa fa-comments"></i></span> Need help?</h4>
