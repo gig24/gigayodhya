@@ -44,7 +44,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
         <div className="w-100 d-flex justify-content-center align-items-center" id="plannerdiv">
             <div className={`${styles.explorediv} d-flex justify-content-center align-items-center flex-column`}>
                 <h4 className={styles.headingexplore}>
-                    Explore <span style={{ color: "red" }}>Ayodhya</span> With G<span style={{ color: "orange" }}>I</span>G!
+                    Explore <span style={{ color: "red" }}>Ayodhya</span> With G<span style={{ color: "#ff8134" }}>I</span>G!
                 </h4>
                 <p className="text-center" style={{ fontSize: "2vmin" }}>
                     Unveil the Mystique of Shri Ram Ki Nagri Ayodhya - Explore the <strong><span style={{ color: "orange" }}>Spiritual Essence</span></strong> with Us!
@@ -148,7 +148,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
-                                                Local Activites
+                                                Activites
                                             </h6>
                                             <div className="text-muted w-100 text-center paraabout mt-0" style={{ fontSize: "1.5vmin" }}>
                                                 Explore Local Activites of the City

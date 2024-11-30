@@ -359,7 +359,7 @@ export default function Studentenlightenment() {
         // Close overlay without saving changes
         setIsOverlayVisible(false);
     };
-    const handleMoveToDay = (place, targetDayIndex) => {
+    const handleMoveToDay = (place, targetDayIndex, addtostart = false) => {
         const updatedTempItinerary = [...tempItinerary];
         const updatedUnassignedPlaces = [...unassignedPlaces];
 
@@ -379,15 +379,19 @@ export default function Studentenlightenment() {
                 }
             }
         }
+        if (addtostart) {
+            updatedTempItinerary[targetDayIndex].places.unshift(place);
 
+        } else {
+            updatedTempItinerary[targetDayIndex].places.push(place);
+
+        }
         // Add the place to the target day
-        updatedTempItinerary[targetDayIndex].places.push(place);
 
         // Update the states
         setTempItinerary(updatedTempItinerary);
         setUnassignedPlaces(updatedUnassignedPlaces);
     };
-
 
 
     // Move place back to unassigned
@@ -429,10 +433,10 @@ export default function Studentenlightenment() {
 
         // Check if we are moving from unassigned places
         if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
-            handleMoveToDay(place, targetDayIndex); // Move to the first day
+            handleMoveToDay(place, targetDayIndex, true); // Move to the first day
         } else {
             // Move to the next day if we're not in the first day
-            handleMoveToDay(place, targetDayIndex + 1);
+            handleMoveToDay(place, targetDayIndex + 1, true);
         }
     };
 
@@ -1002,7 +1006,7 @@ export default function Studentenlightenment() {
                         <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
                             <div className="d-flex w-100 justify-content-between">
                                 <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
-                                <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
+                                    <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
                                 </button>
                                 <button className="btn btn-primary m-2" onClick={saveChanges}>
                                     Save Changes
@@ -1193,7 +1197,7 @@ export default function Studentenlightenment() {
                 <div className={styles.overlay} style={{ zIndex: "1000" }}>
                     <div className={styles.allhoverlaycontainer}>
                         <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
-                            <button className=" btn btn-secondary  mt-2"  onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                            <button className=" btn btn-secondary  mt-2" onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                         </div>
                         <h2 className='text-dark m-0 p-0'>Available Hotels</h2>
                         <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} style={{ width: "98%" }}>

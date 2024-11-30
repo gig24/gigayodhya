@@ -18,6 +18,8 @@ import poojaData from '../data/pooja.json';
 import itineraryData from "@/data/itinirary.json"; // Import itinerary data
 import Image from "next/image";
 import Link from "next/link";
+const deepClone = obj => JSON.parse(JSON.stringify(obj));
+
 export default function Planbot() {
     const router = useRouter();
     const [step, setStep] = useState(0);
@@ -47,6 +49,7 @@ export default function Planbot() {
     const [unassignedPlaces, setUnassignedPlaces] = useState([]);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
     const [finalUserPackage, setFinalUserPackage] = useState({});
+    const [isMobileOverlayVisible, setIsMobileOverlayVisible] = useState(false)
 
     const initialMessageAdded = useRef(false); // Track if initial message has been added
     const rating = (ratingV) => {
@@ -232,14 +235,14 @@ export default function Planbot() {
 
 
     useEffect(() => {
-        if (isOverlayVisible) {
+        if (isOverlayVisible || isMobileOverlayVisible) {
             // Deep clone the itinerary to avoid direct mutation
             const assignedPlaces = itinerary.flatMap(day => day.places.map(p => p.pid));
             const unassigned = placesData.places.filter(place => !assignedPlaces.includes(place.pid));
-            setTempItinerary(itinerary);
+            setTempItinerary(deepClone(itinerary));
             setUnassignedPlaces(unassigned);
         }
-    }, [isOverlayVisible]);
+    }, [isOverlayVisible,isMobileOverlayVisible]);
     const fetchItinerary = () => {
         const itineraryForDuration = JSON.parse(JSON.stringify(itineraryData.itineraries[duration]));
         // const itineraryForDuration = itineraryData.itineraries[duration];
@@ -307,8 +310,9 @@ export default function Planbot() {
 
 
     const saveChanges = () => {
-        setItinerary(tempItinerary);
+        setItinerary(deepClone(tempItinerary));
         setIsOverlayVisible(false);
+        setIsMobileOverlayVisible(false)
         addToChat("bot", "Your updated itinerary has been saved!");
     };
 
@@ -341,6 +345,87 @@ export default function Planbot() {
         addToChat("user", "Back");
         setMessageTracker((prev) => ({ ...prev, step3: false, step2: false }));
 
+    };
+    const handleMoveToDay = (place, targetDayIndex,addtostart=false) => {
+        const updatedTempItinerary = [...tempItinerary];
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+
+        // Remove place from unassigned if it's there (unassigned -> any day)
+        const placeIndexInUnassigned = updatedUnassignedPlaces.findIndex(p => p.pid === place.pid);
+        if (placeIndexInUnassigned !== -1) {
+            updatedUnassignedPlaces.splice(placeIndexInUnassigned, 1);  // Remove from unassigned
+        } else {
+            // Remove place from the source day (it can only be in a day, not in both)
+            const placeIndexInSourceDay = updatedTempItinerary.findIndex(day =>
+                day.places.some(p => p.pid === place.pid)
+            );
+            if (placeIndexInSourceDay !== -1) {
+                const placeIndexInSourceDayArray = updatedTempItinerary[placeIndexInSourceDay].places.findIndex(p => p.pid === place.pid);
+                if (placeIndexInSourceDayArray !== -1) {
+                    updatedTempItinerary[placeIndexInSourceDay].places.splice(placeIndexInSourceDayArray, 1); // Remove from current day
+                }
+            }
+        }
+if(addtostart){
+    updatedTempItinerary[targetDayIndex].places.unshift(place);
+
+}else{
+    updatedTempItinerary[targetDayIndex].places.push(place);
+
+}
+        // Add the place to the target day
+
+        // Update the states
+        setTempItinerary(updatedTempItinerary);
+        setUnassignedPlaces(updatedUnassignedPlaces);
+    };
+
+
+
+    // Move place back to unassigned
+    const handleMoveToUnassigned = (place, sourceDayIndex) => {
+        const updatedTempItinerary = [...tempItinerary];
+        const updatedUnassignedPlaces = [...unassignedPlaces];
+
+        // Remove place from the source day
+        const placeIndexInDay = updatedTempItinerary[sourceDayIndex].places.findIndex(p => p.pid === place.pid);
+        if (placeIndexInDay !== -1) {
+            updatedTempItinerary[sourceDayIndex].places.splice(placeIndexInDay, 1);
+        }
+
+        // Add place back to unassigned
+        updatedUnassignedPlaces.push(place);
+
+        // Update the states
+        setTempItinerary(updatedTempItinerary);
+        setUnassignedPlaces(updatedUnassignedPlaces);
+    };
+
+    // Handle up arrow movement
+    const handleUpArrow = (place, sourceDayIndex) => {
+
+        // Move the place based on its current position
+        if (sourceDayIndex === 0) {
+            handleMoveToUnassigned(place, sourceDayIndex); // Move to unassigned if it's already in day 1
+        } else {
+            // Before moving to the previous day, remove it from the source day
+            handleMoveToDay(place, sourceDayIndex - 1); // Move up to the previous day
+        }
+    };
+
+
+    // Handle down arrow movement
+    const handleDownArrow = (place, targetDayIndex) => {
+        // Check if the targetDayIndex is valid and within the limits
+        if (targetDayIndex === tempItinerary.length) return; // If already at the last day
+
+        // Check if we are moving from unassigned places
+        if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
+            handleMoveToDay(place, targetDayIndex,true); // Move to the first day
+        } else {
+            // Move to the next day if we're not in the first day
+            handleMoveToDay(place, targetDayIndex + 1,true);
+        }
     };
 
     const scrollToSection = (id) => {
@@ -802,7 +887,7 @@ export default function Planbot() {
                             >
                                 Proceed
                             </button>
-                            <button className="btn btn-danger mx-2" onClick={() => handleTravelBack()}>Back</button>
+                            <button className="btn btn-danger mx-2 my-2" onClick={() => handleTravelBack()}>Back</button>
                         </div>
                     </div>
                 )}
@@ -813,7 +898,7 @@ export default function Planbot() {
                         <button className="btn btn-warning" onClick={fetchItinerary} id="show-itinerary-btn">
                             Show Itinerary
                         </button>
-                        <button className="btn btn-danger mx-2" onClick={() => handleDurationBack()}>Back</button>
+                        <button className="btn btn-danger mx-2 my-2" onClick={() => handleDurationBack()}>Back</button>
 
                     </div>
                 )}
@@ -830,10 +915,22 @@ export default function Planbot() {
                                     Itinerary
                                 </h4>
                                 <button
+                                className={`btn btn-primary ${styles.deskItenerybtn}`}
+                                onClick={() => {setIsOverlayVisible(true);addToChat("user", "Customize Itinerary");}}
+                            >
+                                Customize Itinerary
+                            </button>
+                            <button
+                                className={`btn btn-primary ${styles.mobItenerybtn}`}
+                                onClick={() => {setIsMobileOverlayVisible(true);addToChat("user", "Customize Itinerary");}}
+                            >
+                                Customize Itinerary
+                            </button>
+                                {/* <button
                                     className="btn btn-primary mx-2"
                                     onClick={() => { setIsOverlayVisible(true); addToChat("user", "Customize Itinerary"); }}>
                                     Customize Itinerary
-                                </button>
+                                </button> */}
                             </div>
                             {itinerary.map((dayData, index) => (
                                 <div
@@ -1063,6 +1160,109 @@ export default function Planbot() {
                         </div>
                     </div>
                 )}
+                 {isMobileOverlayVisible && (
+                <div className={styles.overlay}>
+                    <div className={styles.itineraryoverlayContent}>
+                        <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
+                            <div className="d-flex w-100 justify-content-between">
+                                <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
+                                <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
+                                </button>
+                                <button className="btn btn-primary m-2" onClick={saveChanges}>
+                                    Save Changes
+                                </button>
+
+                            </div>
+                            <h6 className="text-muted text-center my-2 mb-3">Use Up/Down arrows to move places</h6>
+
+                        </div>
+                        <div className="d-flex w-100 flex-column" style={{ marginTop: "700px" }}>
+                            {/* Unassigned Places */}
+                            <div className={styles.unassignedcontainer}>
+                                <h6 className='px-2'>More Places To Explore</h6>
+                                <div className={styles.unassignedPlacesSection}>
+                                    {unassignedPlaces.map((place, index) => (
+                                        <div key={index} className={styles.itinerarycircleoverlaymobdiv}>
+                                            <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                    <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                </div>
+                                                <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                    <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                </a>
+                                            </div>
+                                            <div className={styles.arrows} >
+                                                <button
+                                                    // onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                    className={`bt btn-ino ${styles.upArrow}`}
+                                                    disabled={true}
+
+                                                // disabled={dayIndex === 0 && !unassignedPlaces.some(p => p.pid === place.pid)}
+                                                >
+                                                    ↑
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDownArrow(place, 0)} // Move down
+                                                    className={`bt btn-inf ${styles.downArrow}`}
+                                                // disabled={dayIndex === tempItinerary.length - 1}
+                                                >
+                                                    ↓
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Itinerary Days */}
+                            {tempItinerary.map((day, dayIndex) => (
+                                <div key={dayIndex} className={styles.daysectioncontainer}>
+                                    <h5 className='m-0 p-0 px-2'>{day.day}</h5>
+
+                                    <div key={dayIndex} className={styles.daySection}>
+                                        <div className='w-100'>
+                                            {day.places.map((place, placeIndex) => (
+                                                <div key={placeIndex} className={styles.itinerarycircleoverlaymobdiv}>
+                                                    <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "center", width: "80%", height: "100%" }}>
+                                                        <div style={{ width: '70px', height: '70px', background: 'grey' }}>
+                                                            <Image src={place.img} alt={place.name} width={80} height={80} objectFit="cover" />
+                                                        </div>
+                                                        <a href={place.link} target='_blank' style={{ textDecoration: "none", color: "#2a9d8f" }}>
+                                                            <h6 className=" bg-ifo mx-4">{place.name}</h6>
+                                                        </a>
+                                                    </div>
+                                                    <div className={styles.arrows}>
+                                                        <button
+                                                            onClick={() => handleUpArrow(place, dayIndex)} // Move up
+                                                            className={styles.upArrow}
+                                                        >
+                                                            ↑
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDownArrow(place, dayIndex)} // Move down
+                                                            className={styles.downArrow}
+                                                            disabled={dayIndex === tempItinerary.length - 1}
+                                                        >
+                                                            ↓
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+
+                        </div>
+
+
+                        {/* Save & Close Buttons */}
+
+                    </div>
+
+                </div>
+            )}
 
                 {/* Step 4: Show Accomodation */}
                 {step === 4 && chatIndex && (
@@ -1182,7 +1382,7 @@ export default function Planbot() {
                                     Confirm Accommodation
                                 </button>
                                 <button
-                                    className="btn btn-danger mx-2"
+                                    className="btn btn-danger mx-2 my-2"
                                     onClick={() => handleAccomBack()}
                                 >
                                     Back
@@ -1209,7 +1409,7 @@ export default function Planbot() {
                                     Confirm Accommodation
                                 </button>
                                 <button
-                                    className="btn btn-danger mx-2"
+                                    className="btn btn-danger mx-2 my-2"
                                     onClick={() => handleAccomBack()}
                                 >
                                     Back
@@ -1363,7 +1563,7 @@ export default function Planbot() {
                         <button className="btn btn-warning" onClick={handleTravelConfirm} disabled={!selectedCab}>
                             Confirm Cab
                         </button>
-                        <button className="btn btn-danger mx-2" onClick={handleTravelcabBack}>
+                        <button className="btn btn-danger mx-2 my-2" onClick={handleTravelcabBack}>
                             Back
                         </button>
                     </div>

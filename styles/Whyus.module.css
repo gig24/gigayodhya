@@ -21,6 +21,7 @@
 }
 
 .headingabout {
+    text-align: center;
     font-size: 2em; /* Adjust based on your preference */
     color: #333; /* Replace with your desired color */
 }
@@ -67,6 +68,9 @@
 }
 
 @media (max-width: 600px) {
+    .headingabout{
+        text-align: center;
+    }
     .aboutcard {
         width: 90%;
         height: max-content;

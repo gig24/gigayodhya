@@ -359,7 +359,7 @@ export default function Mokshayatra() {
         // Close overlay without saving changes
         setIsOverlayVisible(false);
     };
-    const handleMoveToDay = (place, targetDayIndex) => {
+    const handleMoveToDay = (place, targetDayIndex,addtostart=false) => {
         const updatedTempItinerary = [...tempItinerary];
         const updatedUnassignedPlaces = [...unassignedPlaces];
 
@@ -379,15 +379,19 @@ export default function Mokshayatra() {
                 }
             }
         }
+if(addtostart){
+    updatedTempItinerary[targetDayIndex].places.unshift(place);
 
+}else{
+    updatedTempItinerary[targetDayIndex].places.push(place);
+
+}
         // Add the place to the target day
-        updatedTempItinerary[targetDayIndex].places.push(place);
 
         // Update the states
         setTempItinerary(updatedTempItinerary);
         setUnassignedPlaces(updatedUnassignedPlaces);
     };
-
 
 
     // Move place back to unassigned
@@ -429,13 +433,12 @@ export default function Mokshayatra() {
 
         // Check if we are moving from unassigned places
         if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
-            handleMoveToDay(place, targetDayIndex); // Move to the first day
+            handleMoveToDay(place, targetDayIndex,true); // Move to the first day
         } else {
             // Move to the next day if we're not in the first day
-            handleMoveToDay(place, targetDayIndex + 1);
+            handleMoveToDay(place, targetDayIndex + 1,true);
         }
     };
-
 
     const handleViewHotel = (hotelId) => {
         // Find the specific hotel by hotelId

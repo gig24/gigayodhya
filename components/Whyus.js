@@ -5,12 +5,12 @@ export default function Whyus() {
     return (
         <div>
             <div id="whyus" className={`d-flex justify-content-center flex-column align-items-center ${styles.whyuscontainer}`}>
-                <h6 className="text-muted mt-3">Why People Choose Us?</h6>
+                <h6 className="text-muted mt-3 text-center">Why People Choose Us?</h6>
                 <h5 style={{textAlign:"center"}}>
                     Because 
-                    with G<span style={{color:"orange"}}>I</span>G, <span style={{ color: 'red' }}>&#39;re not just a tourist;</span> you&apos;re family
+                    with G<span style={{color:"orange"}}>I</span>G, <span style={{ color: 'red' }}>you&#39;re not just a tourist;</span> you&apos;re family
                 </h5>
-                <p style={{ fontSize: '2vmin' }}>
+                <p className='text-center m-0 p-0' style={{ fontSize: '10px' }}>
                     Discover the Reasons<strong> <span style={{ color: '#24BBEF' }}>to Embrace</span></strong> Our Distinctive
                     Services!
                 </p>
@@ -22,7 +22,7 @@ export default function Whyus() {
                             <i className={`fa fa-child bg-light p-1 ${styles.aboutcardlogo}`} style={{ fontSize: '50px', borderRadius: '50%' }} ></i>
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>More Than Just &quot;Book &amp; Bye&quot;</h6>
+                            <h6 className={`${styles.headingAbout} text-center`}>More Than Just &quot;Book &amp; Bye&quot;</h6>
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`} >
                                 We don&apos;t just toss you a package and
                                 disappear. From planning to execution,
@@ -38,7 +38,7 @@ export default function Whyus() {
 
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>Local Discounts &amp; Perks</h6>
+                            <h6 className={`${styles.headingAbout} text-center`}>Local Discounts &amp; Perks</h6>
                             <div className={`w-100 text-center ${styles.paraabout} text-muted`} >
                                 Get exclusive cashback and discounts at
                                 local shops and restaurants. Support local
@@ -54,7 +54,7 @@ export default function Whyus() {
 
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>Choices Galore</h6>
+                            <h6 className={`${styles.headingAbout} text-center`}>Choices Galore</h6>
                             <div className={`w-100 text-center ${styles.paraabout} text-muted`} >
                                 Dharmshalas or hotels, e-rickshaws or
                                 taxis—we&apos;ve got options for every budget.
@@ -71,7 +71,7 @@ export default function Whyus() {
 
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>All City Under One</h6>
+                            <h6 className={`${styles.headingAbout} text-center`}>All City Under One</h6>
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`} >
                                 GIG has it all—accommodations,
                                 transport options, local guides, pooja
@@ -88,7 +88,7 @@ export default function Whyus() {
 
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>Real Connections, Real Comfort</h6>
+                            <h6 className={`${styles.headingAbout} text-center`}>Real Connections, Real Comfort</h6>
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`} >
                                 With GIG, you have your &quot;local rishtedar&quot;
                                 (SPOC) guiding you, helping you
@@ -104,7 +104,7 @@ export default function Whyus() {
 
                         </div>
                         <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                            <h6 className={styles.headingAbout}>Plan or No Plan</h6>
+                            <h6 className={`${styles.headingAbout} text-center`}>Plan or No Plan</h6>
                             <div className={`text-muted w-100 text-center ${styles.paraabout}`}>
                                 For the planners, Shravan Bot is here to
                                 make you feel in control. For the rest of us,

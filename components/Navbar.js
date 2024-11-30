@@ -101,17 +101,17 @@ const Navbar = () => {
       <div className={styles.mobileNav}>
         <Link href="/" legacyBehavior>
           <div className={getActiveClass('/')}>
-            <i className="fa fa-home" style={{ fontSize: '25px' }}></i> Home
+            <i className="fa fa-home"></i> Home
           </div>
         </Link>
         <Link href="/planbot" legacyBehavior>
           <div className={getActiveClass('/planbot')}>
-            <i className="fa fa-user" style={{ fontSize: '25px' }}></i> Planbot
+            <i className="fa fa-user"></i> Planbot
           </div>
         </Link>
         <Link href="/blogs" legacyBehavior>
           <div className={getActiveClass('/blogs')}>
-            <i className="fa fa-globe" style={{ fontSize: '25px' }}></i> Explore
+            <i className="fa fa-globe"></i> Explore
           </div>
         </Link>
       </div>

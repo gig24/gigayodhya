@@ -13,12 +13,14 @@ export default function Allblogs() {
     const mainContainerRef = useRef(null);
     const aboveMainContainerRef = useRef(null);
 
-    const truncateDescription = (description, maxLength) => {
+    const truncateDescription = (description) => {
+        const maxLength = window.innerWidth <= 768 ? 150 : 300; // Use 200 for mobile (width <= 768px), 300 for desktop
         if (description.length > maxLength) {
             return description.substring(0, maxLength) + "...";
         }
         return description;
     };
+    
 
     // All Blogs Data
     const allBlogs = [
@@ -113,19 +115,21 @@ export default function Allblogs() {
                 <div className={styles.packageoverview}>
                 <h2 className='text-dark mx-2'>All Blogs</h2>
                     {allBlogs.map((blog) => (
+                        <Link href={blog.link} passHref style={{textDecoration:"none"}}>
                         <div key={blog.id} className={`${styles.blogCard} ${styles.allblogcard}`} style={{ color: "black" }}>
                             <div className={styles.allblogcardcorosaldiv}>
-                                <div className={styles.imageblog} >
+                                <div className={styles.imageblog} style={{background:"grey"}} >
                                     <Image src={blog.imageUrl} alt={blog.title} width={400} height={200} objectFit='cover' loading="lazy" />
                                 </div>
                             </div>
                             <div className={styles.allblogcarddesc}>
                                 <p className='text-muted mx-2 mb-1' style={{ border: "1px solid #9DC0E4", borderRadius: "3px", color: "#9DC0E4", fontSize: "13px", padding: "0 3px", height: "max-content", width: "max-content", marginLeft: "10px", background: "#EDF2F7" }}>{blog.topic}</p>
                                 <h3 className='mb-0 p-0 mx-2'>{blog.title}</h3>
-                                <p className='mt-1 text-muted mx-2'>{truncateDescription(blog.description, 300)}</p>
+                                <p className='mt-1 text-muted mx-2'>{truncateDescription(blog.description)}</p>
                                 <Link href={blog.link} style={{color:"rgb(62, 131, 192)"}}>Read More</Link>
                             </div>
                         </div>
+                        </Link>
                     ))}
                 </div>
 

@@ -16,7 +16,7 @@
 }
 .footerlink{
     text-decoration: none;
-    color: #b9bbba;
+    color: #292929;
     cursor: pointer;
 }
 .logo {
@@ -81,6 +81,14 @@
 
 /* Show mobileNav only for smaller screens */
 @media (max-width: 600px) {
+    .footerlinkcontainer{
+        width: 100%;
+
+    }
+    .footerdesc{
+        width: 100%;
+
+    }
     .desktopNav {
         display: none;
     }
@@ -96,10 +104,27 @@
         margin-top: 5px;
     }
     .mobileNav {
+        
         display: flex;
+        padding: 0;
+        padding-top: 8px;
+        padding-bottom: 3px;
+    }
+    .mobileNav i{
+        font-size: 19px;
+    }
+    .mobileNav div{
+        font-size: 15px;
     }
 }
 @media (min-width: 601px){
+    .footerlinkcontainer{
+        width: 50%;
+
+    }
+    .footerdesc{
+        width: 50%;
+    }
     .logomobile{
         display: none;
     }

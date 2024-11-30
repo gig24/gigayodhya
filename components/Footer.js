@@ -52,9 +52,9 @@ export default function Footer() {
           <div className="p-3 pb-0">
             <section>
               <div className="d-flex justify-content-center align-items-center flex-wrap">
-                <div className="col-lg-6 col-md-6 mb-2 mb-md-0 d-flex justify-content-start align-items-center flex-column">
+                <div className={`${styles.footerdesc} mb-2 mb-md-0 d-flex justify-content-start align-items-center flex-column`}>
                   <h5 className="text-uppercase text-dark">
-                    About G<span style={{ color: "orange" }}>I</span>G
+                    About G<span style={{ color: "#fe8134" }}>I</span>G
                   </h5>
                   <p className="w-100 text-center text-dark" style={{ fontSize: "2.5vmin" }}>
                     GIG acts as your local rishtedar/companion, helping you plan
@@ -67,8 +67,8 @@ export default function Footer() {
                   </p>
                 </div>
 
-                <div className="col-lg-5 d-flex justify-content-center align-items-center flex-column text-dark">
-                  <h5>Useful Links</h5>
+                <div className={`${styles.footerlinkcontainer} d-flex justify-content-center align-items-center flex-column text-dark`}>
+                  <h5 style={{color:"#fe8134"}}>Useful Links</h5>
                   <a
                     className={`${styles.footerlink} my-0`}
                     onClick={() => handleNavigation('whyus')}
