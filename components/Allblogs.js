@@ -117,7 +117,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                 <div className={styles.offerings}>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard1}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-hotel" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-hotel" style={{ fontSize: "27px", borderRadius: "50%" }}></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
