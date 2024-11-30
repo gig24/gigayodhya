@@ -115,7 +115,7 @@ export default function Allblogs() {
                 <div className={styles.packageoverview}>
                 <h2 className='text-dark mx-2'>All Blogs</h2>
                     {allBlogs.map((blog) => (
-                        <Link href={blog.link} passHref style={{textDecoration:"none"}}>
+                        <Link key={blog.id} href={blog.link} passHref style={{textDecoration:"none"}}>
                         <div key={blog.id} className={`${styles.blogCard} ${styles.allblogcard}`} style={{ color: "black" }}>
                             <div className={styles.allblogcardcorosaldiv}>
                                 <div className={styles.imageblog} style={{background:"grey"}} >
