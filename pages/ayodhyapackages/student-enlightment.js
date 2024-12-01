@@ -106,6 +106,7 @@ export default function Studentenlightenment() {
 
                 console.log('Data submitted successfully:', data);
                 alert('Query Added Successfully! You will be contacted soon.');
+                window.location.reload();
                 setShowFormOverlay(false); // Close the overlay after submission
             } else {
                 alert('Could Not Submit Your Query, Try Again Later or Contact Us on 7505866498');
