@@ -12,12 +12,28 @@ import hotelData from '../../data/hotels.json'
 import cabData from '../../data/cabs.json'
 import activityData from '../../data/activity.json'
 import poojaData from '../../data/pooja.json'
+import connectDb from '../../lib/mongodb';
 
 
 
 
 const deepClone = obj => JSON.parse(JSON.stringify(obj));
-
+export async function getStaticProps() {
+    try {
+      // Establish MongoDB connection at build time
+      await connectDb();
+      
+      // Since you don't need to return anything, just return an empty object
+      return {
+        props: {},
+      };
+    } catch (error) {
+      console.error("Error establishing database connection:", error);
+      return {
+        notFound: true, // Optional: Handle the error gracefully if needed
+      };
+    }
+  }
 export default function Studentenlightenment() {
     const [packageObject, setPackageObject] = useState(packageObjectData);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
@@ -122,6 +138,13 @@ export default function Studentenlightenment() {
         // Allow only numbers by removing non-numeric characters
         const numericValue = value.replace(/[^0-9]/g, '');
         e.target.value = numericValue;
+        handleFormChange(e);  // Call handleFormChange to update the form data state
+    };
+    const handleNameInput = (e) => {
+        let value = e.target.value;
+        // Allow only alphabetic characters (both uppercase and lowercase)
+        value = value.replace(/[^a-zA-Z]/g, ''); // Remove non-alphabetic characters
+        e.target.value = value;  // Update the input field with the valid value
         handleFormChange(e);  // Call handleFormChange to update the form data state
     };
     const guideOptions = [
@@ -1267,7 +1290,7 @@ export default function Studentenlightenment() {
             {showFormOverlay && (
                 <div className={styles.overlay}>
                     <div className={`${styles.formDiv} ${styles.overlayContent}`}>
-                        <button className={`btn btn-danger mt-2 ${styles.formclosebtn}`} onClick={() => setShowFormOverlay(false)}>Back</button>
+                        <button className={`btn btn-secondary mt-2 ${styles.formclosebtn}`} onClick={() => setShowFormOverlay(false)}>Back</button>
                         <form onSubmit={handleFormSubmit} style={{ width: "90%" }}>
                             <h3>Submit Your Query</h3>
 
@@ -1289,7 +1312,10 @@ export default function Studentenlightenment() {
                                     type="text"
                                     name="name"
                                     value={formData.name}
-                                    onChange={handleFormChange}
+                                    onChange={(e) => {
+                                        handleFormChange(e);
+                                        handleNameInput(e);  // Ensure only numbers are entered
+                                    }}
                                     className="form-control m-0"
                                     required
                                 />
@@ -1321,8 +1347,19 @@ export default function Studentenlightenment() {
                                     required
                                 />
                             </div>
+                            <div className="mb-2">
+                            <label htmlFor="dateOfArrival" className="form-label m-0">Date of Arrival</label>
+                                    <input
+                                        type="date"
+                                        name="dateOfArrival"
+                                        value={formData.dateOfArrival}
+                                        onChange={handleFormChange}
+                                        className="form-control m-0"
+                                        required
 
-                            <div className="row mb-2">
+                                    />
+                            </div>
+                            {/* <div className="row mb-2">
                                 <div className="col-md-6">
                                     <label htmlFor="dateOfArrival" className="form-label m-0">Date of Arrival</label>
                                     <input
@@ -1348,7 +1385,7 @@ export default function Studentenlightenment() {
 
                                     />
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="mb-2">
                                 <label htmlFor="noOfPersons" className="form-label m-0">Number of Persons</label>
