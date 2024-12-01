@@ -995,7 +995,7 @@ export default function Tirthessentials() {
 
                                 >
                                     {unassignedPlaces.map((place, index) => (
-                                        // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                        <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
                                         <div key={index}
                                             draggable
                                             onTouchStart={() => handleDragStart(place, 'unassigned', index)} // Start dragging on touch
@@ -1008,7 +1008,7 @@ export default function Tirthessentials() {
                                             </div>
                                             <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
                                         </div>
-                                        // </a>
+                                         </a>
                                     ))}
                                 </div>
                             </div>
@@ -1024,7 +1024,7 @@ export default function Tirthessentials() {
 
                                         >
                                             {day.places.map((place, placeIndex) => (
-                                                // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                                <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
                                                 <div key={placeIndex}
                                                     draggable
                                                     onDragStart={() => handleDragStart(place, 'itinerary', index)}
@@ -1037,7 +1037,7 @@ export default function Tirthessentials() {
                                                     </div>
                                                     <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
                                                 </div>
-                                                // </a>
+                                                 </a>
 
                                             ))}
                                         </div>

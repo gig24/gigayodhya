@@ -1007,20 +1007,20 @@ export default function Studentenlightenment() {
 
                                 >
                                     {unassignedPlaces.map((place, index) => (
-                                        // <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
-                                        <div key={index}
-                                            draggable
-                                            onTouchStart={() => handleDragStart(place, 'unassigned', index)} // Start dragging on touch
-                                            onMouseDown={() => handleDragStart(place, 'unassigned', index)} // Start dragging on mouse down
-                                            onTouchEnd={handleDragEnd} // End dragging on touch end
-                                            onMouseUp={handleDragEnd}
-                                            className={styles.itinerarycirclediv} >
-                                            <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                                                <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
+                                        <a key={index} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                            <div key={index}
+                                                draggable
+                                                onTouchStart={() => handleDragStart(place, 'unassigned', index)} // Start dragging on touch
+                                                onMouseDown={() => handleDragStart(place, 'unassigned', index)} // Start dragging on mouse down
+                                                onTouchEnd={handleDragEnd} // End dragging on touch end
+                                                onMouseUp={handleDragEnd}
+                                                className={styles.itinerarycirclediv} >
+                                                <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
+                                                    <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
+                                                </div>
+                                                <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
                                             </div>
-                                            <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`}>{place.name}</h6>
-                                        </div>
-                                        // </a>
+                                        </a>
                                     ))}
                                 </div>
                             </div>
@@ -1036,20 +1036,20 @@ export default function Studentenlightenment() {
 
                                         >
                                             {day.places.map((place, placeIndex) => (
-                                                // <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
-                                                <div key={placeIndex}
-                                                    draggable
-                                                    onDragStart={() => handleDragStart(place, 'itinerary', index)}
-                                                    onTouchStart={() => handleDragStart(place, 'itinerary', index)}  // Touch start for mobile
-                                                    onTouchEnd={handleDragEnd}
-                                                    onMouseUp={handleDragEnd}
-                                                    className={styles.itinerarycirclediv} >
-                                                    <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
-                                                        <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
+                                                <a key={placeIndex} href={place.link} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }} className='initeraryitem'>
+                                                    <div key={placeIndex}
+                                                        draggable
+                                                        onDragStart={() => handleDragStart(place, 'itinerary', index)}
+                                                        onTouchStart={() => handleDragStart(place, 'itinerary', index)}  // Touch start for mobile
+                                                        onTouchEnd={handleDragEnd}
+                                                        onMouseUp={handleDragEnd}
+                                                        className={styles.itinerarycirclediv} >
+                                                        <div style={{ width: "70px", height: "70px", overflow: "hidden", background: "grey" }}>
+                                                            <Image src={place.img} alt={place.name} width={80} height={80} loading="lazy" objectFit='cover' />
+                                                        </div>
+                                                        <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
                                                     </div>
-                                                    <h6 className={`mx-2 text-center ${styles.itinerarycircledivpara}`} >{place.name}</h6>
-                                                </div>
-                                                // </a>
+                                                </a>
 
                                             ))}
                                         </div>
