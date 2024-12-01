@@ -117,7 +117,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                 <div className={styles.offerings}>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard1}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-hotel" style={{ fontSize: "27px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-hotel"></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -130,7 +130,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard2}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-taxi" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-taxi"></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -143,7 +143,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard3}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-map" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-map" ></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -156,7 +156,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard4}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-user" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-user" ></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -169,7 +169,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard5}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-gamepad" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-gamepad" ></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
@@ -182,7 +182,7 @@ export default function Allblogs({ allBlog = [] }) {  // Default to empty array
                                     </div>
                                     <div className={`d-flex flex-column ${styles.aboutcard} ${styles.acard6}`} >
                                         <div className="d-flex justify-content-center align-items-center w-100 ">
-                                            <i className="fa fa-fire" style={{ fontSize: "30px", borderRadius: "50%" }}></i>
+                                            <i className="fa fa-fire" ></i>
                                         </div>
                                         <div className=" d-flex flex-column justify-content-center align-items-center mt-1">
                                             <h6 className={styles.headingAbout}>
