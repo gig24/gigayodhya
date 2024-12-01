@@ -514,11 +514,49 @@
         width: 90%;
         margin-top: 14px;
     }
+    .mobilecostdiv{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+         border-top-left-radius:25px;
+         border-top-right-radius:25px;
+         overflow:hidden;
+         border:1px solid #2a9d8f;
+         width:100%;
+         position:fixed;
+         bottom:0px;
+         right:0;
+         left:0;
+         background:#d3dee8;
+         display: none;
+    }
 }
 
 
 @media (max-width: 600px) {
-
+    .mobilecostdiv{
+        transition: transform 0.3s ease-in-out;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        width: 100%;
+         border-top-left-radius:25px;
+         border-top-right-radius:25px;
+         overflow:hidden;
+         border:1px solid #2a9d8f;
+         width:100%;
+         position:fixed;
+         bottom:50px;
+         right:0;
+         left:0;
+         background:#d3dee8
+    }
+    .mobilecostdiv.hidden {
+        transform: translateY(200%); /* Move the navbar out of view */
+      }
     .daySection {
         margin: 8px;
         border: 1px dashed #ccc;
@@ -808,9 +846,7 @@
         display: none;
     }
 
-    .menupackage {
-        margin-top: 10px;
-    }
+  
 
     /* Main Container */
     .maincontainer {

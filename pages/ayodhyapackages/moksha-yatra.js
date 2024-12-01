@@ -20,20 +20,20 @@ import connectDb from '../../lib/mongodb';
 const deepClone = obj => JSON.parse(JSON.stringify(obj));
 export async function getStaticProps() {
     try {
-      // Establish MongoDB connection at build time
-      await connectDb();
-      
-      // Since you don't need to return anything, just return an empty object
-      return {
-        props: {},
-      };
+        // Establish MongoDB connection at build time
+        await connectDb();
+
+        // Since you don't need to return anything, just return an empty object
+        return {
+            props: {},
+        };
     } catch (error) {
-      console.error("Error establishing database connection:", error);
-      return {
-        notFound: true, // Optional: Handle the error gracefully if needed
-      };
+        console.error("Error establishing database connection:", error);
+        return {
+            notFound: true, // Optional: Handle the error gracefully if needed
+        };
     }
-  }
+}
 export default function Mokshayatra() {
     const [packageObject, setPackageObject] = useState(packageObjectData);
     const [isOverlayVisible, setIsOverlayVisible] = useState(false);
@@ -383,7 +383,7 @@ export default function Mokshayatra() {
         // Close overlay without saving changes
         setIsOverlayVisible(false);
     };
-    const handleMoveToDay = (place, targetDayIndex,addtostart=false) => {
+    const handleMoveToDay = (place, targetDayIndex, addtostart = false) => {
         const updatedTempItinerary = [...tempItinerary];
         const updatedUnassignedPlaces = [...unassignedPlaces];
 
@@ -403,13 +403,13 @@ export default function Mokshayatra() {
                 }
             }
         }
-if(addtostart){
-    updatedTempItinerary[targetDayIndex].places.unshift(place);
+        if (addtostart) {
+            updatedTempItinerary[targetDayIndex].places.unshift(place);
 
-}else{
-    updatedTempItinerary[targetDayIndex].places.push(place);
+        } else {
+            updatedTempItinerary[targetDayIndex].places.push(place);
 
-}
+        }
         // Add the place to the target day
 
         // Update the states
@@ -457,10 +457,10 @@ if(addtostart){
 
         // Check if we are moving from unassigned places
         if (targetDayIndex === 0 && unassignedPlaces.some(p => p.pid === place.pid)) {
-            handleMoveToDay(place, targetDayIndex,true); // Move to the first day
+            handleMoveToDay(place, targetDayIndex, true); // Move to the first day
         } else {
             // Move to the next day if we're not in the first day
-            handleMoveToDay(place, targetDayIndex + 1,true);
+            handleMoveToDay(place, targetDayIndex + 1, true);
         }
     };
 
@@ -552,7 +552,32 @@ if(addtostart){
             }
         }
     };
+    const [scrolling, setScrolling] = useState(false); // Track if user is scrolling
 
+    // Detect scroll behavior to hide/show navbar
+    useEffect(() => {
+        let scrollTimeout;
+
+        const handleScroll = () => {
+            if (!scrolling) {
+                setScrolling(true);
+            }
+
+            // Reset the scroll timeout after the user stops scrolling
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                setScrolling(false);
+            }, 150); // 150ms after scroll stops
+        };
+
+        // Add the scroll event listener
+        window.addEventListener('scroll', handleScroll);
+
+        // Cleanup the event listener when the component is unmounted
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [scrolling]);
     return (
         <div>
 
@@ -618,6 +643,18 @@ if(addtostart){
                         <span className={styles.menupackage} onClick={() => scrollToSection('additional-info')}>Additional Info</span>
                         <span className={`${styles.menupackage} ${styles.makequerymenu}`} onClick={() => scrollToSection('costdiv')}>Make Query</span>
 
+                    </div>
+                    <div className={`${styles.mobilecostdiv} ${scrolling ? styles.hidden : ''}`} >
+                        <div className='ml-4' style={{ width: "50%", padding: "13px", color: "black", borderBottom: "1px solid #2a9d8f", marginLeft: "16px" }}>
+                            <p className='m-0 text-muted' style={{ fontSize: "10px" }}>Starting From</p>
+                            <div className='d-flex justify-content-start align-items-center w-100'>
+                                <h5 style={{ textDecoration: "line-through", margin: "0" }}>{incprice(packageObject.price)}</h5>
+                                <h4 style={{ fontWeight: "bold", margin: "0", marginLeft: "7px" }}>₹{packageObject.price} <span style={{ fontSize: "10px" }}></span></h4>
+                            </div>
+                        </div>
+                        <div className='d-flex justify-content-center align-items-center w-50'>
+                            <button className="btn btn-outline-primary m-2 w-75" onClick={() => setShowFormOverlay(true)}>Make Query</button>
+                        </div>
                     </div>
                     <div id="overview" className={`packageoverviewtext ${styles.overviewdiv}`}>
                         <h4 className="text-dark" style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}>Package Overview</h4>
@@ -1029,7 +1066,7 @@ if(addtostart){
                         <div className='w-100 bg-light' style={{ position: "sticky", top: "0", zIndex: "100000" }}>
                             <div className="d-flex w-100 justify-content-between">
                                 <button className="btn btn-secondary m-2" onClick={() => setIsMobileOverlayVisible(false)}>
-                                <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
+                                    <i className="fa fa-arrow-left" aria-hidden="true"></i> Back
                                 </button>
                                 <button className="btn btn-primary m-2" onClick={saveChanges}>
                                     Save Changes
@@ -1220,7 +1257,7 @@ if(addtostart){
                 <div className={styles.overlay} style={{ zIndex: "1000" }}>
                     <div className={styles.allhoverlaycontainer}>
                         <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
-                            <button className=" btn btn-secondary  mt-2"  onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                            <button className=" btn btn-secondary  mt-2" onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                         </div>
                         <h2 className='text-dark m-0 p-0'>Available Hotels</h2>
                         <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} style={{ width: "98%" }}>
@@ -1347,16 +1384,16 @@ if(addtostart){
                                 />
                             </div>
                             <div className="mb-2">
-                            <label htmlFor="dateOfArrival" className="form-label m-0">Date of Arrival</label>
-                                    <input
-                                        type="date"
-                                        name="dateOfArrival"
-                                        value={formData.dateOfArrival}
-                                        onChange={handleFormChange}
-                                        className="form-control m-0"
-                                        required
+                                <label htmlFor="dateOfArrival" className="form-label m-0">Date of Arrival</label>
+                                <input
+                                    type="date"
+                                    name="dateOfArrival"
+                                    value={formData.dateOfArrival}
+                                    onChange={handleFormChange}
+                                    className="form-control m-0"
+                                    required
 
-                                    />
+                                />
                             </div>
                             {/* <div className="row mb-2">
                                 <div className="col-md-6">
