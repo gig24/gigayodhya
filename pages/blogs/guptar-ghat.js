@@ -5,17 +5,17 @@ import Image from 'next/image'; // Import next/image for lazy loading
 import styles from '../../styles/Blog.module.css'; // Importing the styles
 import Link from 'next/link.js';
 
-const SaryuArti = () => {
+const GuptarGhat = () => {
   return (
     <>
       <Head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="Saryu Arti Ayodhya" />
-        <meta name="keywords" content="Ayodhya, Saryu, Arti, river, holy dip, evening rituals, blog, tour in Ayodhya, spiritual experience, places to visit in Ayodhya, darshan in Ayodhya" />
+        <meta name="description" content="Guptar Ghat Ayodhya" />
+        <meta name="keywords" content="Ayodhya, Guptar Ghat, Saryu, Lord Ram, holy dip, evening rituals, blog, tour in Ayodhya, spiritual experience, places to visit in Ayodhya, darshan in Ayodhya" />
         <meta name="author" content="GIG Ayodhya" />
         <link rel="icon" href="/assets/images/favicon.ico" type="image/gif" />
-        <title>Saryu Arti Ayodhya</title>
+        <title>Guptar Ghat Ayodhya</title>
       </Head>
 
       <Navbar />
@@ -24,88 +24,79 @@ const SaryuArti = () => {
         <div className={styles.container}>
           <div className="row justify-content-center">
             <div className="col-md-9">
-              <h1 className={styles.heading}>Saryu Arti</h1>
+              <h1 className={styles.heading}>Guptar Ghat</h1>
               <div className={`${styles.user} p-4 rounded`}>
                 <div className="d-flex align-items-start" >
                   <Image
                     src="https://thumbs.dreamstime.com/b/man-head-smile-as-facial-expression-vector-illustration-man-head-smile-as-facial-expression-vector-illustration-young-229260301.jpg"
                     className="img-fluid rounded-circle"
-                    alt="saryu arti"
+                    alt="Guptar Ghat"
                     width={100}
                     height={100}
                     loading="lazy" // Explicit lazy loading
                   />
                   <div className="d-block" >
                     <span className="d-block">by Harsh Singh</span>
-                    <span className="d-block text-muted">8th Aug. 2023</span>
+                    <span className="d-block text-muted">1st Dec. 2024</span>
                   </div>
                 </div>
               </div>
 
               <div className={styles.blogSection}>
                 <p>
-                  Ayodhya, a city of immense religious and historical significance, is home to the iconic Saryu Arti. Performed on the banks of the holy Saryu River, this evening ritual is a sight to behold and an essential part of the spiritual experience in Ayodhya.
+                  Located on the serene banks of the Saryu River, Guptar Ghat in Ayodhya is a historically and spiritually significant site. Known for its peaceful ambiance and stunning sunsets, it is believed to be the place where Lord Ram took Jal Samadhi, marking his departure from the earthly realm.
                 </p>
 
                 <Image
-                  src="https://rishikeshdaytour.com/blog/wp-content/uploads/2023/09/Aarti-Ayodhya.jpg"
+                  src="https://rishikeshdaytour.com/blog/wp-content/uploads/2023/09/Guptar-Ghat-Ayodhya-India.jpg"
                   className={`${styles.bounceLittle} img-fluid`}
-                  alt="saryu arti"
+                  alt="Guptar Ghat"
                   width={900}
                   height={500}
                   loading="lazy"
                 />
 
-                <h2>Significance of Saryu Arti</h2>
+                <h2>Historical Significance</h2>
                 <p>
-                  The Saryu Arti is a revered evening ritual that takes place on the ghats of the Saryu River, where devotees gather to offer prayers, chant mantras, and watch the mesmerizing light and flame show. It is believed that witnessing the Saryu Arti brings spiritual peace and blessings, cleansing the soul and enhancing devotion.
+                  Guptar Ghat is deeply connected to the Ramayana. Devotees and history enthusiasts visit this ghat to pay their respects and reflect on its association with Lord Ram’s final moments on earth. The ghat is adorned with beautiful temples, including the Gupta Harji Mandir, which adds to its spiritual allure.
                 </p>
 
-                <h2>The Ritual</h2>
+                <h2>A Divine Experience</h2>
                 <p>
-                  As the sun sets, the ghats are illuminated with hundreds of lamps, and priests perform the Arti with synchronized chants. Devotees stand by the river, offering their prayers and lighting diyas (oil lamps) in reverence. The atmosphere is filled with spiritual energy, and the rhythmic chants reverberate across the river, creating an unforgettable experience.
+                  Visitors often describe Guptar Ghat as a sanctuary of peace. The tranquil waters of the Saryu and the rhythmic sound of temple bells create a meditative atmosphere. Many pilgrims take a holy dip in the river, believing it to be a step toward spiritual purification.
                 </p>
 
                 <Image
-                  src="https://rishikeshdaytour.com/blog/wp-content/uploads/2023/09/Saryu-Aarti-in-Ayodhya.jpg"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQC77xhSVYdU_C7zbXUnlnTZrOUFII9YvneAg&s"
                   className={`${styles.bounceLittle} img-fluid`}
-                  alt="saryu arti"
+                  alt="Temples at Guptar Ghat"
                   width={500}
                   height={300}
                   loading="lazy"
                 />
 
-                <h2>Spiritual Experience</h2>
+                <h2>Best Time to Visit</h2>
                 <p>
-                  The Saryu Arti offers more than just a visual spectacle; it is a spiritual journey that connects devotees with the divine. As the prayers and chants echo in the evening breeze, the peaceful setting by the river provides a perfect backdrop for contemplation, devotion, and a deep sense of connection with the divine.
+                  While the ghat is a beautiful destination year-round, the early mornings and evenings offer the most serene experiences. The sunrise over the Saryu River and the evening Arti performed at the temples are not to be missed.
                 </p>
 
                 <Image
-                  src="https://images.bhaskarassets.com/thumb/1200x900/web2images/521/2019/11/11/0521_a3_1.jpg"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJd__tvLMdSY4jPHTbwSZp-1gto9c22k88ZQ&s"
                   className={`${styles.bounceLittle} img-fluid`}
-                  alt="saryu arti"
+                  alt="Sunrise at Guptar Ghat"
                   width={500}
                   height={300}
                   loading="lazy"
                 />
 
-                <h2>A Must-See Attraction</h2>
+                <h2>A Spiritual Retreat</h2>
                 <p>
-                  If you are visiting Ayodhya, attending the Saryu Arti is a must. It is one of the most spiritually enriching experiences you can have in this sacred city. The Arti takes place every evening, and the serene atmosphere makes it an ideal place to reflect on life, seek blessings, and embrace peace.
+                  Guptar Ghat is not just a place of historical significance but also a retreat for the soul. Whether you seek spiritual enlightenment, a moment of peace, or simply a connection to history, this ghat offers it all.
                 </p>
-
-                <Image
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9hww9WPFdWFHfB_GiIPU-k_hog57dAIEiFYw_BO53-cIhwvOmcOOc82mlDM0AqCzGoQY&usqp=CAU"
-                  className={`${styles.bounceLittle} img-fluid`}
-                  alt="saryu arti"
-                  width={500}
-                  height={300}
-                  loading="lazy"
-                />
 
                 <div className="text-center w-100">
                   <a
-                    href="https://www.google.com/maps/search/saryu+arti+ayodhya/@26.7523396,82.208452,17z/data=!3m1!4b1?entry=ttu"
+                    href="https://www.google.com/maps/place/Guptar+Ghat+Ayodhya/"
                     className="text-center w-100"
                   >
                     View On Map
@@ -140,4 +131,4 @@ const SaryuArti = () => {
   );
 };
 
-export default SaryuArti;
+export default GuptarGhat;
