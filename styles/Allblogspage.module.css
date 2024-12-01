@@ -184,6 +184,10 @@ border-radius:10px;
   flex: 3;
   color: white;
   height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column-reverse;
   /* Dynamic height */
 }
 .allblogcard{

@@ -150,8 +150,8 @@ export default function Allblogs() {
             {/* Main Content */}
             <div ref={mainContainerRef} className={styles.maincontainer}>
                 {/* Package Overview Section */}
+                {/* <h2 className='text-dark mx-2'>All Blogs</h2> */}
                 <div className={styles.packageoverview}>
-                    <h2 className='text-dark mx-2'>All Blogs</h2>
                     {allBlogs.map((blog) => (
                         <div key={blog.id} className={`${styles.blogCard} ${styles.allblogcard}`} style={{ color: "black", cursor: "pointer" }} onClick={() => router.push(blog.link)}>
                             <div className={styles.allblogcardcorosaldiv}>
@@ -162,7 +162,7 @@ export default function Allblogs() {
                             <div className={styles.allblogcarddesc}>
                                 <p className='text-muted mx-2 mb-1' style={{ border: "1px solid #9DC0E4", borderRadius: "3px", color: "#9DC0E4", fontSize: "13px", padding: "0 3px", height: "max-content", width: "max-content", marginLeft: "10px", background: "#EDF2F7" }}>{blog.topic}</p>
                                 <h3 className='mb-0 p-0 mx-2'>{blog.title}</h3>
-                                <p className='mt-1 text-muted mx-2'>{truncateDescription(blog.description)}</p>
+                                <p className='mt-1 text-muted mx-2'>{truncateDescription(blog.description,maxLength)}</p>
                                 <Link href={blog.link} style={{ color: "rgb(62, 131, 192)" }}>Read More</Link>
                             </div>
                         </div>

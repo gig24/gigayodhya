@@ -31,8 +31,8 @@ export default function Prepackage(){
         <div id="packages" style={{position:"relative"}}>
         <div className={styles.packagecontainer}>
             <div className={styles.packageheading}>
-            <h1>Preset <span style={{color:"black"}}>Plans</span></h1>
-            <p className='text-center text-muted' style={{marginTop:"-12px",fontSize:"15px"}}>Explore our <span style={{color:"#3cc2bd"}}>curated packages</span> designed for every kind of <span style={{color:"orange"}}>Darshanarthi!</span></p>
+            <h3>Preset <span style={{color:"black"}}>Plans</span></h3>
+            <p className='text-center text-muted px-1' style={{marginTop:"-6px",fontSize:"14px"}}>Explore our <span style={{color:"#3cc2bd"}}>curated packages</span> designed for every kind of <span style={{color:"orange"}}>Darshanarthi!</span></p>
             </div>
             <div style={{display:"flex",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}}>
                 <Packagecards 

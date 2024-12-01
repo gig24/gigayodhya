@@ -39,7 +39,7 @@
 .packageheading{
     margin-top: -100px;
 }
-.packageheading h1{
+.packageheading h3{
     color:red;
     padding:0;
     text-align:center
