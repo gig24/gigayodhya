@@ -104,12 +104,15 @@
         margin-top: 5px;
     }
     .mobileNav {
-        
+        transition: transform 0.3s ease-in-out;
         display: flex;
         padding: 0;
         padding-top: 8px;
         padding-bottom: 3px;
     }
+    .mobileNav.hidden {
+  transform: translateY(100%); /* Move the navbar out of view */
+}
     .mobileNav i{
         font-size: 19px;
     }

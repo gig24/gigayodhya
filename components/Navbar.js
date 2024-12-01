@@ -1,12 +1,37 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import styles from '../styles/Navbar.module.css';
 import Image from 'next/image';
 
 const Navbar = () => {
   const router = useRouter();
+  const [scrolling, setScrolling] = useState(false); // Track if user is scrolling
 
+  // Detect scroll behavior to hide/show navbar
+  useEffect(() => {
+    let scrollTimeout;
+
+    const handleScroll = () => {
+      if (!scrolling) {
+        setScrolling(true);
+      }
+
+      // Reset the scroll timeout after the user stops scrolling
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setScrolling(false);
+      }, 150); // 150ms after scroll stops
+    };
+
+    // Add the scroll event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup the event listener when the component is unmounted
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolling]);
   // Determine the active class for dynamic links
   const getActiveClass = (path) => (router.pathname === path ? styles.active : styles.inactive);
 
@@ -98,7 +123,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className={styles.mobileNav}>
+      <div className={`${styles.mobileNav} ${scrolling ? styles.hidden : ''}`}>
         <Link href="/" legacyBehavior>
           <div className={getActiveClass('/')}>
             <i className="fa fa-home"></i> Home
