@@ -12,10 +12,28 @@
           "https://pix10.agoda.net/hotelImages/1198493/-1/a6a5fb62c175cfb0338b00625f623a03.jpg?ca=7&ce=1&s=414x232",
           "https://lbcdn.airpaz.com/hotelimages/4230347/krishna-palace-ayodhya2-3276a638702081283281a9529fbe563d.jpg"
         ],
-        "description": "Hotel Satsang Grand, situated near the historic Sarnath and just 6 km from the revered Sh Whether visiting for pilgrimage or leisure, Hotel Satsang Grand provides a perfect blend of convenience and tranquility, making it an ideal choice for those looking to explore the spiritual and cultural heritage of Varanasi.",
+        "description": "Located near the spiritual heart of Ayodhya, Ayodhya Residency combines modern comfort with serene surroundings. The hotel features well-appointed rooms, ideal for pilgrims and tourists looking for a peaceful retreat after exploring the city.",
         "DistancefromMVP": "500m",
-        "AdditionalInfo": ["Free parking is available to the users who comes with gig as they are best", "24/7 front desk  to the users who comes with gig as they are bes","Free parking  to the users who comes with gig as they are bes","24/7 front desk"],
-        "amenities": ["Free WiFi", "Breakfast included", "Air Conditioning","Free WiFi", "Breakfast included", "Air Conditioning","Free WiFi", "Breakfast included", "Air Conditioning","Free WiFi", "Breakfast included", "Air Conditioning"],
+        "AdditionalInfo": [
+            "Passport, Aadhar, and Govt. ID are accepted as ID proof(s)",
+            "Local IDs are not allowed",
+            "Outside food is allowed",
+            "Smoking within premises is allowed",
+            "Pets are not allowed",
+            "Unmarried couples are not allowed"
+        ],
+        "amenities": [
+            "AC",
+            "power backup",
+            "intercom",
+            "attached bathroom",
+            "laundry service",
+            "smoke detector",
+            "elevator/lift",
+            "doctor on call",
+            "free Wi-Fi",
+            "wake-up call"
+        ],
         "ContactPerson": "Ramesh Gupta",
         "Number": "+91-9876543210",
         "rooms": [
@@ -55,10 +73,28 @@
           "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/00/ca/2c/keys-select-hotel.jpg?w=1200&h=-1&s=1",
           "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTBYy0iCpiuE4_ua3VYxcRgid4TN3fJ9qxhuZ-q5OV9jyloHrc3azW1TdtVGT_aiUhsp8&usqp=CAU"
         ],
-        "description": "A heritage-style hotel with a blend of traditional and modern facilities.",
+        "description": "Ram Heritage Inn blends traditional elegance with modern amenities, offering luxurious stays for those seeking to immerse themselves in Ayodhya's culture. With spacious suites and gourmet dining, it's a top choice for discerning guests.",
         "DistancefromMVP": "1km",
-        "AdditionalInfo": ["Pet-friendly", "Shuttle service available"],
-        "amenities": ["Free WiFi", "Swimming Pool", "Gym"],
+        "AdditionalInfo": [
+            "Pets are not allowed",
+            "Smoking within premises is allowed",
+            "Local IDs are not accepted",
+            "Unmarried couples are not allowed",
+            "24-hour security available",
+            "Fully refundable till check-in"
+        ],
+        "amenities": [
+            "restaurant",
+            "dining area",
+            "conference room",
+            "banquet",
+            "CCTV",
+            "safety and security",
+            "smoke alarms",
+            "private entrance",
+            "paid airport transfers",
+            "elevator/lift"
+        ],
         "ContactPerson": "Suresh Yadav",
         "Number": "+91-9123456789",
         "rooms": [
@@ -98,10 +134,28 @@
           "https://content.jdmagicbox.com/comp/pune/x2/020pxx20.xx20.181011204502.e9x2/catalogue/dnyandarshan-dharmashala-alandi-phata-pune-dharamshalas-4t6dlp71r6-250.jpg",
           "https://incredibleindiaexplore.com/wp-content/uploads/2022/11/Dharamshala-in-Pune-min.webp"
         ],
-        "description": "An economical stay for pilgrims with clean rooms and basic facilities.",
+        "description": "A peaceful and affordable dharamshala offering comfortable rooms with basic amenities for spiritual seekers and pilgrims. A quiet and clean place to rest and rejuvenate, with a serene atmosphere for those on their spiritual journey.",
         "DistancefromMVP": "2km",
-        "AdditionalInfo": ["Strictly vegetarian meals", "Separate prayer hall"],
-        "amenities": ["Shared Bathrooms", "Canteen", "24/7 Water Supply"],
+        "AdditionalInfo": [
+          "Strictly vegetarian meals",
+          "Separate prayer hall",
+          "Non-smoking environment",
+          "No alcohol allowed on premises",
+          "Wheelchair accessible rooms",
+          "Parking available"
+        ],
+        "amenities": [
+          "Shared Bathrooms",
+          "Canteen",
+          "24/7 Water Supply",
+          "Power Backup",
+          "Elevator",
+          "Housekeeping",
+          "Torch",
+          "24-hour Security",
+          "Fire Extinguishers",
+          "First-aid Services"
+        ],
         "ContactPerson": "Mahesh Tiwari",
         "Number": "+91-9456781234",
         "rooms": [
@@ -141,10 +195,28 @@
           "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/24/8b/49/98/kyriad-hotel-pimpri.jpg?w=700&h=-1&s=1",
           "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/95/07/limak-eurasia-luxury.jpg?w=700&h=-1&s=1"
         ],
-        "description": "A budget-friendly dormitory offering shared accommodations for travelers.",
+        "description": "A budget-friendly dormitory offering clean, comfortable, and shared accommodations for travelers looking for a simple stay. Convenient for group stays, with separate dorms for men and women, offering essential amenities for a restful stopover.",
         "DistancefromMVP": "1.5km",
-        "AdditionalInfo": ["Locker facility", "Separate dorms for men and women"],
-        "amenities": ["Bunk Beds", "Shared Bathrooms", "WiFi"],
+        "AdditionalInfo": [
+          "Locker facility available",
+          "Separate dorms for men and women",
+          "Food delivery service available",
+          "No pets allowed",
+          "Group bookings allowed",
+          "24-hour reception"
+        ],
+        "amenities": [
+          "Bunk Beds",
+          "Shared Bathrooms",
+          "WiFi",
+          "Power Backup",
+          "CCTV",
+          "Housekeeping",
+          "24-hour Security",
+          "Wake-up Call",
+          "Fire Extinguishers",
+          "Concierge"
+        ],
         "ContactPerson": "Anil Kumar",
         "Number": "+91-9109876543",
         "rooms": [

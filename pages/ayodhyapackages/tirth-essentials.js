@@ -1168,8 +1168,8 @@ export default function Tirthessentials() {
                 <div className={`${styles.overlay}`} style={{ zIndex: "1800" }}>
                     <div className={styles.fullhoteloverlayContentContainer}>
                         <div className={`${styles.overlayContent} ${styles.fhoverlayContent}`}  >
-                            <div className='w-100 pt-2' style={{ cursor: "pointer" }}>
-                                <button className=" btn btn-secondary mb-2" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
+                            <div className='w-100' style={{ cursor: "pointer",display:"flex",justifyContent:"flex-end" }}>
+                                <button className=" btn btn-outline-secondary mb-2 px-2 py-1" onClick={() => setShowFullHotelOverlay(false)}>Back <i className="fa fa-arrow-right" aria-hidden="true"></i></button>
                             </div>
                             <div className={styles.fhImageDescription}  >
                                 <div className={styles.fhdescription}>
@@ -1257,9 +1257,12 @@ export default function Tirthessentials() {
             {showAllHotelsOverlay && (
                 <div className={styles.overlay} style={{ zIndex: "1000" }}>
                     <div className={styles.allhoverlaycontainer}>
-                        <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
+                    <div className='w-100 mt-5 px-3' style={{ cursor: "pointer",display:"flex",justifyContent:"flex-end" }}>
+                                <button className=" btn btn-outline-secondary mb-2 px-2 py-1" onClick={() => setShowAllHotelsOverlay(false)}>Back <i className="fa fa-arrow-right" aria-hidden="true"></i></button>
+                            </div>
+                        {/* <div className='w-100 pt-4 px-2' style={{ cursor: "pointer" }}>
                             <button className=" btn btn-secondary  mt-2" onClick={() => setShowAllHotelsOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
-                        </div>
+                        </div> */}
                         <h2 className='text-dark m-0 p-0'>Available Hotels</h2>
                         <div className={`${styles.overlayContent} ${styles.allhoverlaycontent}`} style={{ width: "98%" }}>
 
