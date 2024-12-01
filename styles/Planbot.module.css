@@ -398,21 +398,24 @@
         overflow:hidden
         
    }
-   .fhfacilitiesContainer{
-    display:flex;
-    flex-direction: column;
+
+.fhfacilitiesContainer {
+    display: flex;
+    flex-direction: row;
     width: 100%;
-    padding-inline:40px ;
+    padding-inline: 40px;
+    margin-top: 20px;
 }
-.fhfacilities{
+
+.fhfacilities {
     display: flex;
     flex-direction: column;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 7px;
-    border-radius:20px;
-    width: 100%;
-    background:#f8f8f8;
+    border-radius: 20px;
+    width: 50%;
+    /* background:#f8f8f8; */
 }
 .roomContainer{
     display: flex;
@@ -425,6 +428,11 @@
 }
 } 
 @media (max-width: 600px) {
+    .fhfacilities {
+        /* background-color: #000; */
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
     .daySection {
         margin: 8px;
         border: 1px dashed #ccc;
@@ -522,9 +530,9 @@
         width: 95%;
         flex-wrap: wrap;
     }
-    .fhfacilitiesContainer{
+    .fhfacilitiesContainer {
 
-        padding-inline:10px ;
+        padding-inline: 10px;
         width: 100%;
     }
     .fhImage{
