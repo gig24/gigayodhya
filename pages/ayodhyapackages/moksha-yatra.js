@@ -648,12 +648,12 @@ export default function Mokshayatra() {
                         <div className='ml-4' style={{ width: "50%", padding: "13px", color: "black", borderBottom: "1px solid #2a9d8f", marginLeft: "16px" }}>
                             <p className='m-0 text-muted' style={{ fontSize: "10px" }}>Starting From</p>
                             <div className='d-flex justify-content-start align-items-center w-100'>
-                                <h5 style={{ textDecoration: "line-through", margin: "0" }}>{incprice(packageObject.price)}</h5>
-                                <h4 style={{ fontWeight: "bold", margin: "0", marginLeft: "7px" }}>₹{packageObject.price} <span style={{ fontSize: "10px" }}></span></h4>
+                                <h5 style={{ textDecoration: "line-through", margin: "0",color:"#2a9d8f" }}>{incprice(packageObject.price)}</h5>
+                                <h4 style={{ fontWeight: "bold", margin: "0", marginLeft: "7px",color:"#2a9d8f" }}>₹{packageObject.price} <span style={{ fontSize: "10px" }}></span></h4>
                             </div>
                         </div>
                         <div className='d-flex justify-content-center align-items-center w-50'>
-                            <button className="btn btn-outline-primary m-2 w-75" onClick={() => setShowFormOverlay(true)}>Make Query</button>
+                            <button className="btn btn-outline-info m-2 w-75" onClick={() => setShowFormOverlay(true)} style={{background:"transparent",color:"#2a9d8f",border:"1px solid #2a9d8f"}}>Make Query</button>
                         </div>
                     </div>
                     <div id="overview" className={`packageoverviewtext ${styles.overviewdiv}`}>

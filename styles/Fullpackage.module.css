@@ -524,12 +524,13 @@
          border-top-right-radius:25px;
          overflow:hidden;
          border:1px solid #2a9d8f;
+         color:#2a9d8f;
          width:100%;
          position:fixed;
          bottom:0px;
          right:0;
          left:0;
-         background:#d3dee8;
+         background:#e7f7f9;
          display: none;
     }
 }
@@ -552,7 +553,8 @@
          bottom:50px;
          right:0;
          left:0;
-         background:#d3dee8
+         color:#2a9d8f;
+         background:#e7f7f9;
     }
     .mobilecostdiv.hidden {
         transform: translateY(200%); /* Move the navbar out of view */
