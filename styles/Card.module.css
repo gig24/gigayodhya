@@ -178,12 +178,14 @@
       }
       
       .aboutcard {
-        width: 100px;
+        width: 25vw;
         height: 86px;
         border-radius: 10px;
         /* border: 2px solid grey; */
         /* padding-top: 10px; */
         padding-bottom: 1px;
+        padding-right:1px ;
+        padding-left: 1px;
         margin: 3px;
         justify-content: center;
         /* margin: 9px; */
