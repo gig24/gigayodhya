@@ -49,10 +49,10 @@ export default function Enquiry() {
       <div className={`${styles.enquiryContainer} d-flex justify-content-center flex-column align-items-center`}>
         <h4 className="text-decoration-underline mb-2">Enquiry!</h4>
         <form onSubmit={handleSubmit} className={`${styles.enquiryForm} d-flex justify-content-center flex-column align-items-center p-4`}>
-          <input type="text" className="w-100 bg-transparent border-1" placeholder="Name" value={name} onChange={(event) => setName(event.target.value)} required />
-          <input type="email" name='email' className="w-100 bg-transparent border-1" placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} required />
-          <input type="tel" className={`w-100 bg-transparent border-1 ${styles.noarrow}`} placeholder="Number" value={number} onChange={(event) => setNumber(event.target.value)} required />
-          <textarea className="w-100 bg-transparent border-1" placeholder="Enquiry" style={{ fontSize: '3vmin' }} value={enquiry} onChange={(event) => setEnquiry(event.target.value)} required />
+          <input type="text" className="w-100 bg-transparent border-1 text-dark" placeholder="Name" value={name} onChange={(event) => setName(event.target.value)} required />
+          <input type="email" name='email' className="w-100 bg-transparent border-1 text-dark" placeholder="Email" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          <input type="tel" className={`w-100 bg-transparent border-1 text-dark ${styles.noarrow}`} placeholder="Number" value={number} onChange={(event) => setNumber(event.target.value)} required />
+          <textarea className="w-100 bg-transparent border-1 text-dark" placeholder="Enquiry" style={{ fontSize: '3vmin' }} value={enquiry} onChange={(event) => setEnquiry(event.target.value)} required />
           <button type="submit" className="btn btn-dark " disabled={status=="Wait"}>{status}</button>
         </form>
       </div>

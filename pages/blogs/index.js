@@ -17,7 +17,7 @@ export default function Allblogs() {
     const [maxLength, setMaxLength] = useState(300);
     useEffect(() => {
         const updateMaxLength = () => {
-            setMaxLength(window.innerWidth <= 768 ? 150 : 300);
+            setMaxLength(window.innerWidth <= 768 ? 150 : 200);
         };
 
         // Set the initial value

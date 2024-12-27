@@ -51,7 +51,7 @@ export default function Planbot() {
     const [finalUserPackage, setFinalUserPackage] = useState({});
     const [isMobileOverlayVisible, setIsMobileOverlayVisible] = useState(false)
 
- 
+
 
     const initialMessageAdded = useRef(false); // Track if initial message has been added
     const rating = (ratingV) => {
@@ -848,39 +848,50 @@ export default function Planbot() {
 
                 {/* Step 1: Travel Dates */}
                 {step === 1 && chatIndex && (
-                    <div className={styles.dateInputs} style={{ marginLeft: "50px", marginTop: "0px", width: "70%" }}>
-                        <label>
+                    <div className={`${styles.dateInputs} ${styles.widthCorrector} ${styles.overviewdiv}`} style={{ marginLeft: "50px", marginTop: "0px", width: "70%" }}>
+                        <h4
+                            className="text-dark"
+                            style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}
+                        >
                             Arrival Date:
-                            <input
-                                type="date"
-                                value={dates.arrivalDate}
-                                onChange={(e) => handleDateChange("arrivalDate", e.target.value)}
-                                required
-                            />
-                            <select
-                                value={dates.arrivalTime}
-                                onChange={(e) => handleDateChange("arrivalTime", e.target.value)}
-                            >
-                                <option value="Day">Day</option>
-                                <option value="Night">Night</option>
-                            </select>
-                        </label>
-                        <label>
+                        </h4>
+                        <input
+                            type="date"
+                            className="p-1 text-dark"
+                            value={dates.arrivalDate}
+                            onChange={(e) => handleDateChange("arrivalDate", e.target.value)}
+                            required
+                        />
+                        <select
+                        className="p-1 text-dark "
+                            value={dates.arrivalTime}
+                            onChange={(e) => handleDateChange("arrivalTime", e.target.value)}
+                        >
+                            <option value="Day">Day</option>
+                            <option value="Night">Night</option>
+                        </select>
+                        <h4
+                            className="text-dark mt-1 text-dark"
+                            style={{ borderLeft: "3px solid blue", paddingLeft: "7px" }}
+                        >
                             Departure Date:
-                            <input
-                                type="date"
-                                value={dates.departureDate}
-                                onChange={(e) => handleDateChange("departureDate", e.target.value)}
-                                required
-                            />
-                            <select
-                                value={dates.departureTime}
-                                onChange={(e) => handleDateChange("departureTime", e.target.value)}
-                            >
-                                <option value="Day">Day</option>
-                                <option value="Night">Night</option>
-                            </select>
-                        </label>
+                        </h4>
+
+                        <input
+                            type="date"
+                            className="p-1 text-dark"
+                            value={dates.departureDate}
+                            onChange={(e) => handleDateChange("departureDate", e.target.value)}
+                            required
+                        />
+                        <select
+                            value={dates.departureTime}
+                            className="p-1"
+                            onChange={(e) => handleDateChange("departureTime", e.target.value)}
+                        >
+                            <option value="Day">Day</option>
+                            <option value="Night">Night</option>
+                        </select>
                         <div className={styles.options}>
                             <button
                                 className="btn btn-primary"
