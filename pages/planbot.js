@@ -857,7 +857,7 @@ export default function Planbot() {
                         </h4>
                         <input
                             type="date"
-                            className="p-1 text-dark"
+                            className=""
                             value={dates.arrivalDate}
                             onChange={(e) => handleDateChange("arrivalDate", e.target.value)}
                             required
@@ -879,7 +879,7 @@ export default function Planbot() {
 
                         <input
                             type="date"
-                            className="p-1 text-dark"
+                            className=""
                             value={dates.departureDate}
                             onChange={(e) => handleDateChange("departureDate", e.target.value)}
                             required
