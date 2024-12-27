@@ -7,10 +7,10 @@
         "map":"https://maps.app.goo.gl/YZRyqKVPtx1ShG1Q8",
         "ratingValue": "4.5",
         "type": "3 Star Hotel",
-        "startprice":"2000",
+        "startprice":"1800",
         "img": [
           "https://pix10.agoda.net/hotelImages/1198493/-1/a6a5fb62c175cfb0338b00625f623a03.jpg?ca=7&ce=1&s=414x232",
-          "https://lbcdn.airpaz.com/hotelimages/4230347/krishna-palace-ayodhya2-3276a638702081283281a9529fbe563d.jpg"
+          "https://cdn2.advanceinfotech.org/kozhikode.directory/1200x675/business/1052/ayodhya-residencyyd-1641206522.webp"
         ],
         "description": "Located near the spiritual heart of Ayodhya, Ayodhya Residency combines modern comfort with serene surroundings. The hotel features well-appointed rooms, ideal for pilgrims and tourists looking for a peaceful retreat after exploring the city.",
         "DistancefromMVP": "500m",
@@ -39,8 +39,8 @@
         "rooms": [
           {
             "roomid": "101",
-            "roomName": "Standard Room",
-            "price": "2000",
+            "roomName": "Deluxe Room",
+            "price": "1800",
             "img": [
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kj-b7ZGBgh2h-eQQ_p8cQ13rKLXWNJ8ScA&s",
               "https://cf.bstatic.com/xdata/images/hotel/max1024x768/471618884.jpg?k=e84a53625f44d47fc70ac59851b1447a7bab39080a916927358f75ff64c938a6&o=&hp=1"
@@ -50,8 +50,8 @@
           },
           {
             "roomid": "102",
-            "roomName": "Deluxe Room",
-            "price": "3000",
+            "roomName": "Super Deluxe Room",
+            "price": "2400",
             "img": [
               "https://cf.bstatic.com/xdata/images/hotel/max1024x768/471618884.jpg?k=e84a53625f44d47fc70ac59851b1447a7bab39080a916927358f75ff64c938a6&o=&hp=1",
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4kj-b7ZGBgh2h-eQQ_p8cQ13rKLXWNJ8ScA&s"
@@ -63,7 +63,7 @@
       },
       {
         "hotelId": "2",
-        "name": "Ram Heritage Inn",
+        "name": "Keys Hotel",
         "location": "Civil Lines, Ayodhya",
         "map":"https://maps.app.goo.gl/YZRyqKVPtx1ShG1Q8",
         "ratingValue": "4.0",
@@ -165,7 +165,7 @@
             "price": "500",
             "img": [
               "https://content.jdmagicbox.com/comp/pune/x3/020pxx20.xx20.150129173108.v5x3/catalogue/sarka-dharamshala-alandi-devachi-alandi-banquet-halls-oakp6ux8ff-250.jpg",
-              "https://yatradham.org/media/catalog/product/cache/1/small_image/420x400/040ec09b1e35df139433887a97daa66f/d/i/digambar_jain_dharamshala_talwandi_kota_7_.jpg"
+              "https://rishikeshdaytour.com/blog/wp-content/uploads/2023/09/Gujarati-Dharamshala-in-Ayodhya-India.jpg"
             ],
             "amenities": ["Fan", "Bed", "Shared Bathroom"],
             "info": ["Max occupancy: 1", "Non-AC"]
@@ -192,8 +192,8 @@
         "type": "Dormitory",
         "startprice":"700",
         "img": [
-          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/24/8b/49/98/kyriad-hotel-pimpri.jpg?w=700&h=-1&s=1",
-          "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ed/95/07/limak-eurasia-luxury.jpg?w=700&h=-1&s=1"
+          "https://r1imghtlak.ibcdn.com/57b2588a513f11efbebd0a58a9feac02.jpg?&downsize=400:200&crop=400:200;0,2&output-format=webp",
+          "https://cf.bstatic.com/xdata/images/hotel/max500/501461500.jpg?k=cfb03ad45a70360c36562612c6dd4a94668745808ce8cf59a562668b2d49e17f&o=&hp=1"
         ],
         "description": "A budget-friendly dormitory offering clean, comfortable, and shared accommodations for travelers looking for a simple stay. Convenient for group stays, with separate dorms for men and women, offering essential amenities for a restful stopover.",
         "DistancefromMVP": "1.5km",
