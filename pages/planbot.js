@@ -857,13 +857,13 @@ export default function Planbot() {
                         </h4>
                         <input
                             type="date"
-                            className=""
+                            className="text-dark"
                             value={dates.arrivalDate}
                             onChange={(e) => handleDateChange("arrivalDate", e.target.value)}
                             required
                         />
                         <select
-                        className="p-1 text-dark "
+                        className="p-1 bg-light text-dark"
                             value={dates.arrivalTime}
                             onChange={(e) => handleDateChange("arrivalTime", e.target.value)}
                         >
@@ -879,14 +879,14 @@ export default function Planbot() {
 
                         <input
                             type="date"
-                            className=""
+                            className="text-dark"
                             value={dates.departureDate}
                             onChange={(e) => handleDateChange("departureDate", e.target.value)}
                             required
                         />
                         <select
                             value={dates.departureTime}
-                            className="p-1"
+                            className="p-1 bg-light text-dark"
                             onChange={(e) => handleDateChange("departureTime", e.target.value)}
                         >
                             <option value="Day">Day</option>
