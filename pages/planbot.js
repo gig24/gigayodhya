@@ -858,6 +858,7 @@ export default function Planbot() {
                         <input
                             type="date"
                             className="text-dark"
+                            style={{background:"white", border:"1px solid black",paddingLeft:"7px"}}
                             value={dates.arrivalDate}
                             onChange={(e) => handleDateChange("arrivalDate", e.target.value)}
                             required
@@ -880,6 +881,7 @@ export default function Planbot() {
                         <input
                             type="date"
                             className="text-dark"
+                            style={{background:"white", border:"1px solid black",paddingLeft:"7px"}}
                             value={dates.departureDate}
                             onChange={(e) => handleDateChange("departureDate", e.target.value)}
                             required
