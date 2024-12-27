@@ -51,6 +51,8 @@ export default function Planbot() {
     const [finalUserPackage, setFinalUserPackage] = useState({});
     const [isMobileOverlayVisible, setIsMobileOverlayVisible] = useState(false)
 
+ 
+
     const initialMessageAdded = useRef(false); // Track if initial message has been added
     const rating = (ratingV) => {
         let rating = ""
@@ -1423,9 +1425,9 @@ export default function Planbot() {
                     <div className={`${styles.overlay}`} style={{ zIndex: "1800" }}>
                         <div className={styles.fullhoteloverlayContentContainer}>
                             <div className={`${styles.overlayContent} ${styles.fhoverlayContent}`}  >
-                            <div className='w-100' style={{ cursor: "pointer",display:"flex",justifyContent:"flex-end" }}>
-                                <button className=" btn btn-outline-secondary mb-2 px-2 py-1" onClick={() => setShowFullHotelOverlay(false)}>Back <i className="fa fa-arrow-right" aria-hidden="true"></i></button>
-                            </div>
+                                <div className='w-100' style={{ cursor: "pointer", display: "flex", justifyContent: "flex-end" }}>
+                                    <button className=" btn btn-outline-secondary mb-2 px-2 py-1" onClick={() => setShowFullHotelOverlay(false)}>Back <i className="fa fa-arrow-right" aria-hidden="true"></i></button>
+                                </div>
                                 {/* <div className='w-100 pt-2' style={{ cursor: "pointer" }}>
                                     <button className=" btn btn-secondary mb-2" onClick={() => setShowFullHotelOverlay(false)}> <i className="fa fa-arrow-left" aria-hidden="true"></i> Back</button>
                                 </div> */}

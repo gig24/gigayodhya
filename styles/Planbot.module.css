@@ -309,7 +309,7 @@
     transform: scale(1.02);
 }
 
-@media (min-width: 601px) {
+@media (min-width: 801px) {
     .fullhoteloverlayContentContainer {
         background: white;
         height: 90%;
@@ -427,7 +427,7 @@
     width:70%
 }
 } 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .fhfacilities {
         /* background-color: #000; */
         margin-top: 10px;

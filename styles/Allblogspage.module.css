@@ -24,7 +24,7 @@
 .heading div{
   margin-right: 15px;
 }
-@media (min-width: 601px){
+@media (min-width: 801px){
   .abovemaincontainer {
     min-height: 100vh;
 }
@@ -116,7 +116,7 @@ margin-bottom: 10px;
     background-color:aliceblue;
 }
 }
-@media (max-width: 600px){
+@media (max-width: 800px){
   .itinerarycircledivpara{
     font-size:4vmin;
     margin-top:2px

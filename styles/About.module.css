@@ -1,4 +1,4 @@
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .headingAbout{
         margin-bottom: 0;
         font-size: 15px;
@@ -70,7 +70,7 @@
 
     }
 }
-@media (min-width: 601px) {
+@media (min-width: 801px) {
     .headingAbout{
         margin-bottom: 0;
     }

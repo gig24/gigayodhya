@@ -34,7 +34,7 @@
 
 
 /* Responsive Styles for Smaller Screens */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .mobileheading{
         margin-top: -90px;
         width: 100%;
@@ -239,7 +239,7 @@
 }
 
 /* Responsive Styles for Larger Screens */
-@media (min-width: 601px) {
+@media (min-width: 801px) {
     .letsplanbtn{
         margin-bottom: 10px;
     }

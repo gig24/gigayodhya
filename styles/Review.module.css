@@ -85,7 +85,7 @@
 }
 
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .blogCardContainer {
         overflow-x: auto;
         width: 100%;
@@ -97,7 +97,7 @@
 
 }
 
-@media (min-width: 601px) {
+@media (min-width: 801px) {
     .blogCardContainer {
         width: 90%;
     }
